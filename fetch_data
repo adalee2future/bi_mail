@@ -11,8 +11,8 @@ from pprint import pprint
 import random
 import sys
 
-workspace = 'kylin'
-odps = ODPS(os.environ['access_id'], os.environ['access_key'], 'kylin')
+workspace = 'phoenix'
+odps = ODPS(os.environ['access_id'], os.environ['access_key'], workspace)
 odps.get_project()
 
 today = datetime.date.today()
