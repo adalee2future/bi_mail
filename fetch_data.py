@@ -6,8 +6,7 @@ import os
 import pandas as pd
 import time
 import datetime
-from IPython.display import display
-from pprint import pprint
+#from IPython.display import display
 import random
 import sys
 
@@ -31,20 +30,22 @@ def run_sql(sql_text):
         sql_res_dataframe = reader.to_pandas()
         print("fetched size:", sql_res_dataframe.shape)
         print("time take: %ss" % round(time.time() - start))
-        display(sql_res_dataframe.head(10))
+        #display(sql_res_dataframe.head(10))
         return sql_res_dataframe
 
-def sql_to_excel(sql_text):
+def sql_to_excel(sql_text, filename=None):
     res = run_sql(sql_text)
-    random_hash = "%032x" % random.getrandbits(128)
-    filename = '%s.xlsx' % random_hash
+    if filename is None:
+        random_hash = "%032x" % random.getrandbits(128)
+        filename = '%s.xlsx' % random_hash
     res.to_excel(filename, index=False)
     print("Export to excel %s succeed!" % filename)
 
-def sql_to_csv(sql_text):
+def sql_to_csv(sql_text, filename=None):
     res = run_sql(sql_text)
-    random_hash = "%032x" % random.getrandbits(128)
-    filename = '%s.csv' % random_hash
+    if filename is None:
+        random_hash = "%032x" % random.getrandbits(128)
+        filename = '%s.xlsx' % random_hash
     res.to_csv(filename, index=False)
     print("Export to csv %s succeed!" % filename)
 

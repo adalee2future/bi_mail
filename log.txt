@@ -1,0 +1,939 @@
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: 2017年10月25日 星期三 21时09分25秒 CST
+zh_CN.UTF-8
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 22s
+Export to excel /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============4203944960666525290=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============4203944960666525290==
+
+--===============4203944960666525290==--
+
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: 2017年10月25日 星期三 21时10分58秒 CST
+language:
+zh_CN.UTF-8
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 25s
+Export to excel /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============1464976430326044530=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============1464976430326044530==
+
+--===============1464976430326044530==--
+
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: ---------
+2017年10月25日 星期三 21时12分57秒 CST
+language:
+zh_CN.UTF-8
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 31s
+Export to excel /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============0309551205574499560=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============0309551205574499560==
+
+--===============0309551205574499560==--
+
+*************
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: ******start*******
+2017年10月25日 星期三 21时15分39秒 CST
+language:
+zh_CN.UTF-8
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 21s
+Export to excel /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============3749108992112311715=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============3749108992112311715==
+
+--===============3749108992112311715==--
+
+******end*******
+1111111
+******start*******
+2017年10月25日 星期三 21时16分53秒 CST
+language:
+zh_CN.UTF-8
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 22s
+Export to excel /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============4028723588314515127=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============4028723588314515127==
+
+--===============4028723588314515127==--
+
+******end*******
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: 1111111
+******start*******
+2017年10月25日 星期三 21时18分32秒 CST
+language:
+zh_CN.UTF-8
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 22s
+Export to excel /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============3608955406212283789=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============3608955406212283789==
+
+--===============3608955406212283789==--
+
+******end*******
+
+******start*******
+2017年10月25日 星期三 21时21分48秒 CST
+language:
+zh_CN.UTF-8
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+******end*******
+
+******start*******
+2017年10月25日 星期三 21时22分09秒 CST
+language:
+zh_CN.UTF-8
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 21s
+Export to excel /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============1623909865275997283=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============1623909865275997283==
+
+--===============1623909865275997283==--
+
+******end*******
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 22s
+Export to excel /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============8806901108511454496=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============8806901108511454496==
+
+--===============8806901108511454496==--
+
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 23s
+Export to excel /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============8525574447435999094=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============8525574447435999094==
+
+--===============8525574447435999094==--
+
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 24s
+Export to excel /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============0165709042271544898=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============0165709042271544898==
+
+--===============0165709042271544898==--
+
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 40s
+Export to excel /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============3075528548643292854=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============3075528548643292854==
+
+--===============3075528548643292854==--
+
+pt: 20171024
+argv: ['./send_report.py', 'ada_rack_customer_recent_sale_conditions']
+project_id: ada_rack_customer_recent_sale_conditions
+base_dir: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions
+sql_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/ada_rack_customer_recent_sale_conditions.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 23s
+Export to excel /Users/Ada/projects/bi_mail/reports/ada_rack_customer_recent_sale_conditions/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============4881949170149214974=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============4881949170149214974==
+
+--===============4881949170149214974==--
+
+pt: 20171024
+argv: ['./send_report.py', '货架公司运营情况']
+project_id: 货架公司运营情况
+base_dir: /Users/Ada/projects/bi_mail/reports/货架公司运营情况
+sql_path: /Users/Ada/projects/bi_mail/reports/货架公司运营情况/货架公司运营情况.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/货架公司运营情况/货架公司运营情况.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/货架公司运营情况/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 28s
+Export to excel /Users/Ada/projects/bi_mail/reports/货架公司运营情况/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============4250184229312032731=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============4250184229312032731==
+
+--===============4250184229312032731==--
+
+pt: 20171024
+argv: ['./send_report.py', '货架公司运营情况']
+project_id: 货架公司运营情况
+base_dir: /Users/Ada/projects/bi_mail/reports/货架公司运营情况
+sql_path: /Users/Ada/projects/bi_mail/reports/货架公司运营情况/货架公司运营情况.sql
+cfg_path: /Users/Ada/projects/bi_mail/reports/货架公司运营情况/货架公司运营情况.cfg
+aaaaaaaaaa
+bbbbbbbbbb
+cccccccccc
+filename: /Users/Ada/projects/bi_mail/reports/货架公司运营情况/data/货架公司运营情况_20171024.xlsx
+select city_name `城市`,
+       area `区域`,
+       corp_name `公司名称`,
+       detail_address `公司地址`,
+       contact_names `联系人`,
+       telephones `联系方式`,
+       machine_cnt `货架数`,
+       earliest_online_date `铺货日期`,
+       avg_30days_order_cnt_wday `近30天平均订单数（工作日）`,  
+       avg_30days_order_cnt_wend `近30天平均订单数（周末）`,  
+       avg_30days_origin_amount_wday `近30天平均销售额（工作日）`,
+       avg_30days_origin_amount_wend `近30天平均销售额（周末）`,
+       avg_30days_actual_amount_wday `近30天平均实付额（工作日）`,
+       avg_30days_actual_amount_wend `近30天平均实付额（周末）`,
+       avg_7days_order_cnt_wday `近7天平均订单数（工作日）`,  
+       avg_7days_order_cnt_wend `近7天平均订单数（周末）`,  
+       avg_7days_origin_amount_wday `近7天平均销售额（工作日）`,
+       avg_7days_origin_amount_wend `近7天平均销售额（周末）`,
+       avg_7days_actual_amount_wday `近7天平均实付额（工作日）`,
+       avg_7days_actual_amount_wend `近7天平均实付额（周末）`
+from kylin.ada_rack_customer_recent_sale_conditions
+where pt = '20171024'
+;
+
+fetched size: (6258, 20)
+time take: 29s
+Export to excel /Users/Ada/projects/bi_mail/reports/货架公司运营情况/data/货架公司运营情况_20171024.xlsx succeed!
+Content-Type: multipart/mixed; boundary="===============6214523711916801407=="
+MIME-Version: 1.0
+Subject: =?utf-8?b?5pyA6L+R5LiA5Liq5pyI6LSn5p625YWs5Y+457u05bqm6L+Q6JCl5oOF5Ya1XzIwMTcxMDI0?=
+From: lili.li@owitho.com
+to: lili.li@owitho.com
+
+--===============6214523711916801407==
+
+--===============6214523711916801407==--
+
+******end*******
