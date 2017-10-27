@@ -1,4 +1,4 @@
-#!/Users/Ada/anaconda3/anaconda/bin/python
+#!/ada_program/python
 # -*- coding: utf-8 -*-
 
 import json
