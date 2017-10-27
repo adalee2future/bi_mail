@@ -7,4 +7,4 @@ cd ~/projects/bi_mail
 project_id=$1
 log_file=reports/$project_id/log/`date +\%Y\-%m`.log
 touch $log_file
-./send_report.sh $project_id 2>&1 >> $log_file
+./send_report.sh $project_id >> $log_file 2>&1
