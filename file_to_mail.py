@@ -11,7 +11,7 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
 def file_to_mail(filename, subject, to):
-    s = smtplib.SMTP('smtp.office365.com')
+    s = smtplib.SMTP('smtp.office365.com', port=587)
     s.ehlo()
     s.starttls()
     s.login(os.environ['mail_user'], os.environ['mail_passwd'])
