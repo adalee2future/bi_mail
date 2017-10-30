@@ -5,6 +5,13 @@ source ~/.profile
 cd ~/projects/bi_mail
 
 project_id=$1
+
+if [[ ! -d reports/$project_id/log ]]
+  then mkdir reports/$project_id/log
+fi
+if [[ ! -d reports/$project_id/data ]]
+  then mkdir reports/$project_id/data
+fi
 log_file=reports/$project_id/log/`date +\%Y\-%m`.log
 touch $log_file
 ./send_report.sh $project_id >> $log_file 2>&1
