@@ -4,7 +4,6 @@
 import os
 import sys
 import json
-from fetch_data import sql_to_excel, sql_to_csv, pt
 from file_to_mail import file_to_mail
 
 project_id = sys.argv[1]
@@ -18,6 +17,14 @@ with open(sql_path) as f, open(cfg_path) as g:
     cfg = json.loads(g.read())
 
 project_name = cfg['project_name']
+db_type = cfg.get('db_type', 'odps')
+
+
+if db_type == "odps":
+    from fetch_data_odps import sql_to_excel, sql_to_csv, pt
+
+if db_type == "mysql":
+    from fetch_data_mysql import sql_to_excel, sql_to_csv, pt
 
 if cfg.get('customized_file'):
     sys.path.insert(0, os.getcwd())
