@@ -45,7 +45,7 @@ def sql_to_csv(sql_text, filename=None):
     res = run_sql(sql_text)
     if filename is None:
         random_hash = "%032x" % random.getrandbits(128)
-        filename = '%s.xlsx' % random_hash
+        filename = '%s.csv' % random_hash
     res.to_csv(filename, index=False)
     print("Export to csv %s succeed!" % filename)
 
