@@ -1,12 +1,12 @@
-run.py project_id
+run.py report_id
 
-* project_id.cfg
+* report_id.cfg
 	* subject
 	* to
 	* file_type
 
 	
-* project_id.sql {pt}
+* report_id.sql {pt}
 * fetch_data.py  
 * sendmail.py
 

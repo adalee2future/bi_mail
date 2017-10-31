@@ -6,17 +6,17 @@ import sys
 import json
 from file_to_mail import file_to_mail
 
-project_id = sys.argv[1]
-os.chdir(os.path.join('reports', project_id))
+report_id = sys.argv[1]
+os.chdir(os.path.join('reports', report_id))
 base_dir = '.'
-sql_path = os.path.join(base_dir, '%s.sql' % project_id)
-cfg_path = os.path.join(base_dir, '%s.cfg' % project_id)
+sql_path = os.path.join(base_dir, '%s.sql' % report_id)
+cfg_path = os.path.join(base_dir, '%s.cfg' % report_id)
 
 with open(sql_path) as f, open(cfg_path) as g:
     sql_text = f.read()
     cfg = json.loads(g.read())
 
-project_name = cfg['project_name']
+report_name = cfg['report_name']
 db_type = cfg.get('db_type', 'odps')
 
 
@@ -31,7 +31,7 @@ if cfg.get('customized_file'):
     import customized_file
     filename = customized_file.main()
 else:
-    filename = os.path.join(base_dir, 'data', '%s_%s.%s' % (project_name, pt, cfg['file_type'] ))
+    filename = os.path.join(base_dir, 'data', '%s_%s.%s' % (report_name, pt, cfg['file_type'] ))
 
     if cfg['file_type'] == 'csv':
         sql_to_csv(sql_text, filename)
