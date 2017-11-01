@@ -12,6 +12,6 @@ fi
 if [[ ! -d reports/$report_id/data ]]
   then mkdir reports/$report_id/data
 fi
-log_file=reports/$report_id/log/`date +\%Y\-%m`.log
+log_file=reports/$report_id/log/`date +\%Y\-%m-%d`.log
 touch $log_file
 ./send_report.sh $report_id >> $log_file 2>&1
