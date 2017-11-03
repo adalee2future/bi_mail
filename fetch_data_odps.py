@@ -1,7 +1,7 @@
 #!/ada_program/python
 # -*- coding: utf-8 -*-
 
-from odps import ODPS
+import odps
 import os
 import pandas as pd
 import time
@@ -11,8 +11,8 @@ import random
 import sys
 
 workspace = 'phoenix'
-odps = ODPS(os.environ['access_id'], os.environ['access_key'], workspace)
-odps.get_project()
+odps_obj = odps.ODPS(os.environ['access_id'], os.environ['access_key'], workspace)
+odps_obj.get_project()
 
 today = datetime.date.today()
 yesterday = today - datetime.timedelta(1)
@@ -25,7 +25,7 @@ def run_sql(sql_text):
     sql_text = sql_text.format(pt=pt)
     start = time.time()
     print(sql_text)
-    sql_res = odps.execute_sql(sql_text)
+    sql_res = odps_obj.execute_sql(sql_text)
     with sql_res.open_reader() as reader:
         sql_res_dataframe = reader.to_pandas()
         print("fetched size:", sql_res_dataframe.shape)
