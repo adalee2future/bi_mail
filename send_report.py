@@ -17,7 +17,8 @@ with open(sql_path) as f, open(cfg_path) as g:
     cfg = json.loads(g.read())
 
 report_name = cfg['report_name']
-db_type = cfg.get('db_type', 'odps')
+db_type = cfg.get('db_type', 'odps') # default odps
+owner = cfg.get('owner')
 
 
 if db_type == "odps":
@@ -39,5 +40,7 @@ else:
         sql_to_excel(sql_text, filename)
 
 print("filename:", filename)
-file_to_mail(filename, '%s_%s' % (cfg['subject'], pt), cfg['to'])
+subject = '%s_%s' % (cfg['subject'], pt)
+to = cfg.get('to')
+file_to_mail(filename, subject, owner, to)
 

@@ -10,7 +10,7 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
-def file_to_mail(filename, subject, to):
+def file_to_mail(filename, subject, owner, to):
     s = smtplib.SMTP('smtp.office365.com', port=587)
     s.ehlo()
     s.starttls()
@@ -32,11 +32,12 @@ def file_to_mail(filename, subject, to):
 
     mail_body = '''
      <br/><br/>
-     如需退订，请联系发件人
+     如对数据有任何疑问，请联系%s
 
      <br/><br/>
      如果附件有问题，请用outlook客户端或者<a href="https://outlook.office.com/owa/?path=/group/owitho@owitho.com/mail">outlook网页版</a>打开该邮件
-    '''
+    ''' % owner
+
     mail_body_html = MIMEText(mail_body, 'html', 'utf-8')
     msg.attach(mail_body_html)
 
