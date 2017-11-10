@@ -6,13 +6,8 @@ import os
 import pandas as pd
 import time
 import datetime
-#from IPython.display import display
 import random
 import sys
-
-workspace = 'phoenix'
-odps_obj = odps.ODPS(os.environ['access_id'], os.environ['access_key'], workspace)
-odps_obj.get_project()
 
 today = datetime.date.today()
 yesterday = today - datetime.timedelta(1)
@@ -20,6 +15,11 @@ a_month_ago = today - datetime.timedelta(30)
 pt = yesterday.strftime('%Y%m%d')
 pt30 = a_month_ago.strftime('%Y%m%d')
 print("pt:", pt)
+
+def login(workspace):
+    global odps_obj
+    odps_obj = odps.ODPS(os.environ['access_id'], os.environ['access_key'], workspace)
+    return odps_obj
 
 def run_sql(sql_text):
     sql_text = sql_text.format(pt=pt)
@@ -55,6 +55,9 @@ def main():
         sql_to_excel(sql_text)
     if filetype in ['plain', 'text', 'csv', 'c']:
         sql_to_csv(sql_text)
+
+workspace = 'phoenix'
+odps_obj = login(workspace)
 
 if __name__ == "__main__":
     main()
