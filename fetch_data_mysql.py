@@ -12,8 +12,7 @@ import sys
 conn = connect(os.environ['mysql_host'], os.environ['mysql_user'], os.environ['mysql_password'], charset="utf8")
 
 today = datetime.date.today()
-yesterday = today - datetime.timedelta(1)
-pt = yesterday.strftime('%Y%m%d')
+pt = today.strftime('%Y%m%d')
 print("pt:", pt)
 
 def run_sql(sql_text):
