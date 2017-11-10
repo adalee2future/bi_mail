@@ -10,7 +10,11 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
-def file_to_mail(filename, subject, owner, to):
+def file_to_mail(filename, subject, owner, to, cc=None, bcc=None):
+    print("filename", filename)
+    print("subject", subject)
+    print("owner", owner)
+    print("to", to)
     s = smtplib.SMTP('smtp.office365.com', port=587)
     s.ehlo()
     s.starttls()
@@ -21,12 +25,17 @@ def file_to_mail(filename, subject, owner, to):
     msg['Subject'] = subject
     msg['From'] = me
     msg['to'] = to
+    receiver_list = to.split(',')
+    if cc is not None:
+        msg['cc'] = cc
+        receiver_list += cc.split(',')
+    if bcc is not None:
+        msg['bcc'] = bcc
+        receiver_list += bcc.split(',')
     print(msg)
 
     with open(filename, 'rb') as f:
         file_part = MIMEApplication(f.read(), Name=os.path.basename(filename))
-        #file_part = MIMEApplication(f.read())
-    #filename = os.path.basename(filename).encode('utf-8')
     file_part['Content-Disposition'] = 'attachment; filename="%s"' % Header(os.path.basename(filename), 'UTF-8')
     msg.attach(file_part)
 
@@ -42,3 +51,6 @@ def file_to_mail(filename, subject, owner, to):
     msg.attach(mail_body_html)
 
     s.sendmail(me, to.split(','), msg.as_string())
+
+if __name__ == "__main__":
+    file_to_mail(*sys.argv[1:])

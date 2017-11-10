@@ -42,5 +42,7 @@ else:
 print("filename:", filename)
 subject = '%s_%s' % (cfg['subject'], pt)
 to = cfg.get('to')
-file_to_mail(filename, subject, owner, to)
+cc = cfg.get('cc')
+bcc = cfg.get('bcc')
+file_to_mail(filename, subject, owner, to, cc, bcc)
 
