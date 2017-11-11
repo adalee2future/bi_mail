@@ -50,7 +50,7 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None):
     mail_body_html = MIMEText(mail_body, 'html', 'utf-8')
     msg.attach(mail_body_html)
 
-    s.sendmail(me, to.split(','), msg.as_string())
+    s.sendmail(me, receiver_list, msg.as_string())
 
 if __name__ == "__main__":
     file_to_mail(*sys.argv[1:])
