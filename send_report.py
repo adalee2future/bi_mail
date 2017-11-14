@@ -22,10 +22,10 @@ owner = cfg.get('owner')
 body_prepend = ''
 
 if db_type == "odps":
-    from fetch_data_odps import sql_to_excel, sql_to_csv, pt
+    from fetch_data_odps import sql_to_excel, sql_to_csv, sql_to_html, pt
 
 if db_type == "mysql":
-    from fetch_data_mysql import sql_to_excel, sql_to_csv, pt
+    from fetch_data_mysql import sql_to_excel, sql_to_csv, sql_to_html, pt
 
 if cfg.get('customized_file'):
     sys.path.insert(0, os.getcwd())
@@ -37,15 +37,23 @@ if cfg.get('customized_file'):
 else:
     filename = os.path.join(base_dir, 'data', '%s_%s.%s' % (report_name, pt, cfg['file_type'] ))
 
-    if cfg['file_type'] == 'csv':
+    file_type = cfg['file_type']
+    if file_type == 'csv':
         sql_to_csv(sql_text, filename)
-    if cfg['file_type'] == 'xlsx':
+    if file_type == 'xlsx':
         sql_to_excel(sql_text, filename)
+    if file_type == 'html':
+        sql_to_html(sql_text, filename)
 
 print("filename:", filename)
 subject = '%s_%s' % (cfg['subject'], pt)
 to = cfg.get('to')
 cc = cfg.get('cc')
 bcc = cfg.get('bcc')
-file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend)
+
+if file_type == 'html':
+    body_prepend = open(filename).read()
+    file_to_mail(None, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend)
+else:
+    file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend)
 
