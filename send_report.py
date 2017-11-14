@@ -18,6 +18,7 @@ with open(sql_path) as f, open(cfg_path) as g:
 
 report_name = cfg['report_name']
 db_type = cfg.get('db_type', 'odps') # default odps
+file_type = cfg.get('file_type', 'xlsx')
 owner = cfg.get('owner')
 body_prepend = ''
 
@@ -35,14 +36,13 @@ if cfg.get('customized_file'):
     body_prepend = cust_res.get('body_prepend', '')
 
 else:
-    filename = os.path.join(base_dir, 'data', '%s_%s.%s' % (report_name, pt, cfg['file_type'] ))
+    filename = os.path.join(base_dir, 'data', '%s_%s.%s' % (report_name, pt, file_type))
 
-    file_type = cfg['file_type']
     if file_type == 'csv':
         sql_to_csv(sql_text, filename)
-    if file_type == 'xlsx':
+    elif file_type == 'xlsx':
         sql_to_excel(sql_text, filename)
-    if file_type == 'html':
+    elif file_type == 'html':
         sql_to_html(sql_text, filename)
 
 print("filename:", filename)
