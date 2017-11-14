@@ -21,12 +21,33 @@ def run_sql(sql_text):
     sql_res = pd.read_sql(sql_text, conn)
     return sql_res
 
-def sql_to_excel(sql_text, filename=None):
+def sql_to_excel_single(sql_text, filename=None):
     res = run_sql(sql_text)
     if filename is None:
         random_hash = "%032x" % random.getrandbits(128)
         filename = '%s.xlsx' % random_hash
     res.to_excel(filename, index=False)
+    print("Export to excel %s succeed!" % filename)
+
+def sql_to_excel(sql_text, filename=None):
+
+    if filename is None:
+        random_hash = "%032x" % random.getrandbits(128)
+        filename = '%s.xlsx' % random_hash
+
+    sql_text_raw_list = [sql_text.strip() for sql_text in sql_text.split(';')]
+    sql_text_list = []
+
+    for sql_text in sql_text_raw_list:
+        if sql_text.lower().find('select') == -1:
+            continue
+        sql_text_list.append(sql_text)
+
+    with pd.ExcelWriter(filename, engine='xlsxwriter') as writer:
+        for idx, sql_text in enumerate(sql_text_list):
+            sheet_name = "Sheet%s" % idx
+            df = run_sql(sql_text)
+            df.to_excel(writer, sheet_name=sheet_name, index=False)
     print("Export to excel %s succeed!" % filename)
 
 def sql_to_csv(sql_text, filename=None):
@@ -49,8 +70,10 @@ def main():
     sql_text, filetype = sys.argv[1:]
     if filetype in ['xlsx', 'excel', 'x']:
         sql_to_excel(sql_text)
-    if filetype in ['plain', 'text', 'csv', 'c']:
+    elif filetype in ['plain', 'text', 'csv', 'c']:
         sql_to_csv(sql_text)
+    elif filetype in ['html', 'h']:
+        sql_to_html(sql_text)
 
 if __name__ == "__main__":
     main()
