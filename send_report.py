@@ -47,5 +47,5 @@ subject = '%s_%s' % (cfg['subject'], pt)
 to = cfg.get('to')
 cc = cfg.get('cc')
 bcc = cfg.get('bcc')
-file_to_mail(filename, subject, owner, to, cc, bcc)
+file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend)
 
