@@ -34,14 +34,17 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
         receiver_list += bcc.split(',')
     print(msg)
 
-    with open(filename, 'rb') as f:
-        file_part = MIMEApplication(f.read(), Name=os.path.basename(filename))
-    file_part['Content-Disposition'] = 'attachment; filename="%s"' % Header(os.path.basename(filename), 'UTF-8')
-    msg.attach(file_part)
+    if filename is not None:
+        with open(filename, 'rb') as f:
+            file_part = MIMEApplication(f.read(), Name=os.path.basename(filename))
+        file_part['Content-Disposition'] = 'attachment; filename="%s"' % Header(os.path.basename(filename), 'UTF-8')
+        msg.attach(file_part)
 
     mail_body = '''
      <br/><br/>
      {body_prepend}
+     <br/><br/>
+     --------------------------------
      <br/><br/>
      如对数据有任何疑问，请联系{owner}
 
