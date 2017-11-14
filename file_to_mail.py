@@ -10,7 +10,7 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
-def file_to_mail(filename, subject, owner, to, cc=None, bcc=None):
+def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend=''):
     print("filename", filename)
     print("subject", subject)
     print("owner", owner)
@@ -41,11 +41,13 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None):
 
     mail_body = '''
      <br/><br/>
-     如对数据有任何疑问，请联系%s
+     {body_prepend}
+     <br/><br/>
+     如对数据有任何疑问，请联系{owner}
 
      <br/><br/>
      如果附件有问题，请用outlook客户端或者<a href="https://outlook.office.com/owa/?path=/group/owitho@owitho.com/mail">outlook网页版</a>打开该邮件
-    ''' % owner
+    '''.format(body_prepend=body_prepend, owner=owner)
 
     mail_body_html = MIMEText(mail_body, 'html', 'utf-8')
     msg.attach(mail_body_html)

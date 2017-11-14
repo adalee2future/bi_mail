@@ -19,7 +19,7 @@ with open(sql_path) as f, open(cfg_path) as g:
 report_name = cfg['report_name']
 db_type = cfg.get('db_type', 'odps') # default odps
 owner = cfg.get('owner')
-
+body_prepend = ''
 
 if db_type == "odps":
     from fetch_data_odps import sql_to_excel, sql_to_csv, pt
@@ -30,7 +30,10 @@ if db_type == "mysql":
 if cfg.get('customized_file'):
     sys.path.insert(0, os.getcwd())
     import customized_file
-    filename = customized_file.main()
+    cust_res = customized_file.main()
+    filename = cust_res.get('filename')
+    body_prepend = cust_res.get('body_prepend', '')
+
 else:
     filename = os.path.join(base_dir, 'data', '%s_%s.%s' % (report_name, pt, cfg['file_type'] ))
 
