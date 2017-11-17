@@ -50,6 +50,9 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
 
      <br/><br/>
      如果附件有问题，请用outlook客户端或者<a href="https://outlook.office.com/owa/?path=/group/owitho@owitho.com/mail">outlook网页版</a>打开该邮件
+     <br/><br/>
+     [自动发送]
+     <br/><br/>
     '''.format(body_prepend=body_prepend, owner=owner)
 
     mail_body_html = MIMEText(mail_body, 'html', 'utf-8')
