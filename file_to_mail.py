@@ -11,7 +11,6 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
 def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend=''):
-    print("filename", filename)
     print("subject", subject)
     print("owner", owner)
     print("to", to)
@@ -32,7 +31,6 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
     if bcc is not None:
         msg['bcc'] = bcc
         receiver_list += bcc.split(',')
-    print(msg)
 
     if filename is not None:
         with open(filename, 'rb') as f:
@@ -55,6 +53,8 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
     mail_body_html = MIMEText(mail_body, 'html', 'utf-8')
     msg.attach(mail_body_html)
 
+
+    print('\n', msg)
     s.sendmail(me, receiver_list, msg.as_string())
 
 if __name__ == "__main__":
