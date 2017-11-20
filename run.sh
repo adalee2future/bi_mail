@@ -2,8 +2,8 @@
 
 export LANG=zh_CN.UTF-8
 source ~/.profile
-cd ~/projects/bi_mail
 
+cd `dirname $0`
 report_id=$1
 
 if [[ ! -d reports/$report_id/log ]]
