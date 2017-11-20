@@ -42,15 +42,15 @@ def run_sql(sql_text, dependency={}):
         #display(sql_res_dataframe.head(10))
         return sql_res_dataframe
 
-def sql_to_excel_single(sql_text, filename=None):
-    res = run_sql(sql_text)
+def sql_to_excel_single(sql_text, filename=None, dependency={}):
+    res = run_sql(sql_text, dependency=dependency)
     if filename is None:
         random_hash = "%032x" % random.getrandbits(128)
         filename = '%s.xlsx' % random_hash
     res.to_excel(filename, index=False)
     print("Export to excel %s succeed!" % filename)
 
-def sql_to_excel(sql_text, filename=None):
+def sql_to_excel(sql_text, filename=None, dependency={}):
     if filename is None:
         random_hash = "%032x" % random.getrandbits(128)
         filename = '%s.xlsx' % random_hash
@@ -66,20 +66,20 @@ def sql_to_excel(sql_text, filename=None):
     with pd.ExcelWriter(filename, engine='xlsxwriter') as writer:
         for idx, sql_text in enumerate(sql_text_list):
             sheet_name = "Sheet%s" % idx
-            df = run_sql(sql_text)
+            df = run_sql(sql_text, dependency=dependency)
             df.to_excel(writer, sheet_name=sheet_name, index=False)
     print("Export to excel %s succeed!" % filename)
 
-def sql_to_csv(sql_text, filename=None):
-    res = run_sql(sql_text)
+def sql_to_csv(sql_text, filename=None, dependency={}):
+    res = run_sql(sql_text, dependency=dependency)
     if filename is None:
         random_hash = "%032x" % random.getrandbits(128)
         filename = '%s.csv' % random_hash
     res.to_csv(filename, index=False)
     print("Export to csv %s succeed!" % filename)
 
-def sql_to_html(sql_text, filename=None):
-    res = run_sql(sql_text)
+def sql_to_html(sql_text, filename=None, dependency={}):
+    res = run_sql(sql_text, dependency=dependency)
     if filename is None:
         random_hash = "%032x" % random.getrandbits(128)
         filename = '%s.html' % random_hash
