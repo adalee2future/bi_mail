@@ -21,7 +21,16 @@ def login(workspace):
     odps_obj = odps.ODPS(os.environ['access_id'], os.environ['access_key'], workspace)
     return odps_obj
 
-def run_sql(sql_text):
+def run_sql(sql_text, dependency={}):
+
+    for project, table_names in dependency.items():
+        for table_name in table_names:
+            t = odps_obj.get_table(table_name, project)
+            while True:
+                if t.exist_partition('pt={}'.format(pt)):
+                    break
+                time.sleep(60)
+
     sql_text = sql_text.format(pt=pt)
     start = time.time()
     print(sql_text)
