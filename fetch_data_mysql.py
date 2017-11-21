@@ -15,13 +15,13 @@ today = datetime.date.today()
 pt = today.strftime('%Y%m%d')
 print("pt:", pt)
 
-def run_sql(sql_text):
+def run_sql(sql_text, dependency={}):
     start = time.time()
     print(sql_text)
     sql_res = pd.read_sql(sql_text, conn)
     return sql_res
 
-def sql_to_excel_single(sql_text, filename=None):
+def sql_to_excel_single(sql_text, filename=None, dependency={}):
     res = run_sql(sql_text)
     if filename is None:
         random_hash = "%032x" % random.getrandbits(128)
@@ -29,7 +29,7 @@ def sql_to_excel_single(sql_text, filename=None):
     res.to_excel(filename, index=False)
     print("Export to excel %s succeed!" % filename)
 
-def sql_to_excel(sql_text, filename=None):
+def sql_to_excel(sql_text, filename=None, dependency={}):
 
     if filename is None:
         random_hash = "%032x" % random.getrandbits(128)
@@ -50,7 +50,7 @@ def sql_to_excel(sql_text, filename=None):
             df.to_excel(writer, sheet_name=sheet_name, index=False)
     print("Export to excel %s succeed!" % filename)
 
-def sql_to_csv(sql_text, filename=None):
+def sql_to_csv(sql_text, filename=None, dependency={}):
     res = run_sql(sql_text)
     if filename is None:
         random_hash = "%032x" % random.getrandbits(128)
@@ -58,7 +58,7 @@ def sql_to_csv(sql_text, filename=None):
     res.to_csv(filename, index=False)
     print("Export to csv %s succeed!" % filename)
 
-def sql_to_html(sql_text, filename=None):
+def sql_to_html(sql_text, filename=None, dependency={}):
     res = run_sql(sql_text)
     if filename is None:
         random_hash = "%032x" % random.getrandbits(128)
