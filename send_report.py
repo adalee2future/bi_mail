@@ -19,7 +19,6 @@ with open(sql_path) as f, open(cfg_path) as g:
 report_name = cfg['report_name']
 db_type = cfg.get('db_type', 'odps') # default odps
 dependency = cfg.get('dependency', {})
-print("dependency:", dependency)
 file_type = cfg.get('file_type', 'xlsx')
 owner = cfg.get('owner')
 body_prepend = ''

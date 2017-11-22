@@ -23,6 +23,7 @@ def login(workspace):
 
 def run_sql(sql_text, dependency={}):
 
+    print("dependency:", dependency)
     for project, table_names in dependency.items():
         for table_name in table_names:
             t = odps_obj.get_table(table_name, project)
