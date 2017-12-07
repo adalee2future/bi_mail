@@ -10,6 +10,8 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
+STYLES = open('styles.css').read()
+
 def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend=''):
     print("subject", subject)
     print("owner", owner)
@@ -39,6 +41,7 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
         msg.attach(file_part)
 
     mail_body = '''
+     <style>{styles}</style>
      <br/><br/>
      {body_prepend}
      <br/><br/>
@@ -51,7 +54,7 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
      <br/><br/>
      [自动发送]
      <br/><br/>
-    '''.format(body_prepend=body_prepend, owner=owner)
+    '''.format(styles=STYLES, body_prepend=body_prepend, owner=owner)
 
     mail_body_html = MIMEText(mail_body, 'html', 'utf-8')
     msg.attach(mail_body_html)

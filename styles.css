@@ -1,0 +1,22 @@
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: center;
+  padding: 2px;
+}
+
+td {
+  line-height: 100%;
+  width: 10%;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+
+table thead {
+  background-color: #4286f4;
+  color: white;
+}
