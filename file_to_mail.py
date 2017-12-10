@@ -10,9 +10,11 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
-STYLES = open('styles.css').read()
+BASE_DIR = os.path.dirname(__file__)
+STYLES = open(os.path.join(BASE_DIR, 'styles.css')).read()
 
 def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend=''):
+    print(__file__)
     print("subject", subject)
     print("owner", owner)
     print("to", to)
