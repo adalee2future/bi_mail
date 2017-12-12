@@ -93,7 +93,6 @@ class FetchingDataMysql(FetchingData):
         self._conn = pymysql.connect(**DEFAULT_MYSQL_LOGIN_INFO)
 
     def run_sql(self, sql_text, dependency={}):
-        sql_text = sql_text.format(pt=self._pt)
         start = time.time()
         print(sql_text)
         sql_res_dataframe = pd.read_sql(sql_text, self._conn)
