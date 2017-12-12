@@ -1,8 +1,4 @@
-
-# coding: utf-8
-
-# In[9]:
-
+# -*- coding: utf-8 -*-
 
 import odps
 import pymysql
