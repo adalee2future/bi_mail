@@ -5,6 +5,7 @@ import os
 import sys
 import json
 from file_to_mail import file_to_mail
+from fetch_data import *
 
 report_id = sys.argv[1]
 os.chdir(os.path.join('reports', report_id))
@@ -24,10 +25,9 @@ owner = cfg.get('owner')
 body_prepend = ''
 
 if db_type == "odps":
-    from fetch_data_odps import sql_to_excel, sql_to_csv, sql_to_html, pt
-
-if db_type == "mysql":
-    from fetch_data_mysql import sql_to_excel, sql_to_csv, sql_to_html, pt
+    fetching_data = FetchingDataOdps()
+elif db_type == "mysql":
+    fetching_data = FetchingDataMysql()
 
 if cfg.get('customized_file'):
     sys.path.insert(0, os.getcwd())
@@ -37,17 +37,17 @@ if cfg.get('customized_file'):
     body_prepend = cust_res.get('body_prepend', '')
 
 else:
-    filename = os.path.join(base_dir, 'data', '%s_%s.%s' % (report_name, pt, file_type))
+    filename = os.path.join(base_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, file_type))
 
     if file_type == 'csv':
-        sql_to_csv(sql_text, filename=filename, dependency=dependency)
+        fetching_data.sql_to_csv(sql_text, filename=filename, dependency=dependency)
     elif file_type == 'xlsx':
-        sql_to_excel(sql_text, filename=filename, dependency=dependency)
+        fetching_data.sql_to_excel(sql_text, filename=filename, dependency=dependency)
     elif file_type == 'html':
-        sql_to_html(sql_text, filename=filename, dependency=dependency)
+        fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency)
 
 print("filename:", filename)
-subject = '%s_%s' % (cfg['subject'], pt)
+subject = '%s_%s' % (cfg['subject'], fetching_data._pt)
 to = cfg.get('to')
 cc = cfg.get('cc')
 bcc = cfg.get('bcc')
