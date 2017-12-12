@@ -20,7 +20,8 @@ DEFAULT_ODPS_LOGIN_INFO = {
 
 DEFAULT_MYSQL_LOGIN_INFO = {
     'host': os.environ.get('mysql_host'),
-    'user': os.environ.get('mysql_password'),
+    'user': os.environ.get('mysql_user'),
+    'password': os.environ.get('mysql_password'),
     'charset': 'utf8'
 }
 
