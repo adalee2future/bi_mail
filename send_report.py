@@ -22,6 +22,9 @@ db_type = cfg.get('db_type', 'odps') # default odps
 dependency = cfg.get('dependency', {})
 file_type = cfg.get('file_type', 'xlsx')
 owner = cfg.get('owner')
+merge = cfg.get('merge', False)
+df_names = cfg.get('df_names')
+
 body_prepend = ''
 
 if db_type == "odps":
@@ -42,9 +45,9 @@ else:
     if file_type == 'csv':
         fetching_data.sql_to_csv(sql_text, filename=filename, dependency=dependency)
     elif file_type == 'xlsx':
-        fetching_data.sql_to_excel(sql_text, filename=filename, dependency=dependency)
+        fetching_data.sql_to_excel(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge)
     elif file_type == 'html':
-        fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency)
+        fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge)
 
 print("filename:", filename)
 subject = '%s_%s' % (cfg['subject'], fetching_data._pt)

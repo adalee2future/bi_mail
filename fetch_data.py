@@ -32,7 +32,7 @@ class FetchingData:
     def run_sql(self, sql_text, dependency={}):
         raise NotImplementedError
 
-    def sql_to_excel(self, sql_text, filename=None, dependency={}):
+    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False):
         if filename is None:
             random_hash = "%032x" % random.getrandbits(128)
             filename = '%s.xlsx' % random_hash
@@ -45,11 +45,16 @@ class FetchingData:
                 continue
             sql_text_list.append(sql_text)
 
+        if df_names is None:
+            df_names = ['Sheet%s' % i for i in range(1, len(sql_text_list) + 1)]
+
         with pd.ExcelWriter(filename, engine='xlsxwriter') as writer:
-            for idx, sql_text in enumerate(sql_text_list):
-                sheet_name = "Sheet%s" % idx
+            for df_name, sql_text in zip(df_names, sql_text_list):
                 df = self.run_sql(sql_text, dependency=dependency)
-                df.to_excel(writer, sheet_name=sheet_name, index=False)
+                if merge:
+                    df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name)
+                else:
+                    df.to_excel(writer, sheet_name=df_name, index=False)
         print("Export to excel %s succeed!" % filename)
 
     def sql_to_csv(self, sql_text, filename=None, dependency={}):
@@ -60,12 +65,32 @@ class FetchingData:
         res.to_csv(filename, index=False)
         print("Export to csv %s succeed!" % filename)
 
-    def sql_to_html(self, sql_text, filename=None, dependency={}):
-        res = self.run_sql(sql_text, dependency=dependency)
+    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False):
+        #res = self.run_sql(sql_text, dependency=dependency)
+
+        sql_text_raw_list = [sql_text.strip() for sql_text in sql_text.split(';')]
+        sql_text_list = []
+
+        for sql_text in sql_text_raw_list:
+            if sql_text.lower().find('select') == -1:
+                continue
+            sql_text_list.append(sql_text)
+
+        if df_names is None:
+            df_names = ['' for _ in sql_text_list]
+
         if filename is None:
             random_hash = "%032x" % random.getrandbits(128)
             filename = '%s.html' % random_hash
-        res.to_html(filename, index=False)
+
+        with open(filename, 'w') as f:
+            for sql_text, df_name in zip(sql_text_list, df_names):
+                f.write('<br/><p>%s</p><br/>\n' % df_name)
+                df = self.run_sql(sql_text)
+                if merge:
+                    f.write(df.set_index(list(df)).to_html())
+                else:
+                    f.write(df.to_html(index=False))
         print("Export to html %s succeed!" % filename)
 
 class FetchingDataOdps(FetchingData):
@@ -75,6 +100,15 @@ class FetchingDataOdps(FetchingData):
         self._conn = odps.ODPS(**login_info)
 
     def run_sql(self, sql_text, dependency={}):
+
+        print("dependency:", dependency)
+        for project, table_names in dependency.items():
+            for table_name in table_names:
+                t = self._conn.get_table(table_name, project)
+                while True:
+                    if t.exist_partition('pt={}'.format(self._pt)):
+                        break
+                    time.sleep(60)
         sql_text = sql_text.format(pt=self._pt)
         start = time.time()
         print(sql_text)
