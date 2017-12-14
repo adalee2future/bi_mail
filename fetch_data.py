@@ -4,6 +4,7 @@ import odps
 import pymysql
 import os
 import pandas as pd
+import numpy as np
 import time
 import datetime
 import random
@@ -87,6 +88,7 @@ class FetchingData:
             for sql_text, df_name in zip(sql_text_list, df_names):
                 f.write('<br/><h2>%s</h2>\n' % df_name)
                 df = self.run_sql(sql_text)
+                df.fillna('', inplace=True)
                 if merge:
                     f.write(df.set_index(list(df)).to_html())
                 else:
