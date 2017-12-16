@@ -24,6 +24,14 @@ DEFAULT_MYSQL_LOGIN_INFO = {
 
 today = datetime.date.today()
 yesterday = today - datetime.timedelta(1)
+week_start = yesterday - datetime.timedelta(6)
+
+DATES = {
+    'today': today.strftime('%Y-%m-%d'),
+    'yesterday': yesterday.strftime('%Y-%m-%d'),
+    'week_range': '{week_start}-{week_end}'.format(week_start=week_start.strftime('%m%d'), week_end=yesterday.strftime('%m%d')),
+    'month': yesterday.strftime('%Y-%m')
+}
 
 
 class FetchingData:
@@ -48,6 +56,8 @@ class FetchingData:
 
         if df_names is None:
             df_names = ['Sheet%s' % i for i in range(1, len(sql_text_list) + 1)]
+        else:
+            df_names = [df_name.format(**DATES) for df_name in df_names]
 
         with pd.ExcelWriter(filename, engine='xlsxwriter') as writer:
             for df_name, sql_text in zip(df_names, sql_text_list):
