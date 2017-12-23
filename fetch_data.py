@@ -59,7 +59,7 @@ class FetchingData:
         else:
             df_names = [df_name.format(**DATES) for df_name in df_names]
 
-        with pd.ExcelWriter(filename, engine='xlsxwriter') as writer:
+        with pd.ExcelWriter(filename, engine='xlsxwriter', options={'strings_to_urls': False}) as writer:
             for df_name, sql_text in zip(df_names, sql_text_list):
                 df = self.run_sql(sql_text, dependency=dependency)
                 if merge:
@@ -147,3 +147,10 @@ class FetchingDataMysql(FetchingData):
         #display(sql_res_dataframe.head(10))
         return sql_res_dataframe
 
+
+try:
+    odps_obj = FetchingDataOdps()
+    mysql_obj = FetchingDataMysql()
+except:
+    pass
+    
