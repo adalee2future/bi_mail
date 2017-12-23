@@ -28,9 +28,9 @@ df_names = cfg.get('df_names')
 body_prepend = ''
 
 if db_type == "odps":
-    fetching_data = FetchingDataOdps()
+    fetching_data = odps_obj
 elif db_type == "mysql":
-    fetching_data = FetchingDataMysql()
+    fetching_data = mysql_obj
 
 if cfg.get('customized_file'):
     sys.path.insert(0, os.getcwd())
