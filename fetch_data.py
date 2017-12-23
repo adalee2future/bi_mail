@@ -150,7 +150,11 @@ class FetchingDataMysql(FetchingData):
 
 try:
     odps_obj = FetchingDataOdps()
+except:
+    pass
+
+try:
     mysql_obj = FetchingDataMysql()
 except:
     pass
-    
+
