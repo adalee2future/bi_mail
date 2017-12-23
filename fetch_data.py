@@ -13,7 +13,8 @@ import sys
 DEFAULT_ODPS_LOGIN_INFO = {
     'access_id': os.environ.get('access_id'),
     'secret_access_key': os.environ.get('access_key'),
-    'project': 'phoenix'}
+    'project': 'phoenix'
+}
 
 DEFAULT_MYSQL_LOGIN_INFO = {
     'host': os.environ.get('mysql_host'),
@@ -157,4 +158,3 @@ try:
     mysql_obj = FetchingDataMysql()
 except:
     pass
-
