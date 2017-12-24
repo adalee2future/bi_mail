@@ -26,12 +26,13 @@ DEFAULT_MYSQL_LOGIN_INFO = {
 }
 
 DEFAULT_ROW_PERMISSION = {
-    "field": None,
-    "detail":
+    'field': None,
+    'detail':
       [
         {
-          "suffix": "",
-          "permit": None
+          'prefix': '',
+          'suffix': '',
+          'permit': None
         }
       ]
 }
@@ -61,7 +62,7 @@ class FetchingData:
     @staticmethod
     def random_filename(file_type):
         random_hash = "%032x" % random.getrandbits(128)
-        return '{random_hash}{suffix}'.format(random_hash=random_hash, suffix=DEFAULT_FILE_EXTENSION.get(file_type))
+        return '{random_hash}{extension}'.format(random_hash=random_hash, extension=DEFAULT_FILE_EXTENSION.get(file_type))
     
     @classmethod
     def run_sql(self, sql_text, dependency={}):
@@ -97,15 +98,14 @@ class FetchingData:
         row_permission = copy.deepcopy(row_permission)
         permit_field = row_permission.get('field')
         permit_detail_list = row_permission.get('detail')
-        print("permit_detail_list:\n",permit_detail_list)
 
         for permit_detail in permit_detail_list:
-            print("permit_detail:\n", permit_detail)
-            detail_suffix = permit_detail.get('suffix')
+            detail_prefix = permit_detail.get('prefix', '')
+            detail_suffix = permit_detail.get('suffix', '')
             detail_permit = permit_detail.get('permit')
 
             name, extension = os.path.splitext(filename)
-            current_filename = ''.join([name, detail_suffix, extension])
+            current_filename = ''.join([detail_prefix, name, detail_suffix, extension])
             permit_detail['filename'] = current_filename
 
             with pd.ExcelWriter(current_filename, engine='xlsxwriter', options={'strings_to_urls': False}) as writer:
@@ -136,11 +136,13 @@ class FetchingData:
 
         for permit_detail in permit_detail_list:
 
-            detail_suffix = permit_detail.get('suffix')
+            detail_prefix = permit_detail.get('prefix', '')
+            detail_suffix = permit_detail.get('suffix', '')
             detail_permit = permit_detail.get('permit')
 
-            name, extension = os.path.splitext(filename)
-            current_filename = ''.join([name, detail_suffix, extension])
+            dirname = os.path.dirname(filename)
+            name, extension = os.path.splitext(os.path.basename(filename))
+            current_filename = os.path.join(dirname, ''.join([detail_prefix, name, detail_suffix, extension]))
             permit_detail['filename'] = current_filename
 
             with open(current_filename, 'w') as f:

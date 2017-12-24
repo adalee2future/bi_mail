@@ -47,14 +47,13 @@ if db_type == "odps":
 elif db_type == "mysql":
     fetching_data = fetch_data.mysql_obj
 
-subject = '%s_%s' % (cfg['subject'], fetching_data._pt)
-
 if cfg.get('customized_file'):
     sys.path.insert(0, os.getcwd())
     import customized_file
     cust_res = customized_file.main()
     filename = cust_res.get('filename')
     body_prepend = cust_res.get('body_prepend', '')
+    subject = '%s_%s' % (cfg.get('subject'), fetching_data._pt)
     file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend)
 
 else:
@@ -75,7 +74,10 @@ else:
             mail_meta['body_prepend'] = open(file_meta['filename']).read()
             mail_meta['filename'] = None
         
-        mail_meta['subject'] = subject
+        mail_meta['subject'] = '{prefix}{subject}_{pt}{suffix}'.format(prefix=file_meta.get('prefix', ''),
+                                                                       subject=cfg.get('subject'),
+                                                                       pt=fetching_data._pt,
+                                                                       suffix=file_meta.get('suffix', ''))
         mail_meta['owner'] = owner
 
         mail_meta['to'] = file_meta.get('to')
