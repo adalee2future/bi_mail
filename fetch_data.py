@@ -68,7 +68,7 @@ class FetchingData:
     def run_sql(self, sql_text, dependency={}):
         raise NotImplementedError
      
-    def sql_to_data(self, sql_text, dependency, df_names=None):
+    def sql_to_data(self, sql_text, dependency, df_names=None, part_prefix='part'):
         data_dict = OrderedDict()
         sql_text_raw_list = [sql_text.strip() for sql_text in sql_text.split(';')]
         sql_text_list = []
@@ -79,7 +79,7 @@ class FetchingData:
             sql_text_list.append(sql_text)
         
         if df_names is None:
-            df_names = ['part%s' % i for i in range(1, len(sql_text_list) + 1)]
+                df_names = ['%s%s' % (part_prefix, i) for i in range(1, len(sql_text_list) + 1)]
         else:
             df_names = [df_name.format(**DATES) for df_name in df_names]
         
@@ -89,11 +89,11 @@ class FetchingData:
 
         return data_dict
 
-    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION):
+    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_prefix='sheet'):
         if filename is None:
             filename = self.__class__.random_filename('excel')
-        
-        data_dict = self.sql_to_data(sql_text, dependency=dependency, df_names=df_names)
+
+        data_dict = self.sql_to_data(sql_text, dependency=dependency, df_names=df_names, part_prefix=part_prefix)
         
         row_permission = copy.deepcopy(row_permission)
         permit_field = row_permission.get('field')
