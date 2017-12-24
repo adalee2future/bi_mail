@@ -68,7 +68,7 @@ class FetchingData:
     def run_sql(self, sql_text, dependency={}):
         raise NotImplementedError
      
-    def sql_to_data(self, sql_text, dependency, df_names=None, part_prefix='', part_suffix=None):
+    def sql_to_data(self, sql_text, dependency={}, df_names=None, part_prefix='', part_suffix=None):
         data_dict = OrderedDict()
         sql_text_raw_list = [sql_text.strip() for sql_text in sql_text.split(';')]
         sql_text_list = []
