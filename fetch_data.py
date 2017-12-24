@@ -9,6 +9,8 @@ import time
 import datetime
 import random
 import sys
+import copy
+from collections import OrderedDict
 
 DEFAULT_ODPS_LOGIN_INFO = {
     'access_id': os.environ.get('access_id'),
@@ -21,6 +23,23 @@ DEFAULT_MYSQL_LOGIN_INFO = {
     'user': os.environ.get('mysql_user'),
     'password': os.environ.get('mysql_password'),
     'charset': 'utf8'
+}
+
+DEFAULT_ROW_PERMISSION = {
+    "field": None,
+    "detail":
+      [
+        {
+          "suffix": "",
+          "permit": None
+        }
+      ]
+}
+
+DEFAULT_FILE_EXTENSION = {
+    'excel': '.xlsx',
+    'csv': '.csv',
+    'html': '.html'
 }
 
 today = datetime.date.today()
@@ -39,14 +58,17 @@ class FetchingData:
     def __init__(self, login_info):
         raise NotImplementedError
 
+    @staticmethod
+    def random_filename(file_type):
+        random_hash = "%032x" % random.getrandbits(128)
+        return '{random_hash}{suffix}'.format(random_hash=random_hash, suffix=DEFAULT_FILE_EXTENSION.get(file_type))
+    
+    @classmethod
     def run_sql(self, sql_text, dependency={}):
         raise NotImplementedError
-
-    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False):
-        if filename is None:
-            random_hash = "%032x" % random.getrandbits(128)
-            filename = '%s.xlsx' % random_hash
-
+     
+    def sql_to_data(self, sql_text, dependency, df_names=None):
+        data_dict = OrderedDict()
         sql_text_raw_list = [sql_text.strip() for sql_text in sql_text.split(';')]
         sql_text_list = []
 
@@ -54,57 +76,101 @@ class FetchingData:
             if sql_text.lower().find('select') == -1:
                 continue
             sql_text_list.append(sql_text)
-
+        
         if df_names is None:
-            df_names = ['Sheet%s' % i for i in range(1, len(sql_text_list) + 1)]
+            df_names = ['part%s' % i for i in range(1, len(sql_text_list) + 1)]
         else:
             df_names = [df_name.format(**DATES) for df_name in df_names]
+        
+        for sql_text, df_name in zip(sql_text_list, df_names):
+            df = self.run_sql(sql_text, dependency=dependency)
+            data_dict[df_name] = df
 
-        with pd.ExcelWriter(filename, engine='xlsxwriter', options={'strings_to_urls': False}) as writer:
-            for df_name, sql_text in zip(df_names, sql_text_list):
-                df = self.run_sql(sql_text, dependency=dependency)
-                if merge:
-                    df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name)
-                else:
-                    df.to_excel(writer, sheet_name=df_name, index=False)
-        print("Export to excel %s succeed!" % filename)
+        return data_dict
 
-    def sql_to_csv(self, sql_text, filename=None, dependency={}):
-        res = self.run_sql(sql_text, dependency=dependency)
+    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION):
         if filename is None:
-            random_hash = "%032x" % random.getrandbits(128)
-            filename = '%s.csv' % random_hash
+            filename = self.__class__.random_filename('excel')
+        
+        data_dict = self.sql_to_data(sql_text, dependency=dependency, df_names=df_names)
+        
+        row_permission = copy.deepcopy(row_permission)
+        permit_field = row_permission.get('field')
+        permit_detail_list = row_permission.get('detail')
+        print("permit_detail_list:\n",permit_detail_list)
+
+        for permit_detail in permit_detail_list:
+            print("permit_detail:\n", permit_detail)
+            detail_suffix = permit_detail.get('suffix')
+            detail_permit = permit_detail.get('permit')
+
+            name, extension = os.path.splitext(filename)
+            current_filename = ''.join([name, detail_suffix, extension])
+            permit_detail['filename'] = current_filename
+
+            with pd.ExcelWriter(current_filename, engine='xlsxwriter', options={'strings_to_urls': False}) as writer:
+                for df_name, df in data_dict.items():
+
+                    if detail_permit is not None:
+                        df = df[df[permit_field].isin(detail_permit)]
+
+                    if merge:
+                        df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name)
+                    else:
+                        df.to_excel(writer, sheet_name=df_name, index=False)
+            print("Export to excel %s succeed!" % current_filename)
+
+        return permit_detail_list
+
+
+    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION):
+        
+        if filename is None:
+            filename = self.__class__.random_filename('html')
+
+        data_dict = self.sql_to_data(sql_text, dependency=dependency, df_names=df_names)
+
+        row_permission = copy.deepcopy(row_permission)
+        permit_field = row_permission.get('field')
+        permit_detail_list = row_permission.get('detail')
+
+        for permit_detail in permit_detail_list:
+
+            detail_suffix = permit_detail.get('suffix')
+            detail_permit = permit_detail.get('permit')
+
+            name, extension = os.path.splitext(filename)
+            current_filename = ''.join([name, detail_suffix, extension])
+            permit_detail['filename'] = current_filename
+
+            with open(current_filename, 'w') as f:
+                for df_name, df in data_dict.items():
+
+                    if detail_permit is not None:
+                        df = df[df[permit_field].isin(detail_permit)].copy()
+
+                    f.write('<br/><h2>%s</h2>\n' % df_name)
+                    df.fillna('', inplace=True)
+                    if merge:
+                        f.write(df.set_index(list(df)).to_html())
+                    else:
+                        f.write(df.to_html(index=False))
+            print("Export to html %s succeed!" % current_filename)
+
+        return permit_detail_list
+
+
+    def sql_to_csv(self, sql_text, filename=None, dependency={}, row_permission=DEFAULT_ROW_PERMISSION):
+
+        if filename is None:
+            filename = self.__class__.random_filename('csv')
+
+        res = self.run_sql(sql_text, dependency=dependency)
+        
         res.to_csv(filename, index=False)
         print("Export to csv %s succeed!" % filename)
 
-    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False):
-        #res = self.run_sql(sql_text, dependency=dependency)
-
-        sql_text_raw_list = [sql_text.strip() for sql_text in sql_text.split(';')]
-        sql_text_list = []
-
-        for sql_text in sql_text_raw_list:
-            if sql_text.lower().find('select') == -1:
-                continue
-            sql_text_list.append(sql_text)
-
-        if df_names is None:
-            df_names = ['' for _ in sql_text_list]
-
-        if filename is None:
-            random_hash = "%032x" % random.getrandbits(128)
-            filename = '%s.html' % random_hash
-
-        with open(filename, 'w') as f:
-            for sql_text, df_name in zip(sql_text_list, df_names):
-                f.write('<br/><h2>%s</h2>\n' % df_name)
-                df = self.run_sql(sql_text)
-                df.fillna('', inplace=True)
-                if merge:
-                    f.write(df.set_index(list(df)).to_html())
-                else:
-                    f.write(df.to_html(index=False))
-        print("Export to html %s succeed!" % filename)
+        # todo csv行权限
 
 class FetchingDataOdps(FetchingData):
     def __init__(self, login_info=DEFAULT_ODPS_LOGIN_INFO):
@@ -132,6 +198,7 @@ class FetchingDataOdps(FetchingData):
             print("time take: %ss" % round(time.time() - start))
             #display(sql_res_dataframe.head(10))
             return sql_res_dataframe
+
 
 class FetchingDataMysql(FetchingData):
     def __init__(self, login_info=DEFAULT_MYSQL_LOGIN_INFO):
