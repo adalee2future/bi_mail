@@ -13,7 +13,7 @@ from email.header import Header
 BASE_DIR = os.path.dirname(__file__)
 STYLES = open(os.path.join(BASE_DIR, 'styles.css')).read()
 
-def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend=''):
+def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles=''):
     print(__file__)
     print("subject", subject)
     print("owner", owner)
@@ -43,7 +43,7 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
         msg.attach(file_part)
 
     mail_body = '''
-     <style>{styles}</style>
+     <style>\n{styles}\n{customized_styles}\n</style>
      <br/><br/>
      {body_prepend}
      <br/><br/>
@@ -56,7 +56,7 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
      <br/><br/>
      [自动发送]
      <br/><br/>
-    '''.format(styles=STYLES, body_prepend=body_prepend, owner=owner)
+    '''.format(styles=STYLES, customized_styles=customized_styles, body_prepend=body_prepend, owner=owner)
 
     mail_body_html = MIMEText(mail_body, 'html', 'utf-8')
     msg.attach(mail_body_html)

@@ -30,6 +30,7 @@ df_names = cfg.get('df_names')
 to = cfg.get('to')
 cc = cfg.get('cc')
 bcc = cfg.get('bcc')
+customized_styles = cfg.get('customized_styles', '')
 
 
 default_row_permission = copy.deepcopy(fetch_data.DEFAULT_ROW_PERMISSION)
@@ -54,7 +55,7 @@ if cfg.get('customized_file'):
     filename = cust_res.get('filename')
     body_prepend = cust_res.get('body_prepend', '')
     subject = '%s_%s' % (cfg.get('subject'), fetching_data._pt)
-    file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend)
+    file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles)
 
 else:
     filename = os.path.join(base_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, file_type))
@@ -73,11 +74,12 @@ else:
         if file_type == "html":
             mail_meta['body_prepend'] = open(file_meta['filename']).read()
             mail_meta['filename'] = None
-        
+
         mail_meta['subject'] = '{prefix}{subject}_{pt}{suffix}'.format(prefix=file_meta.get('prefix', ''),
                                                                        subject=cfg.get('subject'),
                                                                        pt=fetching_data._pt,
                                                                        suffix=file_meta.get('suffix', ''))
+        mail_meta['customized_styles'] = customized_styles
         mail_meta['owner'] = owner
 
         mail_meta['to'] = file_meta.get('to')
