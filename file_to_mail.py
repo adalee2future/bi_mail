@@ -39,7 +39,7 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
     if filename is not None:
         with open(filename, 'rb') as f:
             file_part = MIMEApplication(f.read(), Name=os.path.basename(filename))
-        file_part['Content-Disposition'] = 'attachment; filename="%s"' % Header(os.path.basename(filename), 'UTF-8')
+        file_part.add_header('Content-Disposition', 'attachment', filename=os.path.basename(filename))
         msg.attach(file_part)
 
     mail_body = '''
@@ -50,9 +50,6 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
      --------------------------------
      <br/><br/>
      如对数据有任何疑问，请联系{owner}
-
-     <br/><br/>
-     如果附件有问题，请用outlook客户端或者<a href="https://outlook.office.com/owa/?path=/group/owitho@owitho.com/mail">outlook网页版</a>打开该邮件
      <br/><br/>
      [自动发送]
      <br/><br/>
