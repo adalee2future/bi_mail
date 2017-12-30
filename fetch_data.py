@@ -11,6 +11,7 @@ import random
 import sys
 import copy
 from collections import OrderedDict
+import tkinter
 
 DEFAULT_ODPS_LOGIN_INFO = {
     'access_id': os.environ.get('access_id'),
@@ -54,6 +55,9 @@ DATES = {
     'month': yesterday.strftime('%Y-%m')
 }
 
+MIN_COL_WIDTH = 8
+MAX_COL_WIDTH = 36
+
 
 class FetchingData:
     def __init__(self, login_info):
@@ -63,6 +67,24 @@ class FetchingData:
     def random_filename(file_type):
         random_hash = "%032x" % random.getrandbits(128)
         return '{random_hash}{extension}'.format(random_hash=random_hash, extension=DEFAULT_FILE_EXTENSION.get(file_type))
+
+    def get_text_col_width(text):
+        if text is None:
+            return MIN_COL_WIDTH
+        tkinter.Frame().destroy()
+        font = tkinter.font.Font(family='SimSun', size=2, weight='bold')
+        width = font.measure(text)
+        if width < MIN_COL_WIDTH:
+            return MIN_COL_WIDTH
+        elif width > MAX_COL_WIDTH:
+            return MAX_COL_WIDTH
+        else:
+            return width
+
+    def get_df_col_width(df):
+        max_width = df.applymap(get_text_col_width).max()
+        df_width_map = {col: width for col, width in enumerate(max_width)}
+        return df_width_map
     
     @classmethod
     def run_sql(self, sql_text, dependency={}):
