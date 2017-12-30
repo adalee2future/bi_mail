@@ -58,9 +58,8 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
     mail_body_html = MIMEText(mail_body, 'html', 'utf-8')
     msg.attach(mail_body_html)
 
-
-    print('\n', msg)
     s.sendmail(me, receiver_list, msg.as_string())
+    s.quit()
 
 if __name__ == "__main__":
     file_to_mail(*sys.argv[1:])
