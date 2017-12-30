@@ -12,6 +12,7 @@ import sys
 import copy
 from collections import OrderedDict
 import tkinter
+import tkinter.font
 
 DEFAULT_ODPS_LOGIN_INFO = {
     'access_id': os.environ.get('access_id'),
@@ -81,8 +82,8 @@ class FetchingData:
         else:
             return width
 
-    def get_df_col_width(df):
-        max_width = df.applymap(get_text_col_width).max()
+    def get_df_col_width(df, rows=100):
+        max_width = df.head(rows).applymap(FetchingData.get_text_col_width).max()
         df_width_map = {col: width for col, width in enumerate(max_width)}
         return df_width_map
     
