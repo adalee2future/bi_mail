@@ -30,12 +30,14 @@ df_names = cfg.get('df_names')
 to = cfg.get('to')
 cc = cfg.get('cc')
 bcc = cfg.get('bcc')
+fake_cc = cfg.get('fake_cc')
 customized_styles = cfg.get('customized_styles', '')
 
 
 default_row_permission = copy.deepcopy(fetch_data.DEFAULT_ROW_PERMISSION)
 default_row_permission['detail'][0]['to'] = to
 default_row_permission['detail'][0]['cc'] = cc
+default_row_permission['detail'][0]['fake_cc'] = fake_cc
 default_row_permission['detail'][0]['bcc'] = bcc
 
 
@@ -55,7 +57,7 @@ if cfg.get('customized_file'):
     filename = cust_res.get('filename')
     body_prepend = cust_res.get('body_prepend', '')
     subject = '%s_%s' % (cfg.get('subject'), fetching_data._pt)
-    file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles)
+    file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc)
 
 else:
     filename = os.path.join(base_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, file_type))
@@ -84,6 +86,7 @@ else:
 
         mail_meta['to'] = file_meta.get('to')
         mail_meta['cc'] = file_meta.get('cc')
+        mail_meta['fake_cc'] = file_meta.get('fake_cc')
         mail_meta['bcc'] = file_meta.get('bcc')
 
         file_to_mail(**mail_meta)

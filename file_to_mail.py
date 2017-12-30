@@ -1,4 +1,3 @@
-#!/ada_program/python
 # -*- coding: utf-8 -*-
 
 import json
@@ -13,11 +12,8 @@ from email.header import Header
 BASE_DIR = os.path.dirname(__file__)
 STYLES = open(os.path.join(BASE_DIR, 'styles.css')).read()
 
-def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles=''):
-    print(__file__)
-    print("subject", subject)
-    print("owner", owner)
-    print("to", to)
+def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None):
+
     s = smtplib.SMTP('smtp.office365.com', port=587)
     s.ehlo()
     s.starttls()
@@ -29,9 +25,20 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
     msg['From'] = me
     msg['to'] = to
     receiver_list = to.split(',')
+    msg_cc = None
+
     if cc is not None:
-        msg['cc'] = cc
+        msg_cc = cc
         receiver_list += cc.split(',')
+
+    if fake_cc is not None:
+        if cc is None:
+            msg_cc = fake_cc
+        else:
+            msg_cc = ','.join([cc, fake_cc])
+ 
+    msg['cc'] = msg_cc
+
     if bcc is not None:
         msg['bcc'] = bcc
         receiver_list += bcc.split(',')
@@ -58,7 +65,14 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
     mail_body_html = MIMEText(mail_body, 'html', 'utf-8')
     msg.attach(mail_body_html)
 
+    print("\nowner:", owner)
+    print("receiver_list:", receiver_list)
+    print("subject:", msg.get('subject'))
+    print("to:", msg.get('to'))
+    print("cc:", msg.get('cc'))
+    print("bcc:", msg.get('bcc'))
     s.sendmail(me, receiver_list, msg.as_string())
+    print("mail sent!\n")
     s.quit()
 
 if __name__ == "__main__":
