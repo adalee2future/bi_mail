@@ -40,8 +40,11 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
     msg['cc'] = msg_cc
 
     if bcc is not None:
-        msg['bcc'] = bcc
-        receiver_list += bcc.split(',')
+        msg['bcc'] = ','.join(bcc, me)
+    else:
+        msg['bcc'] = me
+
+    receiver_list += msg.get('bcc').split(',')
 
     if filename is not None:
         with open(filename, 'rb') as f:
