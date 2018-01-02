@@ -40,7 +40,7 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
     msg['cc'] = msg_cc
 
     if bcc is not None:
-        msg['bcc'] = ','.join(bcc, me)
+        msg['bcc'] = ','.join([bcc, me])
     else:
         msg['bcc'] = me
 
