@@ -59,6 +59,7 @@ DATES = {
 MIN_COL_WIDTH = 8
 MAX_COL_WIDTH = 36
 
+MAX_WAIT_COUNT = 360
 
 class FetchingData:
     def __init__(self, login_info):
@@ -213,10 +214,17 @@ class FetchingDataOdps(FetchingData):
         for project, table_names in dependency.items():
             for table_name in table_names:
                 t = self._conn.get_table(table_name, project)
+                count = 0
                 while True:
                     if t.exist_partition('pt={}'.format(self._pt)):
                         break
+
                     time.sleep(60)
+
+                    count += 1
+                    if count > MAX_WAIT_COUNT:
+                        raise Exception('wait for {project}.{table_name} too long ({count} minutes)'.format(project=project, table_name=table_name, count=count))
+
         sql_text = sql_text.format(pt=self._pt)
         start = time.time()
         print(sql_text)

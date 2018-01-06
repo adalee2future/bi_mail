@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 report_id=$1
 echo

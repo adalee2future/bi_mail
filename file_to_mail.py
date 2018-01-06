@@ -1,3 +1,4 @@
+#!/ada_program/python
 # -*- coding: utf-8 -*-
 
 import json
@@ -11,15 +12,17 @@ from email.header import Header
 
 BASE_DIR = os.path.dirname(__file__)
 STYLES = open(os.path.join(BASE_DIR, 'styles.css')).read()
+MAIL_USER = os.environ['mail_user']
+MAIL_PASSWD = os.environ['mail_passwd']
 
-def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None):
+def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD):
 
     s = smtplib.SMTP('smtp.office365.com', port=587)
     s.ehlo()
     s.starttls()
-    s.login(os.environ['mail_user'], os.environ['mail_passwd'])
+    s.login(mail_user, mail_passwd)
 
-    me = os.environ['mail_user']
+    me = mail_user
     msg = MIMEMultipart()
     msg['Subject'] = subject
     msg['From'] = me
