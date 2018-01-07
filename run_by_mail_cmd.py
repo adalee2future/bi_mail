@@ -18,7 +18,7 @@ from file_to_mail import MAIL_USER, MAIL_PASSWD, BASE_DIR
 DEFAULT_FOLDER = "inbox"
 VALID_SENDER_SUFFIX = 'owitho.com'
 MAIL_SEARCH = 'SUBJECT "bi_mail run"'
-WAIT_SECONDS = 60
+WAIT_SECONDS = 1
 FNULL = open(os.devnull, 'w')
 
 os.chdir(BASE_DIR)
@@ -28,9 +28,10 @@ min_mail_id = open('mail.id').read().strip()
 M = imaplib.IMAP4_SSL("mail.office365.com", port=993)
 M.login(MAIL_USER, MAIL_PASSWD)
 
-M.select(DEFAULT_FOLDER)
-resp_code, resp_data = M.search(None, MAIL_SEARCH)
-
+def get_mail_count(folder=DEFAULT_FOLDER):
+    M.select(folder)
+    resp_code, resp_data = M.search(None, 'ALL')
+    return max(int(mail_id) for mail_id in resp_data[0].decode('ascii').split())
 
 def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER):
     
@@ -44,12 +45,12 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER):
         message_byte = resp_data[0][1]
         message = email.message_from_bytes(message_byte)
         raw_subject = message.get('subject')
-        print(raw_subject)
+        #print(raw_subject)
         subject, encoding = decode_header(message.get('subject'))[0]
         if encoding is not None:
             subject = subject.decode(encoding)
        
-        print("mail header encoding:", encoding)
+        #print("mail header encoding:", encoding)
         res['subject'] = subject
         
         report_id_search = re.search(r'bi_mail run (\S+)', subject)
@@ -57,9 +58,9 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER):
             res['report_id'] = report_id_search.groups()[0]
             
         sender = message.get('from')
-        print('sender:', sender)
-        print('sender decode:', decode_header(sender))
-        print(sender)
+        #print('sender:', sender)
+        #print('sender decode:', decode_header(sender))
+        #print(sender)
         res['sender'] = re.findall(r'<{0,1}([^<]*@[^>]*)>{0,1}', sender)[0]
         
         return res
@@ -82,46 +83,56 @@ def bi_mail_run(cmd_info):
     report_owner = json.loads(open(cfg_filename).read()).get('owner').split(',')
     if sender_prefix in report_owner:
         print("./run.sh %s" % report_id)
-        subprocess.call(["./run.sh", report_id])
+        print("exit code:", subprocess.call(["./run.sh", report_id]))
         
-def exist_condition_by_time():
-    now = datetime.datetime.now()
+
+def current_time():
+    return datetime.datetime.now()
+
+
+def exit_condition_by_time():
+    now = current_time()
     if now.hour == 23 and now.minute > 50:
         return True
 
 
-while True:
-    print("server starts at %s" % datetime.datetime.now())
-    time.sleep(WAIT_SECONDS)
-
-    subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
-    subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
-    print("loop start time:", datetime.datetime.now())
-    M.select(DEFAULT_FOLDER)
-    resp_code, resp_data = M.search(None, MAIL_SEARCH)
-    min_mail_id = int(open('mail.id').read().strip())
-    current_mail_id = min_mail_id
-    print("min_mail_id:", min_mail_id)
-    if resp_code == 'OK':
-        print("OK")
-        all_mail_ids = [int(mail_id) for mail_id in resp_data[0].decode('ascii').split()]
-        mail_ids = list(filter(lambda x: x > min_mail_id, all_mail_ids))
-        print("mail_ids:", mail_ids)
-        for mail_id in mail_ids:
-            print("mail_id:", mail_id)
-            print("enter mail_id loops")
+def main():
+    print("server starts at %s" % current_time())
+    while True:
+        print("loops starts at %s" % current_time())
+        if exit_condition_by_time():
+            break
+            print("server ends at %s" % current_time())
+        time.sleep(WAIT_SECONDS)
+        subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+        subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+        M.select(DEFAULT_FOLDER)
+        resp_code, resp_data = M.search(None, MAIL_SEARCH)
+        min_mail_id = int(open('mail.id').read().strip())
+        current_mail_id = min_mail_id
+        #print("min_mail_id:", min_mail_id)
+        if resp_code == 'OK':
+            all_mail_ids = [int(mail_id) for mail_id in resp_data[0].decode('ascii').split()]
+            mail_ids = list(filter(lambda x: x > min_mail_id, all_mail_ids))
+            print("mail_ids:", mail_ids)
+            for mail_id in mail_ids:
+                print("mail_id:", mail_id)
+                
+                cmd_info = parse_mail_sender_and_subject(mail_id)
+                print("cmd_info:", cmd_info)
+                
+                try:
+                    bi_mail_run(cmd_info)
+                except Exception as e:
+                    print("invalid cmd_info")
+                    print(e.args)
             
-            cmd_info = parse_mail_sender_and_subject(mail_id)
-            print("cmd_info:", cmd_info)
-            
-            try:
-                bi_mail_run(cmd_info)
-            except Exception as e:
-                print("invalid cmd_info")
-                print(e.args)
-        
-            with open('mail.id', 'w') as f:
-                f.write('{mail_id}\n'.format(mail_id=mail_id))
+                with open('mail.id', 'w') as f:
+                    f.write('{mail_id}\n'.format(mail_id=mail_id))
 
-            if exist_condition_by_time():
-                break
+                if exit_condition_by_time():
+                    break
+
+if __name__ == "__main__":
+    main()
+
