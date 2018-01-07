@@ -93,6 +93,7 @@ def current_time():
 def exit_condition_by_time():
     now = current_time()
     if now.hour == 23 and now.minute > 50:
+        print("server ends at %s" % current_time())
         return True
 
 
@@ -102,7 +103,7 @@ def main():
         print("loops starts at %s" % current_time())
         if exit_condition_by_time():
             break
-            print("server ends at %s" % current_time())
+           
         time.sleep(WAIT_SECONDS)
         subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
         subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
