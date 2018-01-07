@@ -18,7 +18,6 @@ DEFAULT_FOLDER = "inbox"
 VALID_SENDER_SUFFIX = 'owitho.com'
 MAIL_SEARCH = 'SUBJECT "bi_mail run"'
 WAIT_SECONDS = 60
-BASE_DIR = os.path.dirname(__file__)
 
 os.chdir(BASE_DIR)
 
@@ -98,7 +97,7 @@ while True:
     print(git_cmd)
     os.system(git_cmd)
     print("loop start time:", datetime.datetime.now())
-    M.select('inbox')
+    M.select(DEFAULT_FOLDER)
     resp_code, resp_data = M.search(None, MAIL_SEARCH)
     min_mail_id = int(open('mail.id').read().strip())
     current_mail_id = min_mail_id
@@ -112,7 +111,7 @@ while True:
             print("mail_id:", mail_id)
             print("enter mail_id loops")
             
-            cmd_info = parse_mail_sender_and_subject(mail_id, 'inbox')
+            cmd_info = parse_mail_sender_and_subject(mail_id)
             print("cmd_info:", cmd_info)
             
             try:
