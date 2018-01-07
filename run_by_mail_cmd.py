@@ -92,8 +92,6 @@ def exist_condition_by_time():
 
 while True:
     print("server starts at %s" % datetime.datetime.now())
-    if exist_condition_by_time():
-        break
     time.sleep(WAIT_SECONDS)
 
     subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
@@ -122,7 +120,8 @@ while True:
                 print("invalid cmd_info")
                 print(e.args)
         
-        if len(mail_ids) > 0 and mail_id > min_mail_id:
             with open('mail.id', 'w') as f:
-                f.write('{mail_id}\n'.format(mail_id=mail_id)) 
+                f.write('{mail_id}\n'.format(mail_id=mail_id))
 
+            if exist_condition_by_time():
+                break
