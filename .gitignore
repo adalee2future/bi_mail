@@ -6,3 +6,5 @@ log/
 log*.txt
 .DS_Store
 Untitled.*
+mail.id
+nohup.out
