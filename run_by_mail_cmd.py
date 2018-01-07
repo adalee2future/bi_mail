@@ -8,16 +8,18 @@ import sys
 import time
 import os
 import email
-from email.header import decode_header
 import re
 import json
-from subprocess import call
+import subprocess
+
+from email.header import decode_header
 from file_to_mail import MAIL_USER, MAIL_PASSWD, BASE_DIR
 
 DEFAULT_FOLDER = "inbox"
 VALID_SENDER_SUFFIX = 'owitho.com'
 MAIL_SEARCH = 'SUBJECT "bi_mail run"'
 WAIT_SECONDS = 60
+FNULL = open(os.devnull, 'w')
 
 os.chdir(BASE_DIR)
 
@@ -80,7 +82,7 @@ def bi_mail_run(cmd_info):
     report_owner = json.loads(open(cfg_filename).read()).get('owner').split(',')
     if sender_prefix in report_owner:
         print("./run.sh %s" % report_id)
-        call(["./run.sh", report_id])
+        subprocess.call(["./run.sh", report_id])
         
 def exist_condition_by_time():
     now = datetime.datetime.now()
@@ -93,9 +95,9 @@ while True:
     if exist_condition_by_time():
         break
     time.sleep(WAIT_SECONDS)
-    git_cmd = 'git checkout dev; git pull origin dev'
-    print(git_cmd)
-    os.system(git_cmd)
+
+    subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+    subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
     print("loop start time:", datetime.datetime.now())
     M.select(DEFAULT_FOLDER)
     resp_code, resp_data = M.search(None, MAIL_SEARCH)
