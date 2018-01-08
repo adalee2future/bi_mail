@@ -115,7 +115,6 @@ def main():
         if resp_code == 'OK':
             all_mail_ids = [int(mail_id) for mail_id in resp_data[0].decode('ascii').split()]
             mail_ids = list(filter(lambda x: x > min_mail_id, all_mail_ids))
-            print("mail_ids:", mail_ids)
             for mail_id in mail_ids:
                 print("mail_id:", mail_id)
                 
