@@ -18,7 +18,7 @@ from file_to_mail import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR, file_to
 DEFAULT_FOLDER = "inbox"
 VALID_SENDER_SUFFIX = 'owitho.com'
 MAIL_SEARCH = 'SUBJECT "bi_mail run"'
-WAIT_SECONDS = 1
+WAIT_SECONDS = 60
 FNULL = open(os.devnull, 'w')
 
 os.chdir(BASE_DIR)
