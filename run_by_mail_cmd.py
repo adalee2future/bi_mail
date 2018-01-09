@@ -86,8 +86,9 @@ def bi_mail_run(cmd_info):
 
     cfg_filename = os.path.join('reports', report_id, '%s.cfg' % report_id)
     report_owner = json.loads(open(cfg_filename).read()).get('owner').split(',')
+    report_owner.append(MAIL_MONITOR.split('@')[0])
     if sender_prefix in report_owner:
-        print("./run.sh %s" % report_id)
+        print("./run.sh '%s'" % report_id)
         print("exit code:", subprocess.call(["./run.sh", report_id]))
 
 
