@@ -41,7 +41,7 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
 
     M.select(folder)
     resp_code, resp_data = M.fetch(str(mail_id), '(RFC822)')
-    print("reso_code:", resp_code)
+    print("resp_code:", resp_code)
     if(resp_code == 'OK'):
         message_byte = resp_data[0][1]
         message = email.message_from_bytes(message_byte)
