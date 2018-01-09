@@ -13,7 +13,7 @@ import json
 import subprocess
 
 from email.header import decode_header
-from file_to_mail import MAIL_USER, MAIL_PASSWD, BASE_DIR
+from file_to_mail import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR, file_to_mail
 
 DEFAULT_FOLDER = "inbox"
 VALID_SENDER_SUFFIX = 'owitho.com'
@@ -25,20 +25,21 @@ os.chdir(BASE_DIR)
 
 min_mail_id = open('mail.id').read().strip()
 
-M = imaplib.IMAP4_SSL("mail.office365.com", port=993)
-M.login(MAIL_USER, MAIL_PASSWD)
+def login_imap():
+    M = imaplib.IMAP4_SSL("mail.office365.com", port=993)
+    M.login(MAIL_USER, MAIL_PASSWD)
+    return M
 
 def get_mail_count(folder=DEFAULT_FOLDER):
+    M = login_imap()
     M.select(folder)
     resp_code, resp_data = M.search(None, 'ALL')
     return max(int(mail_id) for mail_id in resp_data[0].decode('ascii').split())
 
-def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER):
-    
-    M.select(folder)
-    
+def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap(), notify=False):
     res = {}
-    
+
+    M.select(folder)
     resp_code, resp_data = M.fetch(str(mail_id), '(RFC822)')
     print("reso_code:", resp_code)
     if(resp_code == 'OK'):
@@ -49,42 +50,46 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER):
         subject, encoding = decode_header(message.get('subject'))[0]
         if encoding is not None:
             subject = subject.decode(encoding)
-       
+
         #print("mail header encoding:", encoding)
         res['subject'] = subject
-        
+
         report_id_search = re.search(r'bi_mail run (\S+)', subject)
         if report_id_search:
             res['report_id'] = report_id_search.groups()[0]
-            
+
         sender = message.get('from')
         #print('sender:', sender)
         #print('sender decode:', decode_header(sender))
         #print(sender)
         res['sender'] = re.findall(r'<{0,1}([^<]*@[^>]*)>{0,1}', sender)[0]
-        
+
+        if notify:
+            file_to_mail(None, 'parse_mail_sender_and_subject',
+                    '', MAIL_MONITOR, body_prepend=res)
+
         return res
-  
+
 
 def bi_mail_run(cmd_info):
     report_id = cmd_info.get('report_id')
     sender = cmd_info.get('sender')
     subject = cmd_info.get('subject')
-    
+
     if report_id is None:
         raise Exception("report_id is None")
-        
+
     if sender.find(VALID_SENDER_SUFFIX) == -1:
         raise Exception("sender has no right to run report, should be @%s" % VALID_SENDER_SUFFIX)
-    
+
     sender_prefix = re.search('(\\S+)@%s' % VALID_SENDER_SUFFIX, sender).groups()[0]
-    
+
     cfg_filename = os.path.join('reports', report_id, '%s.cfg' % report_id)
     report_owner = json.loads(open(cfg_filename).read()).get('owner').split(',')
     if sender_prefix in report_owner:
         print("./run.sh %s" % report_id)
         print("exit code:", subprocess.call(["./run.sh", report_id]))
-        
+
 
 def current_time():
     return datetime.datetime.now()
@@ -99,16 +104,23 @@ def exit_condition_by_time():
 
 def main():
     print("server starts at %s" % current_time())
+    M = login_imap()
     while True:
         print("loops starts at %s" % current_time())
         if exit_condition_by_time():
             break
-           
+
         time.sleep(WAIT_SECONDS)
         subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
         subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
-        M.select(DEFAULT_FOLDER)
-        resp_code, resp_data = M.search(None, MAIL_SEARCH)
+
+        try:
+            M.select(DEFAULT_FOLDER)
+            resp_code, resp_data = M.search(None, MAIL_SEARCH)
+        except:
+            time.sleep(WAIT_SECONDS)
+            M = login_imap()
+
         min_mail_id = int(open('mail.id').read().strip())
         current_mail_id = min_mail_id
         #print("min_mail_id:", min_mail_id)
@@ -117,16 +129,16 @@ def main():
             mail_ids = list(filter(lambda x: x > min_mail_id, all_mail_ids))
             for mail_id in mail_ids:
                 print("mail_id:", mail_id)
-                
-                cmd_info = parse_mail_sender_and_subject(mail_id)
+
+                cmd_info = parse_mail_sender_and_subject(mail_id, M=M, notify=True)
                 print("cmd_info:", cmd_info)
-                
+
                 try:
                     bi_mail_run(cmd_info)
                 except Exception as e:
                     print("invalid cmd_info")
                     print(e.args)
-            
+
                 with open('mail.id', 'w') as f:
                     f.write('{mail_id}\n'.format(mail_id=mail_id))
 

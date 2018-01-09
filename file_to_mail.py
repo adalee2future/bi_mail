@@ -14,6 +14,7 @@ BASE_DIR = os.path.dirname(__file__)
 STYLES = open(os.path.join(BASE_DIR, 'styles.css')).read()
 MAIL_USER = os.environ['mail_user']
 MAIL_PASSWD = os.environ['mail_passwd']
+MAIL_MONITOR = os.environ['mail_monitor']
 
 def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD):
 
@@ -39,7 +40,7 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
             msg_cc = fake_cc
         else:
             msg_cc = ','.join([cc, fake_cc])
- 
+
     msg['cc'] = msg_cc
 
     if bcc is not None:
