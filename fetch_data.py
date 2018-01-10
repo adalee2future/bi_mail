@@ -127,6 +127,8 @@ class FetchingData:
         permit_field = row_permission.get('field')
         permit_detail_list = row_permission.get('detail')
 
+        data_rows_dict_list = []
+
         for permit_detail in permit_detail_list:
             detail_prefix = permit_detail.get('prefix', '')
             detail_suffix = permit_detail.get('suffix', '')
@@ -134,21 +136,26 @@ class FetchingData:
 
             name, extension = os.path.splitext(filename)
             current_filename = ''.join([detail_prefix, name, detail_suffix, extension])
+            data_rows_dict = OrderedDict()
             permit_detail['filename'] = current_filename
-
+           
+            
             with pd.ExcelWriter(current_filename, engine='xlsxwriter', options={'strings_to_urls': False}) as writer:
+                
                 for df_name, df in data_dict.items():
 
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)]
-
+                    data_rows_dict[df_name] = len(df)
                     if merge:
                         df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name)
                     else:
                         df.to_excel(writer, sheet_name=df_name, index=False)
+            
+            data_rows_dict_list.append(data_rows_dict)
             print("Export to excel %s succeed!" % current_filename)
 
-        return permit_detail_list
+        return data_rows_dict_list, permit_detail_list
 
 
     def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' '):
@@ -162,6 +169,8 @@ class FetchingData:
         permit_field = row_permission.get('field')
         permit_detail_list = row_permission.get('detail')
 
+        data_rows_dict_list = []
+
         for permit_detail in permit_detail_list:
 
             detail_prefix = permit_detail.get('prefix', '')
@@ -171,6 +180,7 @@ class FetchingData:
             dirname = os.path.dirname(filename)
             name, extension = os.path.splitext(os.path.basename(filename))
             current_filename = os.path.join(dirname, ''.join([detail_prefix, name, detail_suffix, extension]))
+            data_rows_dict = OrderedDict()
             permit_detail['filename'] = current_filename
 
             with open(current_filename, 'w') as f:
@@ -178,16 +188,18 @@ class FetchingData:
 
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)].copy()
-
+                    data_rows_dict[df_name] = len(df)
                     f.write('<br/><h2>%s</h2>\n' % df_name)
                     df.fillna('', inplace=True)
                     if merge:
                         f.write(df.set_index(list(df)).to_html())
                     else:
                         f.write(df.to_html(index=False))
+
+            data_rows_dict_list.append(data_rows_dict)
             print("Export to html %s succeed!" % current_filename)
 
-        return permit_detail_list
+        return data_rows_dict_list, permit_detail_list
 
 
     def sql_to_csv(self, sql_text, filename=None, dependency={}, row_permission=DEFAULT_ROW_PERMISSION):
