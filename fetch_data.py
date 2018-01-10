@@ -146,7 +146,7 @@ class FetchingData:
 
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)]
-                    data_rows_dict[df_name] = len(df)
+                    data_rows_dict[df_name] = {"shape": df.shape}
                     if merge:
                         df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name)
                     else:
@@ -188,7 +188,7 @@ class FetchingData:
 
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)].copy()
-                    data_rows_dict[df_name] = len(df)
+                    data_rows_dict[df_name] = {"shape": df.shape}
                     f.write('<br/><h2>%s</h2>\n' % df_name)
                     df.fillna('', inplace=True)
                     if merge:

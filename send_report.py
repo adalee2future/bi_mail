@@ -14,7 +14,8 @@ VALID_ACTIONS = [ 'error', 'exit' ]
 
 def get_mail_action(data_meta, no_data_handler):
     size = len(data_meta)
-    satisfied_size = sum(map(lambda x: x == 0, data_meta.values()))
+    rows = [d['shape'][0] for d in data_meta.values()]
+    satisfied_size = sum(map(lambda x: x == 0, rows))
 
     if no_data_handler is not None and no_data_handler.get('how') in VALID_HOWS and no_data_handler.get('action') in VALID_ACTIONS:
         how = no_data_handler.get('how')
@@ -92,12 +93,16 @@ def main():
 
         for data_meta, file_meta in zip(data_metas, file_metas):
             
-            mail_action = get_mail_action(data_meta, no_data_handler)
-            print('no_data_handler:', no_data_handler, 'mail_action:', mail_action)
-            if mail_action == 'error':
-                raise Exception('NoData Error!')
-            elif mail_action == 'exit':
-                return
+            if no_data_handler is not None:
+                mail_action = get_mail_action(data_meta, no_data_handler)
+                print('data_meta:', data_meta)
+                print('no_data_handler:', no_data_handler)
+                print('mail_action:', mail_action)
+
+                if mail_action == 'error':
+                    raise Exception('NoData Error!')
+                elif mail_action == 'exit':
+                    return
 
             mail_meta = {}
             mail_meta['filename'] = file_meta.get('filename')
