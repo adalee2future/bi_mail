@@ -9,7 +9,7 @@ import copy
 import fetch_data
 from file_to_mail import file_to_mail
 
-VALID_HOWS = [ 'all', 'any' ]
+VALID_CONDITIONS = [ 'all', 'any' ]
 VALID_ACTIONS = [ 'error', 'exit' ]
 
 def get_mail_action(data_meta, no_data_handler):
@@ -17,14 +17,14 @@ def get_mail_action(data_meta, no_data_handler):
     rows = [d['shape'][0] for d in data_meta.values()]
     satisfied_size = sum(map(lambda x: x == 0, rows))
 
-    if no_data_handler is not None and no_data_handler.get('how') in VALID_HOWS and no_data_handler.get('action') in VALID_ACTIONS:
-        how = no_data_handler.get('how')
+    if no_data_handler is not None and no_data_handler.get('condition') in VALID_CONDITIONS and no_data_handler.get('action') in VALID_ACTIONS:
+        condition= no_data_handler.get('condition')
         action = no_data_handler.get('action')
 
-        if how == 'any' and satisfied_size > 0:
+        if condition == 'any' and satisfied_size > 0:
             return action
 
-        if how == 'all' and satisfied_size == size:
+        if condition == 'all' and satisfied_size == size:
             return action
 
 def main():
@@ -92,7 +92,7 @@ def main():
             data_metas, file_metas = fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission)
 
         for data_meta, file_meta in zip(data_metas, file_metas):
-            
+
             if no_data_handler is not None:
                 mail_action = get_mail_action(data_meta, no_data_handler)
                 print('data_meta:', data_meta)
