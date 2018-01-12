@@ -11,6 +11,8 @@ from file_to_mail import file_to_mail
 
 VALID_CONDITIONS = [ 'all', 'any' ]
 VALID_ACTIONS = [ 'error', 'exit' ]
+DEFAULT_NO_DATA_HANDLER = {"condition": "any", "action": "error"}
+DEFAULT_BODY_PREPEND = ''
 
 def get_mail_action(data_meta, no_data_handler):
     size = len(data_meta)
@@ -27,8 +29,7 @@ def get_mail_action(data_meta, no_data_handler):
         if condition == 'all' and satisfied_size == size:
             return action
 
-def main():
-    report_id = sys.argv[1]
+def send_report(report_id, to=None):
     os.chdir(os.path.join('reports', report_id))
     base_dir = '.'
     sql_path = os.path.join(base_dir, '%s.sql' % report_id)
@@ -46,14 +47,19 @@ def main():
     merge = cfg.get('merge', False)
     df_names = cfg.get('df_names')
 
-    to = cfg.get('to')
-    cc = cfg.get('cc')
-    bcc = cfg.get('bcc')
-    fake_cc = cfg.get('fake_cc')
+    if to is None:
+        to = cfg.get('to')
+        cc = cfg.get('cc')
+        bcc = cfg.get('bcc')
+        fake_cc = cfg.get('fake_cc')
+    else:
+        cc = None
+        bcc = None
+        fake_cc = None
+
     customized_styles = cfg.get('customized_styles', '')
 
-    no_data_handler = cfg.get('no_data_handler')
-
+    no_data_handler = cfg.get('no_data_handler', DEFAULT_NO_DATA_HANDLER)
 
     default_row_permission = copy.deepcopy(fetch_data.DEFAULT_ROW_PERMISSION)
     default_row_permission['detail'][0]['to'] = to
@@ -61,10 +67,7 @@ def main():
     default_row_permission['detail'][0]['fake_cc'] = fake_cc
     default_row_permission['detail'][0]['bcc'] = bcc
 
-
     row_permission = cfg.get('row_permission', default_row_permission)
-
-    body_prepend = ''
 
     if db_type == 'odps':
         fetching_data = fetch_data.odps_obj
@@ -76,7 +79,7 @@ def main():
         import customized_file
         cust_res = customized_file.main()
         filename = cust_res.get('filename')
-        body_prepend = cust_res.get('body_prepend', '')
+        body_prepend = cust_res.get('body_prepend', DEFAILT_BODY_PREPEND)
         subject = '%s_%s' % (cfg.get('subject'), fetching_data._pt)
         file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc)
 
@@ -125,4 +128,9 @@ def main():
             file_to_mail(**mail_meta)
 
 if __name__ == '__main__':
-    main()
+    report_id = sys.argv[1]
+    if len(sys.argv) > 2:
+        to = sys.argv[2]
+    else:
+        to = None
+    send_report(report_id, to)
