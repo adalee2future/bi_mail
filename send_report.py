@@ -81,7 +81,7 @@ def send_report(report_id, to=None):
         import customized_file
         cust_res = customized_file.main()
         filename = cust_res.get('filename')
-        body_prepend = cust_res.get('body_prepend', DEFAILT_BODY_PREPEND)
+        body_prepend = cust_res.get('body_prepend', DEFAULT_BODY_PREPEND)
         subject = '%s_%s' % (cfg.get('subject'), fetching_data._pt)
         file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc)
 
