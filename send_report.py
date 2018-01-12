@@ -97,7 +97,7 @@ def send_report(report_id, to=None):
 
         if filename is not None:
             oss_filename = upload_file.upload_file_to_oss(filename)
-            print()
+            print("oss_filename:", oss_filename)
 
         try:
             file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc)
@@ -159,11 +159,14 @@ def send_report(report_id, to=None):
             except SMTPDataError as e:
                 if report_id in oss_link_reports:
                     body_prepend = '附件太大，请自行下载(有效期%s小时)<br/>' % round(upload_file.EXPIRE_SECONDS / 3600, 1)
+                    print("-----")
+                    print("oss_filename:", oss_filename)
                     body_prepend += upload_file.get_file_url(oss_filename)
+                    print("body_prepend")
                     print("oss_filename:", oss_filename)
                     mail_meta['body_prepend'] = body_prepend
                     mail_meta['filename'] = None
-                    file_to_mail(*mail_meta)
+                    file_to_mail(**mail_meta)
                 else:
                     raise e
 

@@ -23,8 +23,8 @@ def upload_file_to_oss(filename, bucket_name=DEFAULT_BUCKET, folder=DEFAULT_FOLD
     oss_filename = file_creation_time.strftime('_%Y-%m-%d_%H:%M:%S').join(os.path.splitext(os.path.basename(filename)))
     oss_filename = '{}/{}'.format(folder, oss_filename)
     bucket.put_object_from_file(oss_filename, filename)
-    return filename
+    return oss_filename
 
-def get_file_url(oss_filename, expires=EXPIRE_SECONDS, folder=DEFAULT_FOLDER):
+def get_file_url(oss_filename, expires=EXPIRE_SECONDS):
 	bucket = login_bucket(DEFAULT_BUCKET)
-	return bucket.sign_url('GET', '{}/{}'.format(folder, oss_filename), expires)
+	return bucket.sign_url('GET', oss_filename, expires)
