@@ -13,15 +13,25 @@ if [[ ! -d reports/$report_id/data ]]
   then mkdir reports/$report_id/data
 fi
 
-log_file=reports/$report_id/log/`date +%Y-%m-%d_%H:%M:%S`.log
-echo $log_file
-touch $log_file
-./send_report.sh $report_id >> $log_file 2>&1
+report_log_file=reports/$report_id/log/`date +%Y-%m-%d_%H:%M:%S`.log
+daily_report_log_file=reports/$report_id/log/`date +%Y-%m-%d`.log
+daily_log_file=log/report_`date +%Y-%m-%d`.log
 
+touch $report_log_file
+touch $daily_report_log_file
+touch $daily_log_file
+
+echo './send_report.sh' $report_id >> $daily_log_file
+./send_report.sh $report_id >> $report_log_file 2>&1
 res_code=$?
+
+cat $report_log_file >> $daily_report_log_file
 echo send_report result: $res_code
+echo send_report result: $res_code >> $daily_log_file
+echo >> $daily_log_file
+
 if [[ $res_code -eq 0 ]]
   then echo
 else
-  ./send_log.py $report_id $log_file
+  ./send_log.py $report_id $report_log_file
 fi
