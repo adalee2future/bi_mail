@@ -11,7 +11,8 @@ from file_to_mail import file_to_mail
 
 VALID_CONDITIONS = [ 'all', 'any' ]
 VALID_ACTIONS = [ 'error', 'exit' ]
-DEFAULT_NO_DATA_HANDLER = {"condition": "any", "action": "error"}
+ODPS_DEFAULT_NO_DATA_HANDLER = {"condition": "any", "action": "error"}
+MYSQL_DEFAULT_NO_DATA_HANDLER = None
 DEFAULT_BODY_PREPEND = ''
 
 def get_mail_action(data_meta, no_data_handler):
@@ -59,7 +60,6 @@ def send_report(report_id, to=None):
 
     customized_styles = cfg.get('customized_styles', '')
 
-    no_data_handler = cfg.get('no_data_handler', DEFAULT_NO_DATA_HANDLER)
 
     default_row_permission = copy.deepcopy(fetch_data.DEFAULT_ROW_PERMISSION)
     default_row_permission['detail'][0]['to'] = to
@@ -71,8 +71,10 @@ def send_report(report_id, to=None):
 
     if db_type == 'odps':
         fetching_data = fetch_data.odps_obj
+        no_data_handler = cfg.get('no_data_handler', ODPS_DEFAULT_NO_DATA_HANDLER)
     elif db_type == 'mysql':
         fetching_data = fetch_data.mysql_obj
+        no_data_handler = cfg.get('no_data_handler', MYSQL_DEFAULT_NO_DATA_HANDLER)
 
     if cfg.get('customized_file'):
         sys.path.insert(0, os.getcwd())
