@@ -94,7 +94,7 @@ def send_report(report_id, to=None):
         elif file_type == 'xlsx':
             data_metas, file_metas = fetching_data.sql_to_excel(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission)
         elif file_type == 'html':
-            data_metas, file_metas = fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission)
+            data_metas, file_metas = fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, customized_styles=customized_styles)
 
         for data_meta, file_meta in zip(data_metas, file_metas):
 

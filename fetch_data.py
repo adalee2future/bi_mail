@@ -13,6 +13,7 @@ import copy
 from collections import OrderedDict
 import tkinter
 import tkinter.font
+from file_to_mail import STYLES
 
 DEFAULT_ODPS_LOGIN_INFO = {
     'access_id': os.environ.get('access_id'),
@@ -158,7 +159,7 @@ class FetchingData:
         return data_rows_dict_list, permit_detail_list
 
 
-    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' '):
+    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' ', styles=STYLES, customized_styles=''):
         
         if filename is None:
             filename = self.__class__.random_filename('html')
@@ -189,6 +190,8 @@ class FetchingData:
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)].copy()
                     data_rows_dict[df_name] = {"shape": df.shape}
+                    f.write('<head><meta charset="UTF-8"></head>\n')
+                    f.write('<style>\n{styles}\n{customized_styles}\n</style>'.format(styles=styles, customized_styles=customized_styles))
                     f.write('<br/><h2>%s</h2>\n' % df_name)
                     df.fillna('', inplace=True)
                     if merge:
