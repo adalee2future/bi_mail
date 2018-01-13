@@ -18,7 +18,6 @@ MYSQL_DEFAULT_NO_DATA_HANDLER = None
 DEFAULT_BODY_PREPEND = ''
 
 oss_link_reports = os.environ.get('oss_link_reports', '').split(',')
-print("oss_link_reports:", oss_link_reports)
 
 def get_mail_action(data_meta, no_data_handler):
     size = len(data_meta)
@@ -88,16 +87,16 @@ def send_report(report_id, to=None):
         filename = cust_res.get('filename')
         body_prepend = cust_res.get('body_prepend', DEFAULT_BODY_PREPEND)
         subject = '%s_%s' % (cfg.get('subject'), fetching_data._pt)
+        print()
 
         if len(body_prepend) > 0:
-            body_prepend_filename = '{report_id}_{pt}_temp.html'.format(report_id=report_id, pt=fetching_data._pt)
+            body_prepend_filename = os.path.join('data', '{report_id}_{pt}_temp.html'.format(report_id=report_id, pt=fetching_data._pt))
             with open(body_prepend_filename, 'w') as f:
                 f.write(body_prepend)
             upload_file.upload_file_to_oss(body_prepend_filename)
 
         if filename is not None:
             oss_filename = upload_file.upload_file_to_oss(filename)
-            print("oss_filename:", oss_filename)
 
         try:
             file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc)
@@ -105,7 +104,7 @@ def send_report(report_id, to=None):
             if report_id in oss_link_reports:
                 body_prepend += '附件太大，请自行下载(有效期%s小时)<br/>' % round(upload_file.EXPIRE_SECONDS / 3600, 1)
                 body_prepend += upload_file.get_file_url(oss_filename)
-                print("oss_filename:", oss_filename)
+                print("body_prepend:", body_prepend)
                 file_to_mail(None, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc)
             else:
                 raise e
@@ -125,7 +124,7 @@ def send_report(report_id, to=None):
 
             if no_data_handler is not None:
                 mail_action = get_mail_action(data_meta, no_data_handler)
-                print('data_meta:', data_meta)
+                print('\ndata_meta:', data_meta)
                 print('no_data_handler:', no_data_handler)
                 print('mail_action:', mail_action)
 
@@ -159,12 +158,9 @@ def send_report(report_id, to=None):
             except SMTPDataError as e:
                 if report_id in oss_link_reports:
                     body_prepend = '附件太大，请自行下载(有效期%s小时)<br/>' % round(upload_file.EXPIRE_SECONDS / 3600, 1)
-                    print("-----")
-                    print("oss_filename:", oss_filename)
                     body_prepend += upload_file.get_file_url(oss_filename)
-                    print("body_prepend")
-                    print("oss_filename:", oss_filename)
                     mail_meta['body_prepend'] = body_prepend
+                    print("body_prepend:", body_prepend)
                     mail_meta['filename'] = None
                     file_to_mail(**mail_meta)
                 else:
