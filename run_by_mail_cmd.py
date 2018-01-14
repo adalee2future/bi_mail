@@ -37,7 +37,7 @@ def get_mail_count(folder=DEFAULT_FOLDER):
     return max(int(mail_id) for mail_id in resp_data[0].decode('ascii').split())
 
 def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap(), notify=False):
-    res = {}
+    res = {'mail_id': mail_id}
 
     M.select(folder)
     resp_code, resp_data = M.fetch(str(mail_id), '(RFC822)')
@@ -58,6 +58,10 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
         if report_id_search:
             res['report_id'] = report_id_search.groups()[0]
 
+        to_search = re.search(r'bi_mail run \S+ (\S+)', subject)
+        if to_search:
+            res['to'] = to_search.groups()[0]
+
         sender = message.get('from')
         #print('sender:', sender)
         #print('sender decode:', decode_header(sender))
@@ -73,6 +77,7 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
 
 def bi_mail_run(cmd_info):
     report_id = cmd_info.get('report_id')
+    to = cmd_info.get('to', '')
     sender = cmd_info.get('sender')
     subject = cmd_info.get('subject')
 
@@ -88,8 +93,8 @@ def bi_mail_run(cmd_info):
     report_owner = json.loads(open(cfg_filename).read()).get('owner').split(',')
     report_owner.append(MAIL_MONITOR.split('@')[0])
     if sender_prefix in report_owner:
-        print("./run.sh '%s'" % report_id)
-        print("exit code:", subprocess.call(["./run.sh", report_id]))
+        print("./run.sh '%s' %s" % (report_id, to))
+        print("exit code:", subprocess.call(["./run.sh", report_id, to]))
 
 
 def current_time():

@@ -16,7 +16,7 @@ MAIL_USER = os.environ['mail_user']
 MAIL_PASSWD = os.environ['mail_passwd']
 MAIL_MONITOR = os.environ['mail_monitor']
 
-def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD):
+def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None):
 
     s = smtplib.SMTP('smtp.office365.com', port=587)
     s.ehlo()
@@ -29,19 +29,23 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
     msg['From'] = me
     msg['to'] = to
     receiver_list = to.split(',')
-    msg_cc = None
 
+    msg_cc_list = []
     if cc is not None:
-        msg_cc = cc
+        msg_cc_list += cc.split(',')
         receiver_list += cc.split(',')
 
-    if fake_cc is not None:
-        if cc is None:
-            msg_cc = fake_cc
-        else:
-            msg_cc = ','.join([cc, fake_cc])
+    if supervised is None:
+        supervised = bool(os.environ.get('supervised', False))
 
-    msg['cc'] = msg_cc
+    if supervised:
+        msg_cc_list.append(MAIL_MONITOR)
+        receiver_list.append(MAIL_MONITOR)
+
+    if fake_cc is not None:
+        msg_cc_list.append(MAIL_MONITOR)
+
+    msg['cc'] = ','.join(msg_cc_list)
     msg['bcc'] = bcc
     if bcc is not None:
         receiver_list += bcc.split(',')
