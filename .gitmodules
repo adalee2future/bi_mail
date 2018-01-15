@@ -1,0 +1,3 @@
+[submodule "reports"]
+	path = reports
+	url = git@git.intra.im:ada.li/reports.git
