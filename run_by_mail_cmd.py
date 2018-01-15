@@ -117,8 +117,13 @@ def main():
             break
 
         time.sleep(WAIT_SECONDS)
+        
         subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
         subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+        os.chdir('reports')
+        subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+        subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+        os.chdir(BASE_DIR)
 
         try:
             M.select(DEFAULT_FOLDER)
