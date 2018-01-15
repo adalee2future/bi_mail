@@ -38,7 +38,7 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
     if supervised is None:
         supervised = bool(os.environ.get('supervised', False))
 
-    if supervised:
+    if supervised and MAIL_MONITOR not in receiver_list:
         msg_cc_list.append(MAIL_MONITOR)
         receiver_list.append(MAIL_MONITOR)
 
