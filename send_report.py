@@ -5,6 +5,7 @@ import os
 import sys
 import json
 import copy
+import datetime
 
 import fetch_data
 from file_to_mail import file_to_mail
@@ -16,6 +17,7 @@ VALID_ACTIONS = [ 'error', 'exit' ]
 ODPS_DEFAULT_NO_DATA_HANDLER = {"condition": "any", "action": "error"}
 MYSQL_DEFAULT_NO_DATA_HANDLER = None
 DEFAULT_BODY_PREPEND = ''
+OSS_DATA_FOLDER = 'data'
 
 oss_link_reports = os.environ.get('oss_link_reports', '').split(',')
 
@@ -90,13 +92,13 @@ def send_report(report_id, to=None):
         print()
 
         if len(body_prepend) > 0:
-            body_prepend_filename = os.path.join('data', '{report_id}_{pt}_temp.html'.format(report_id=report_id, pt=fetching_data._pt))
-            with open(body_prepend_filename, 'w') as f:
-                f.write(body_prepend)
-            upload_file.upload_file_to_oss(body_prepend_filename)
+
+            current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
+            oss_filename = '{}_{}_{}.html'.format(report_id, fetching_data._pt, current_datetime)
+            upload_file.upload_text_to_oss(oss_filename, body_prepend, folder=OSS_DATA_FOLDER)
 
         if filename is not None:
-            oss_filename = upload_file.upload_file_to_oss(filename)
+            oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_DATA_FOLDER)
 
         try:
             file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc)
@@ -137,7 +139,7 @@ def send_report(report_id, to=None):
             mail_meta = {}
             filename = file_meta.get('filename')
             mail_meta['filename'] = filename
-            oss_filename = upload_file.upload_file_to_oss(filename)
+            oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_DATA_FOLDER)
             if file_type == 'html':
                 mail_meta['body_prepend'] = open(file_meta['filename']).read()
                 mail_meta['filename'] = None
