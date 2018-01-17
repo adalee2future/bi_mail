@@ -13,6 +13,7 @@ import copy
 from collections import OrderedDict
 import tkinter
 import tkinter.font
+import decimal
 from file_to_mail import STYLES
 
 DEFAULT_ODPS_LOGIN_INFO = {
@@ -46,6 +47,8 @@ DEFAULT_FILE_EXTENSION = {
     'html': '.html'
 }
 
+TO_NUMERIC = True
+
 today = datetime.date.today()
 yesterday = today - datetime.timedelta(1)
 week_start = yesterday - datetime.timedelta(6)
@@ -61,6 +64,17 @@ MIN_COL_WIDTH = 8
 MAX_COL_WIDTH = 36
 
 MAX_WAIT_COUNT = 360
+
+def convert_to_integer(s):
+    if len(s) == 0:
+        return s
+    s.fillna(np.nan, inplace=True)
+    s_type = type(s[0])
+    if np.issubdtype(s_type, np.number) or s_type in [str, decimal.Decimal]:
+        print("convert to number")
+        return pd.to_numeric(s, downcast='integer', errors='ignore')
+    else:
+        return s
 
 class FetchingData:
     def __init__(self, login_info):
@@ -249,6 +263,8 @@ class FetchingDataOdps(FetchingData):
             print("fetched size:", sql_res_dataframe.shape)
             print("time take: %ss" % round(time.time() - start))
             #display(sql_res_dataframe.head(10))
+            if TO_NUMERIC:
+                sql_res_dataframe = sql_res_dataframe.apply(convert_to_integer)
             return sql_res_dataframe
 
 
@@ -265,6 +281,8 @@ class FetchingDataMysql(FetchingData):
         print("fetched size:", sql_res_dataframe.shape)
         print("time take: %ss" % round(time.time() - start))
         #display(sql_res_dataframe.head(10))
+        if TO_NUMERIC:
+            sql_res_dataframe = sql_res_dataframe.apply(convert_to_integer)
         return sql_res_dataframe
 
 
