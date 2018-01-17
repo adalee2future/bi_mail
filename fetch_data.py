@@ -48,6 +48,7 @@ DEFAULT_FILE_EXTENSION = {
 }
 
 TO_NUMERIC = True
+HTML_TO_STR = True
 
 today = datetime.date.today()
 yesterday = today - datetime.timedelta(1)
@@ -208,6 +209,8 @@ class FetchingData:
                     f.write('<style>\n{styles}\n{customized_styles}\n</style>'.format(styles=styles, customized_styles=customized_styles))
                     f.write('<br/><h2>%s</h2>\n' % df_name)
                     df.fillna('', inplace=True)
+                    if HTML_TO_STR:
+                        df = df.applymap(str)
                     if merge:
                         f.write(df.set_index(list(df)).to_html())
                     else:
