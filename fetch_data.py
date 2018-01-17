@@ -47,7 +47,6 @@ DEFAULT_FILE_EXTENSION = {
     'html': '.html'
 }
 
-TO_NUMERIC = True
 HTML_TO_STR = True
 
 today = datetime.date.today()
@@ -108,7 +107,7 @@ class FetchingData:
     def run_sql(self, sql_text, dependency={}):
         raise NotImplementedError
      
-    def sql_to_data(self, sql_text, dependency={}, df_names=None, part_prefix='', part_suffix=None):
+    def sql_to_data(self, sql_text, dependency={}, df_names=None, part_prefix='', part_suffix=None, coerce_numeric=False):
         data_dict = OrderedDict()
         sql_text_raw_list = [sql_text.strip() for sql_text in sql_text.split(';')]
         sql_text_list = []
@@ -128,17 +127,19 @@ class FetchingData:
             df_names = [df_name.format(**DATES) for df_name in df_names]
         
         for sql_text, df_name in zip(sql_text_list, df_names):
-            df = self.run_sql(sql_text, dependency=dependency)
+            df = self.run_sql(sql_text, dependency=dependency, coerce_numeric=coerce_numeric)
             data_dict[df_name] = df
 
         return data_dict
 
-    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_prefix='Sheet'):
+    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_prefix='Sheet', coerce_numeric=False):
         if filename is None:
             filename = self.__class__.random_filename('excel')
 
-        data_dict = self.sql_to_data(sql_text, dependency=dependency, df_names=df_names, part_prefix=part_prefix)
+        data_dict = self.sql_to_data(sql_text, dependency=dependency, df_names=df_names, part_prefix=part_prefix, coerce_numeric=coerce_numeric)
         
+        if coerce_numeric:
+            sql_res_dataframe = sql_res_dataframe.apply(convert_to_integer)
         row_permission = copy.deepcopy(row_permission)
         permit_field = row_permission.get('field')
         permit_detail_list = row_permission.get('detail')
@@ -174,12 +175,12 @@ class FetchingData:
         return data_rows_dict_list, permit_detail_list
 
 
-    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' ', styles=STYLES, customized_styles=''):
+    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' ', styles=STYLES, customized_styles='', coerce_numeric=True):
         
         if filename is None:
             filename = self.__class__.random_filename('html')
 
-        data_dict = self.sql_to_data(sql_text, dependency=dependency, df_names=df_names, part_suffix=part_suffix)
+        data_dict = self.sql_to_data(sql_text, dependency=dependency, df_names=df_names, part_suffix=part_suffix, coerce_numeric=coerce_numeric)
 
         row_permission = copy.deepcopy(row_permission)
         permit_field = row_permission.get('field')
@@ -240,7 +241,7 @@ class FetchingDataOdps(FetchingData):
         self._pt = yesterday.strftime('%Y%m%d')
         self._conn = odps.ODPS(**login_info)
 
-    def run_sql(self, sql_text, dependency={}):
+    def run_sql(self, sql_text, dependency={}, coerce_numeric=False):
 
         print("dependency:", dependency)
         for project, table_names in dependency.items():
@@ -266,7 +267,7 @@ class FetchingDataOdps(FetchingData):
             print("fetched size:", sql_res_dataframe.shape)
             print("time take: %ss" % round(time.time() - start))
             #display(sql_res_dataframe.head(10))
-            if TO_NUMERIC:
+            if coerce_numeric:
                 sql_res_dataframe = sql_res_dataframe.apply(convert_to_integer)
             return sql_res_dataframe
 
@@ -277,14 +278,14 @@ class FetchingDataMysql(FetchingData):
         self._pt = today.strftime('%Y%m%d')
         self._conn = pymysql.connect(**DEFAULT_MYSQL_LOGIN_INFO)
 
-    def run_sql(self, sql_text, dependency={}):
+    def run_sql(self, sql_text, dependency={}, coerce_numeric=False):
         start = time.time()
         print(sql_text)
         sql_res_dataframe = pd.read_sql(sql_text, self._conn)
         print("fetched size:", sql_res_dataframe.shape)
         print("time take: %ss" % round(time.time() - start))
         #display(sql_res_dataframe.head(10))
-        if TO_NUMERIC:
+        if coerce_numeric:
             sql_res_dataframe = sql_res_dataframe.apply(convert_to_integer)
         return sql_res_dataframe
 
