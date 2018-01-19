@@ -18,7 +18,7 @@ from file_to_mail import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR, file_to
 DEFAULT_FOLDER = "inbox"
 VALID_SENDER_SUFFIX = 'owitho.com'
 MAIL_SEARCH = 'SUBJECT "bi_mail run"'
-WAIT_SECONDS = 60
+WAIT_SECONDS = 6
 FNULL = open(os.devnull, 'w')
 
 os.chdir(BASE_DIR)
@@ -36,7 +36,7 @@ def get_mail_count(folder=DEFAULT_FOLDER):
     resp_code, resp_data = M.search(None, 'ALL')
     return max(int(mail_id) for mail_id in resp_data[0].decode('ascii').split())
 
-def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap(), notify=False):
+def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()):
     res = {'mail_id': mail_id}
 
     M.select(folder)
@@ -54,7 +54,7 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
         #print("mail header encoding:", encoding)
         res['subject'] = subject
 
-        report_id_search = re.search(r'bi_mail run (\S+)', subject)
+        report_id_search = re.search(r'bi_mail run\s+(\S+)', subject)
         if report_id_search:
             res['report_id'] = report_id_search.groups()[0]
 
@@ -67,10 +67,6 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
         #print('sender decode:', decode_header(sender))
         #print(sender)
         res['sender'] = re.findall(r'<{0,1}([^<]*@[^>]*)>{0,1}', sender)[0]
-
-        if notify:
-            file_to_mail(None, 'parse_mail_sender_and_subject',
-                    '', MAIL_MONITOR, body_prepend=res)
 
         return res
 
@@ -141,8 +137,11 @@ def main():
             for mail_id in mail_ids:
                 print("mail_id:", mail_id)
 
-                cmd_info = parse_mail_sender_and_subject(mail_id, M=M, notify=True)
+                cmd_info = parse_mail_sender_and_subject(mail_id, M=M)
                 print("cmd_info:", cmd_info)
+
+                file_to_mail(None, '手动运行报表<%s>监控' % cmd_info.get('report_id'),
+		            '', MAIL_MONITOR, cc=cmd_info.get('sender'), body_prepend=cmd_info)
 
                 try:
                     bi_mail_run(cmd_info)
