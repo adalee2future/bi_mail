@@ -58,7 +58,7 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
         if report_id_search:
             res['report_id'] = report_id_search.groups()[0]
 
-        to_search = re.search(r'bi_mail run \S+ (\S+)', subject)
+        to_search = re.search(r'bi_mail run\s+\S+\s+(\S+)', subject)
         if to_search:
             res['to'] = to_search.groups()[0]
 
@@ -113,7 +113,7 @@ def main():
             break
 
         time.sleep(WAIT_SECONDS)
-        
+
         subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
         subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
         os.chdir('reports')
