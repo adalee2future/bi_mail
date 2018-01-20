@@ -66,12 +66,11 @@ MAX_COL_WIDTH = 36
 MAX_WAIT_COUNT = 360
 
 def convert_to_integer(s):
-    if len(s) == 0:
+    if sum(pd.notna(s)) == 0:
         return s
-    s.fillna(np.nan, inplace=True)
-    s_type = type(s[0])
-    if np.issubdtype(s_type, np.number) or s_type in [str, decimal.Decimal]:
-        print("convert to number")
+
+    s_type = type(s[pd.notna(s)].iloc[0])
+    if np.issubdtype(s_type, np.number) or s_type == decimal.Decimal:
         return pd.to_numeric(s, downcast='integer', errors='ignore')
     else:
         return s
