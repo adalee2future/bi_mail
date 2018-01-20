@@ -17,7 +17,7 @@ from file_to_mail import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR, file_to
 
 DEFAULT_FOLDER = "inbox"
 VALID_SENDER_SUFFIX = 'owitho.com'
-MAIL_SEARCH = 'SUBJECT "bi_mail run"'
+MAIL_SEARCH = 'SUBJECT "bi_mail"'
 WAIT_SECONDS = 6
 FNULL = open(os.devnull, 'w')
 
@@ -54,11 +54,11 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
         #print("mail header encoding:", encoding)
         res['subject'] = subject
 
-        report_id_search = re.search(r'bi_mail run\s+(\S+)', subject)
+        report_id_search = re.search(r'bi_mail\s+run\s+(\S+)', subject)
         if report_id_search:
             res['report_id'] = report_id_search.groups()[0]
 
-        to_search = re.search(r'bi_mail run\s+\S+\s+(\S+)', subject)
+        to_search = re.search(r'bi_mail\s+run\s+\S+\s+(\S+)', subject)
         if to_search:
             res['to'] = to_search.groups()[0]
 
