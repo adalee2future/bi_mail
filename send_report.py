@@ -11,6 +11,7 @@ import fetch_data
 from file_to_mail import file_to_mail
 import upload_file
 from smtplib import SMTPDataError
+from style import default_style, STYLE_FUNC_MAP
 
 VALID_CONDITIONS = [ 'all', 'any' ]
 VALID_ACTIONS = [ 'error', 'exit' ]
@@ -53,6 +54,7 @@ def send_report(report_id, to=None):
     owner = cfg.get('owner')
     merge = cfg.get('merge', False)
     df_names = cfg.get('df_names')
+    style_func = STYLE_FUNC_MAP.get(cfg.get('style_func'), default_style)
 
     if to is None:
         to = cfg.get('to')
@@ -121,7 +123,7 @@ def send_report(report_id, to=None):
         elif file_type == 'xlsx':
             data_metas, file_metas = fetching_data.sql_to_excel(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission)
         elif file_type == 'html':
-            data_metas, file_metas = fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, customized_styles=customized_styles)
+            data_metas, file_metas = fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, customized_styles=customized_styles, style_func=style_func)
 
         for data_meta, file_meta in zip(data_metas, file_metas):
 

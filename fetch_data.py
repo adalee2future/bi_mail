@@ -15,6 +15,7 @@ import tkinter
 import tkinter.font
 import decimal
 from file_to_mail import STYLES
+from style import default_style
 
 DEFAULT_ODPS_LOGIN_INFO = {
     'access_id': os.environ.get('access_id'),
@@ -48,6 +49,8 @@ DEFAULT_FILE_EXTENSION = {
 }
 
 HTML_TO_STR = True
+
+TABLE_STYLES = [{'selector': '.row_heading, .blank', 'props': [('display', 'none;')]}]
 
 today = datetime.date.today()
 yesterday = today - datetime.timedelta(1)
@@ -174,7 +177,7 @@ class FetchingData:
         return data_rows_dict_list, permit_detail_list
 
 
-    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' ', styles=STYLES, customized_styles='', coerce_numeric=True):
+    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' ', styles=STYLES, customized_styles='', coerce_numeric=True, style_func=default_style):
         
         if filename is None:
             filename = self.__class__.random_filename('html')
@@ -211,10 +214,12 @@ class FetchingData:
                     df.fillna('', inplace=True)
                     if HTML_TO_STR:
                         df = df.applymap(str)
+
                     if merge:
                         f.write(df.set_index(list(df)).to_html())
                     else:
-                        f.write(df.to_html(index=False))
+                        f.write(df.style.apply(style_func).set_table_styles(TABLE_STYLES).render())
+		        
 
             data_rows_dict_list.append(data_rows_dict)
             print("Export to html %s succeed!" % current_filename)
