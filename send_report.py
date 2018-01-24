@@ -54,7 +54,7 @@ def send_report(report_id, to=None):
     owner = cfg.get('owner')
     merge = cfg.get('merge', False)
     df_names = cfg.get('df_names')
-    style_func = STYLE_FUNC_MAP.get(cfg.get('style_func'), default_style)
+    style_func = STYLE_FUNC_MAP.get(cfg.get('style_func'), None)
 
     if to is None:
         to = cfg.get('to')

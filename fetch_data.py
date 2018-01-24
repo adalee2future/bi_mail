@@ -177,7 +177,7 @@ class FetchingData:
         return data_rows_dict_list, permit_detail_list
 
 
-    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' ', styles=STYLES, customized_styles='', coerce_numeric=True, style_func=default_style):
+    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' ', styles=STYLES, customized_styles='', coerce_numeric=True, style_func=None):
         
         if filename is None:
             filename = self.__class__.random_filename('html')
@@ -217,6 +217,8 @@ class FetchingData:
 
                     if merge:
                         f.write(df.set_index(list(df)).to_html())
+                    elif style_func is None:
+                        f.write(df.to_html(index=False))
                     else:
                         f.write(df.style.apply(style_func).set_table_styles(TABLE_STYLES).render())
 		        
