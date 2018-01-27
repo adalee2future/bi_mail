@@ -16,7 +16,7 @@ MAIL_USER = os.environ['mail_user']
 MAIL_PASSWD = os.environ['mail_passwd']
 MAIL_MONITOR = os.environ['mail_monitor']
 
-def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None):
+def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None, caption=''):
 
     s = smtplib.SMTP('smtp.office365.com', port=587)
     s.ehlo()
@@ -59,6 +59,7 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
     mail_body = '''
      <style>\n{styles}\n{customized_styles}\n</style>
      <br/><br/>
+     {caption}
      {body_prepend}
      <br/><br/>
      --------------------------------
@@ -67,7 +68,7 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
      <br/><br/>
      [自动发送]
      <br/><br/>
-    '''.format(styles=STYLES, customized_styles=customized_styles, body_prepend=body_prepend, owner=owner)
+    '''.format(styles=STYLES, customized_styles=customized_styles, body_prepend=body_prepend, owner=owner, caption=caption)
 
     mail_body_html = MIMEText(mail_body, 'html', 'utf-8')
     msg.attach(mail_body_html)

@@ -42,8 +42,15 @@ def get_mail_action(data_meta, no_data_handler):
 def send_report(report_id, to=None):
     os.chdir(os.path.join('reports', report_id))
     base_dir = '.'
+
     sql_path = os.path.join(base_dir, '%s.sql' % report_id)
     cfg_path = os.path.join(base_dir, '%s.cfg' % report_id)
+    cpt_path = os.path.join(base_dir, '%s.cpt' % report_id)
+
+    if os.path.exists(cpt_path):
+        caption = open(cpt_path).read()
+    else:
+        caption = ''
 
     with open(sql_path) as f, open(cfg_path) as g:
         sql_text = f.read()
@@ -116,14 +123,14 @@ def send_report(report_id, to=None):
             return
         
         try:
-            file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc)
+            file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc, caption=caption)
         except SMTPDataError as e:
             if report_id in oss_link_reports:
                 share_url = upload_file.get_file_url(oss_filename)
                 valid_hours = round(upload_file.EXPIRE_SECONDS / 3600)
                 body_prepend = '附件太大，请<a href=%s>点击链接</a>下载(有效期%s小时)<br/>' % (share_url, valid_hours)
                 print("body_prepend:", body_prepend)
-                file_to_mail(None, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc)
+                file_to_mail(None, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc, caption=caption)
             else:
                 raise e
 
@@ -169,6 +176,7 @@ def send_report(report_id, to=None):
             mail_meta['cc'] = file_meta.get('cc')
             mail_meta['fake_cc'] = file_meta.get('fake_cc')
             mail_meta['bcc'] = file_meta.get('bcc')
+            mail_meta['caption'] = caption
 
             try:
                 file_to_mail(**mail_meta)
