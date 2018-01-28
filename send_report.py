@@ -45,7 +45,7 @@ def send_report(report_id, to=None):
 
     sql_path = os.path.join(base_dir, '%s.sql' % report_id)
     cfg_path = os.path.join(base_dir, '%s.cfg' % report_id)
-    cpt_path = os.path.join(base_dir, '%s.cpt' % report_id)
+    cpt_path = os.path.join(base_dir, '%s.caption.html' % report_id)
 
     if os.path.exists(cpt_path):
         caption = open(cpt_path).read()
