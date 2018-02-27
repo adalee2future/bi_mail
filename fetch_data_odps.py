@@ -19,6 +19,7 @@ print("pt:", pt)
 def login(workspace):
     global odps_obj
     odps_obj = odps.ODPS(os.environ['access_id'], os.environ['access_key'], workspace)
+    odps_obj.to_global()
     return odps_obj
 
 def run_sql(sql_text, dependency={}):
