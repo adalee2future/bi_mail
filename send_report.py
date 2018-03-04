@@ -159,11 +159,11 @@ def send_report(report_id, to=None):
 
             mail_meta = {}
             filename = file_meta.get('filename')
-            mail_meta['filename'] = filename
+            mail_meta['filenames'] = filename
             oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_DATA_FOLDER)
             if file_type == 'html':
                 mail_meta['body_prepend'] = open(file_meta['filename']).read()
-                mail_meta['filename'] = None
+                mail_meta['filenames'] = None
 
             mail_meta['subject'] = '{prefix}{subject}_{pt}{suffix}'.format(prefix=file_meta.get('prefix', ''),
                                                                            subject=cfg.get('subject'),
@@ -187,7 +187,7 @@ def send_report(report_id, to=None):
                     body_prepend = '附件太大，请<a href=%s>点击链接</a>下载(有效期%s小时)<br/>' % (share_url, valid_hours)
                     mail_meta['body_prepend'] = body_prepend
                     print("body_prepend:", body_prepend)
-                    mail_meta['filename'] = None
+                    mail_meta['filenames'] = None
                     file_to_mail(**mail_meta)
                 else:
                     raise e

@@ -16,7 +16,7 @@ MAIL_USER = os.environ['mail_user']
 MAIL_PASSWD = os.environ['mail_passwd']
 MAIL_MONITOR = os.environ['mail_monitor']
 
-def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None, caption=''):
+def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None, caption=''):
 
     s = smtplib.SMTP('smtp.office365.com', port=587)
     s.ehlo()
@@ -50,11 +50,14 @@ def file_to_mail(filename, subject, owner, to, cc=None, bcc=None, body_prepend='
     if bcc is not None:
         receiver_list += bcc.split(',')
 
-    if filename is not None:
-        with open(filename, 'rb') as f:
-            file_part = MIMEApplication(f.read(), Name=os.path.basename(filename))
-        file_part.add_header('Content-Disposition', 'attachment', filename=os.path.basename(filename))
-        msg.attach(file_part)
+    if type(filenames) == str:
+        filenames = [filenames]
+    if filenames is not None:
+        for filename in filenames:
+            with open(filename, 'rb') as f:
+                file_part = MIMEApplication(f.read(), Name=os.path.basename(filename))
+                file_part.add_header('Content-Disposition', 'attachment', filename=os.path.basename(filename))
+                msg.attach(file_part)
 
     mail_body = '''
      <style>\n{styles}\n{customized_styles}\n</style>
