@@ -22,9 +22,10 @@ def login(workspace):
     odps_obj.to_global()
     return odps_obj
 
-def run_sql(sql_text, dependency={}):
+def run_sql(sql_text, dependency={}, print_log=True):
 
-    print("dependency:", dependency)
+    if print_log:
+        print("dependency:", dependency)
     for project, table_names in dependency.items():
         for table_name in table_names:
             t = odps_obj.get_table(table_name, project)
@@ -35,22 +36,16 @@ def run_sql(sql_text, dependency={}):
 
     sql_text = sql_text.format(pt=pt)
     start = time.time()
-    print(sql_text)
+    if print_log:
+        print(sql_text)
     sql_res = odps_obj.execute_sql(sql_text)
     with sql_res.open_reader() as reader:
         sql_res_dataframe = reader.to_pandas()
-        print("fetched size:", sql_res_dataframe.shape)
-        print("time take: %ss" % round(time.time() - start))
-        #display(sql_res_dataframe.head(10))
+        if print_log:
+            print("fetched size:", sql_res_dataframe.shape)
+            print("time take: %ss" % round(time.time() - start))
+            display(sql_res_dataframe.head(10))
         return sql_res_dataframe
-
-def sql_to_excel_single(sql_text, filename=None, dependency={}):
-    res = run_sql(sql_text, dependency=dependency)
-    if filename is None:
-        random_hash = "%032x" % random.getrandbits(128)
-        filename = '%s.xlsx' % random_hash
-    res.to_excel(filename, index=False)
-    print("Export to excel %s succeed!" % filename)
 
 def sql_to_excel(sql_text, filename=None, dependency={}):
     if filename is None:
