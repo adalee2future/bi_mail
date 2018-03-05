@@ -26,6 +26,7 @@ def upload_file_to_oss(filename, oss_filename=None, folder=DEFAULT_FOLDER, bucke
         oss_filename = '{}/{}'.format(folder, oss_filename)
     bucket.put_object_from_file(oss_filename, filename)
     print("uploaded oss filename:", oss_filename)
+    bucket.update_object_meta(oss_filename, {'Content-Disposition': 'attachment'})
     return oss_filename
 
 def upload_text_to_oss(oss_filename, text, folder=DEFAULT_FOLDER, bucket_name=DEFAULT_BUCKET):
