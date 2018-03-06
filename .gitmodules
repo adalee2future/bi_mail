@@ -1,3 +1,6 @@
 [submodule "reports"]
 	path = reports
 	url = git@git.intra.im:ada.li/reports.git
+[submodule "vreports"]
+	path = vreports
+	url = git@git.intra.im:ada.li/vreports.git
