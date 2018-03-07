@@ -15,8 +15,11 @@ STYLES = open(os.path.join(BASE_DIR, 'styles.css')).read()
 MAIL_USER = os.environ['mail_user']
 MAIL_PASSWD = os.environ['mail_passwd']
 MAIL_MONITOR = os.environ['mail_monitor']
-
-def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None, caption='', report_type='报表'):
+REPORT_TYPE_MAP = {
+    'report': '报表',
+    'vreport': '报告'
+}
+def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None, caption='', report_type='report'):
 
     s = smtplib.SMTP('smtp.office365.com', port=587)
     s.ehlo()
@@ -67,11 +70,11 @@ def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend=
      <br/><br/>
      --------------------------------
      <br/><br/>
-     如对{report_type}有任何疑问，请联系{owner}
+     如对{report_type_name}有任何疑问，请联系{owner}
      <br/><br/>
      [自动发送]
      <br/><br/>
-    '''.format(styles=STYLES, customized_styles=customized_styles, body_prepend=body_prepend, owner=owner, caption=caption, report_type=report_type)
+    '''.format(styles=STYLES, customized_styles=customized_styles, body_prepend=body_prepend, owner=owner, caption=caption, report_type_name=REPORT_TYPE_MAP[report_type])
 
     mail_body_html = MIMEText(mail_body, 'html', 'utf-8')
     msg.attach(mail_body_html)

@@ -34,5 +34,5 @@ echo >> $daily_log_file
 if [[ $res_code -eq 0 ]]
   then echo
 else
-  ./send_log.py $report_id $report_log_file
+  ./send_log.py report $report_id $report_log_file
 fi
