@@ -1,6 +1,8 @@
 #!/bin/sh
 
 export LANG=zh_CN.UTF-8
+export PATH=~/anaconda3/bin:$PATH
+export PYTHONPATH=$HOME/projects/bi_mail:$PYTHONPATH
 source ~/.profile
 
 cd `dirname $0`
