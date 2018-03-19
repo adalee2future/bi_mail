@@ -104,11 +104,11 @@ class FetchingData:
         max_width = df.head(rows).applymap(FetchingData.get_text_col_width).max()
         df_width_map = {col: width for col, width in enumerate(max_width)}
         return df_width_map
-    
+
     @classmethod
     def run_sql(self, sql_text, dependency={}):
         raise NotImplementedError
-     
+
     def sql_to_data(self, sql_text, dependency={}, df_names=None, part_prefix='', part_suffix=None, coerce_numeric=False):
         data_dict = OrderedDict()
         sql_text_raw_list = [sql_text.strip() for sql_text in sql_text.split(';')]
@@ -118,7 +118,7 @@ class FetchingData:
             if sql_text.lower().find('select') == -1:
                 continue
             sql_text_list.append(sql_text)
-        
+
         if df_names is None:
                 if part_suffix is None:
                     df_names = ['%s%s' % (part_prefix, i) for i in range(1, len(sql_text_list) + 1)]
@@ -127,7 +127,7 @@ class FetchingData:
                     df_names = ['%s%s' % (part_prefix, part_suffix * i) for i in range(1, len(sql_text_list) + 1)]
         else:
             df_names = [df_name.format(**DATES) for df_name in df_names]
-        
+
         for sql_text, df_name in zip(sql_text_list, df_names):
             df = self.run_sql(sql_text, dependency=dependency, coerce_numeric=coerce_numeric)
             data_dict[df_name] = df
@@ -139,7 +139,7 @@ class FetchingData:
             filename = self.__class__.random_filename('excel')
 
         data_dict = self.sql_to_data(sql_text, dependency=dependency, df_names=df_names, part_prefix=part_prefix, coerce_numeric=coerce_numeric)
-        
+
         if coerce_numeric:
             sql_res_dataframe = sql_res_dataframe.apply(convert_to_integer)
         row_permission = copy.deepcopy(row_permission)
@@ -157,10 +157,10 @@ class FetchingData:
             current_filename = ''.join([detail_prefix, name, detail_suffix, extension])
             data_rows_dict = OrderedDict()
             permit_detail['filename'] = current_filename
-           
-            
+
+
             with pd.ExcelWriter(current_filename, engine='xlsxwriter', options={'strings_to_urls': False}) as writer:
-                
+
                 for df_name, df in data_dict.items():
 
                     if detail_permit is not None:
@@ -170,7 +170,7 @@ class FetchingData:
                         df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name)
                     else:
                         df.to_excel(writer, sheet_name=df_name, index=False)
-            
+
             data_rows_dict_list.append(data_rows_dict)
             print("Export to excel %s succeed!" % current_filename)
 
@@ -178,7 +178,7 @@ class FetchingData:
 
 
     def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' ', styles=STYLES, customized_styles='', coerce_numeric=True, style_func=None):
-        
+
         if filename is None:
             filename = self.__class__.random_filename('html')
 
@@ -221,7 +221,7 @@ class FetchingData:
                         f.write(df.to_html(index=False))
                     else:
                         f.write(df.style.apply(style_func).set_table_styles(TABLE_STYLES).render())
-		        
+
 
             data_rows_dict_list.append(data_rows_dict)
             print("Export to html %s succeed!" % current_filename)
@@ -235,16 +235,19 @@ class FetchingData:
             filename = self.__class__.random_filename('csv')
 
         res = self.run_sql(sql_text, dependency=dependency)
-        
+
         res.to_csv(filename, index=False)
         print("Export to csv %s succeed!" % filename)
 
         # todo csv行权限
 
 class FetchingDataOdps(FetchingData):
-    def __init__(self, login_info=DEFAULT_ODPS_LOGIN_INFO):
+    def __init__(self, login_info=DEFAULT_ODPS_LOGIN_INFO, pt=None):
         self._login_info = login_info
-        self._pt = yesterday.strftime('%Y%m%d')
+        if pt is not None:
+            self._pt = pt
+        else:
+            self._pt = yesterday.strftime('%Y%m%d')
         self._conn = odps.ODPS(**login_info)
 
     def run_sql(self, sql_text, dependency={}, coerce_numeric=False):
@@ -279,9 +282,12 @@ class FetchingDataOdps(FetchingData):
 
 
 class FetchingDataMysql(FetchingData):
-    def __init__(self, login_info=DEFAULT_MYSQL_LOGIN_INFO):
+    def __init__(self, login_info=DEFAULT_MYSQL_LOGIN_INFO, pt=None):
         self._login_info = login_info
-        self._pt = today.strftime('%Y%m%d')
+        if pt is not None:
+            self._pt = pt
+        else:
+            self._pt = today.strftime('%Y%m%d')
         self._conn = pymysql.connect(**DEFAULT_MYSQL_LOGIN_INFO)
 
     def run_sql(self, sql_text, dependency={}, coerce_numeric=False):

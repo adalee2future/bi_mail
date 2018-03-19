@@ -5,6 +5,7 @@ import os
 import sys
 import json
 import copy
+import re
 import datetime
 
 import fetch_data
@@ -39,7 +40,9 @@ def get_mail_action(data_meta, no_data_handler):
         if condition == 'all' and satisfied_size == size:
             return action
 
-def send_report(report_id, to=None):
+def send_report(report_id, params=''):
+    if params is None:
+        params = ''
     os.chdir(os.path.join('reports', report_id))
     base_dir = '.'
 
@@ -65,6 +68,10 @@ def send_report(report_id, to=None):
     df_names = cfg.get('df_names')
     style_func = STYLE_FUNC_MAP.get(cfg.get('style_func'), None)
 
+    param_json = dict(re.findall(r'([^;]+)=([^;]+)', params))
+    to = param_json.get('to')
+    pt = param_json.get('pt')
+
     if to is None:
         to = cfg.get('to')
         cc = cfg.get('cc')
@@ -87,10 +94,10 @@ def send_report(report_id, to=None):
     row_permission = cfg.get('row_permission', default_row_permission)
 
     if db_type == 'odps':
-        fetching_data = fetch_data.odps_obj
+        fetching_data = fetch_data.FetchingDataOdps(pt=pt)
         no_data_handler = cfg.get('no_data_handler', ODPS_DEFAULT_NO_DATA_HANDLER)
     elif db_type == 'mysql':
-        fetching_data = fetch_data.mysql_obj
+        fetching_data = fetch_data.FetchingDataMysql()
         no_data_handler = cfg.get('no_data_handler', MYSQL_DEFAULT_NO_DATA_HANDLER)
 
     if cfg.get('customized_file'):
@@ -100,7 +107,7 @@ def send_report(report_id, to=None):
         filename = cust_res.get('filename')
         body_prepend = cust_res.get('body_prepend', DEFAULT_BODY_PREPEND)
         data_meta = cust_res.get('data_meta')
-        
+
         subject = '%s_%s' % (cfg.get('subject'), fetching_data._pt)
         print()
 
@@ -112,7 +119,7 @@ def send_report(report_id, to=None):
 
         if filename is not None:
             oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_DATA_FOLDER)
-            
+
         mail_action = get_mail_action(data_meta, no_data_handler)
         print('\ndata_meta:', data_meta)
         print('no_data_handler:', no_data_handler)
@@ -121,7 +128,7 @@ def send_report(report_id, to=None):
             raise Exception('NoData Error!')
         elif mail_action == 'exit':
             return
-        
+
         try:
             file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc, caption=caption)
         except SMTPDataError as e:
@@ -195,7 +202,7 @@ def send_report(report_id, to=None):
 if __name__ == '__main__':
     report_id = sys.argv[1]
     if len(sys.argv) > 2:
-        to = sys.argv[2]
+        params = sys.argv[2]
     else:
-        to = None
-    send_report(report_id, to)
+        params = None
+    send_report(report_id, params)

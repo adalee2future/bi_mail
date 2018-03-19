@@ -5,7 +5,7 @@ source ~/.profile
 
 cd `dirname $0`
 report_id=$1
-to=$2
+params=$2
 
 if [[ ! -d reports/$report_id/log ]]
   then mkdir reports/$report_id/log
@@ -22,8 +22,8 @@ touch $report_log_file
 touch $daily_report_log_file
 touch $daily_log_file
 
-echo './send_report.sh' $report_id $to >> $daily_log_file
-./send_report.sh $report_id $to >> $report_log_file 2>&1
+echo './send_report.sh' $report_id $params >> $daily_log_file
+./send_report.sh $report_id $params >> $report_log_file 2>&1
 res_code=$?
 
 cat $report_log_file >> $daily_report_log_file

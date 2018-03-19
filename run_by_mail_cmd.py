@@ -58,9 +58,9 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
         if report_id_search:
             res['report_id'] = report_id_search.groups()[0]
 
-        to_search = re.search(r'bi_mail\s+run\s+\S+\s+(\S+)', subject)
-        if to_search:
-            res['to'] = to_search.groups()[0]
+        params_search = re.search(r'bi_mail\s+run\s+\S+\s+(\S+)', subject)
+        if params_search:
+            res['params'] = params_search.groups()[0]
 
         sender = message.get('from')
         #print('sender:', sender)
@@ -73,7 +73,7 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
 
 def bi_mail_run(cmd_info):
     report_id = cmd_info.get('report_id')
-    to = cmd_info.get('to', '')
+    params = cmd_info.get('params')
     sender = cmd_info.get('sender')
     subject = cmd_info.get('subject')
 
@@ -89,8 +89,8 @@ def bi_mail_run(cmd_info):
     report_owner = json.loads(open(cfg_filename).read()).get('owner').split(',')
     report_owner.append(MAIL_MONITOR.split('@')[0])
     if sender_prefix in report_owner:
-        print("./run.sh '%s' %s" % (report_id, to))
-        print("exit code:", subprocess.call(["./run.sh", report_id, to]))
+        print("./run.sh '%s' %s" % (report_id, params))
+        print("exit code:", subprocess.call(["./run.sh", report_id, params]))
 
 
 def current_time():
