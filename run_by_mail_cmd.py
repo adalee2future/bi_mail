@@ -73,7 +73,7 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
 
 def bi_mail_run(cmd_info):
     report_id = cmd_info.get('report_id')
-    params = cmd_info.get('params')
+    params = cmd_info.get('params', '')
     sender = cmd_info.get('sender')
     subject = cmd_info.get('subject')
 
