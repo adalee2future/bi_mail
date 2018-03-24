@@ -28,7 +28,8 @@ DEFAULT_MYSQL_LOGIN_INFO = {
     'host': os.environ.get('mysql_host'),
     'user': os.environ.get('mysql_user'),
     'password': os.environ.get('mysql_password'),
-    'charset': 'utf8'
+    'charset': 'utf8',
+    'read_timeout': 60 * 40
 }
 
 DEFAULT_ROW_PERMISSION = {
