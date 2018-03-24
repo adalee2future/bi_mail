@@ -16,6 +16,7 @@ import tkinter.font
 import decimal
 from file_to_mail import STYLES
 from style import default_style
+from IPython.display import display
 
 DEFAULT_ODPS_LOGIN_INFO = {
     'access_id': os.environ.get('access_id'),
@@ -250,9 +251,9 @@ class FetchingDataOdps(FetchingData):
             self._pt = yesterday.strftime('%Y%m%d')
         self._conn = odps.ODPS(**login_info)
 
-    def run_sql(self, sql_text, dependency={}, coerce_numeric=False):
+    def run_sql(self, sql_text, dependency={}, coerce_numeric=False, print_log=True):
 
-        print("dependency:", dependency)
+        print("dependency:", dependency) if print_log else None
         for project, table_names in dependency.items():
             for table_name in table_names:
                 t = self._conn.get_table(table_name, project)
@@ -269,13 +270,14 @@ class FetchingDataOdps(FetchingData):
 
         sql_text = sql_text.format(pt=self._pt)
         start = time.time()
-        print(sql_text)
+        print(sql_text) if print_log else None
         sql_res = self._conn.execute_sql(sql_text)
         with sql_res.open_reader() as reader:
             sql_res_dataframe = reader.to_pandas()
-            print("fetched size:", sql_res_dataframe.shape)
-            print("time take: %ss" % round(time.time() - start))
-            #display(sql_res_dataframe.head(10))
+            if print_log:
+                print("fetched size:", sql_res_dataframe.shape)
+                print("time take: %ss" % round(time.time() - start))
+                display(sql_res_dataframe.head(10))
             if coerce_numeric:
                 sql_res_dataframe = sql_res_dataframe.apply(convert_to_integer)
             return sql_res_dataframe
@@ -290,13 +292,14 @@ class FetchingDataMysql(FetchingData):
             self._pt = today.strftime('%Y%m%d')
         self._conn = pymysql.connect(**DEFAULT_MYSQL_LOGIN_INFO)
 
-    def run_sql(self, sql_text, dependency={}, coerce_numeric=False):
+    def run_sql(self, sql_text, dependency={}, coerce_numeric=False, print_log=True):
         start = time.time()
-        print(sql_text)
+        print(sql_text) if print_log else None
         sql_res_dataframe = pd.read_sql(sql_text, self._conn)
-        print("fetched size:", sql_res_dataframe.shape)
-        print("time take: %ss" % round(time.time() - start))
-        #display(sql_res_dataframe.head(10))
+        if print_log:
+            print("fetched size:", sql_res_dataframe.shape)
+            print("time take: %ss" % round(time.time() - start))
+            display(sql_res_dataframe.head(10))
         if coerce_numeric:
             sql_res_dataframe = sql_res_dataframe.apply(convert_to_integer)
         return sql_res_dataframe
