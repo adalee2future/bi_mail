@@ -7,6 +7,8 @@ import json
 import copy
 import re
 import datetime
+import matplotlib
+matplotlib.use('agg')
 
 import fetch_data
 from file_to_mail import file_to_mail
