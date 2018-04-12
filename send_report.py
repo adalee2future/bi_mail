@@ -11,7 +11,7 @@ import matplotlib
 matplotlib.use('agg')
 
 import fetch_data
-from file_to_mail import file_to_mail
+from file_to_mail import file_to_mail, BASE_DIR
 import upload_file
 from smtplib import SMTPDataError
 from style import default_style, STYLE_FUNC_MAP
@@ -22,6 +22,7 @@ ODPS_DEFAULT_NO_DATA_HANDLER = {"condition": "any", "action": "error"}
 MYSQL_DEFAULT_NO_DATA_HANDLER = None
 DEFAULT_BODY_PREPEND = ''
 OSS_DATA_FOLDER = 'data'
+VALID_EXTERNAL_PROJECTS = ['store-bi', 'rack-bi']
 
 oss_link_reports = os.environ.get('oss_link_reports', '').split(',')
 
@@ -45,21 +46,28 @@ def get_mail_action(data_meta, no_data_handler):
 def send_report(report_id, params=''):
     if params is None:
         params = ''
-    os.chdir(os.path.join('reports', report_id))
-    base_dir = '.'
+    project_dir = os.path.join(BASE_DIR, 'reports', report_id)
 
-    sql_path = os.path.join(base_dir, '%s.sql' % report_id)
-    cfg_path = os.path.join(base_dir, '%s.cfg' % report_id)
-    cpt_path = os.path.join(base_dir, '%s.caption.html' % report_id)
+    cfg_path = os.path.join(project_dir, '%s.cfg' % report_id)
+    cpt_path = os.path.join(project_dir, '%s.caption.html' % report_id)
 
     if os.path.exists(cpt_path):
         caption = open(cpt_path).read()
     else:
         caption = ''
 
-    with open(sql_path) as f, open(cfg_path) as g:
+    with open(cfg_path) as f:
+        cfg = json.loads(f.read())
+
+    external_sql_location = cfg.get('external_sql_location')
+    if external_sql_location in VALID_EXTERNAL_PROJECTS:
+        os.chdir('..')
+        os.chdir(os.path.join('xbl_bi', external_sql_location, '周期取数'))
+    else:
+        os.chdir(project_dir)
+    sql_path = '%s.sql' % report_id
+    with open(sql_path) as f:
         sql_text = f.read()
-        cfg = json.loads(g.read())
 
     report_name = cfg['report_name']
     db_type = cfg.get('db_type', 'odps')
@@ -144,7 +152,7 @@ def send_report(report_id, params=''):
                 raise e
 
     else:
-        filename = os.path.join(base_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, file_type))
+        filename = os.path.join(project_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, file_type))
         print('filename:', filename)
 
         if file_type == 'csv':

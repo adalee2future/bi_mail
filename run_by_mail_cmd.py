@@ -14,6 +14,7 @@ import subprocess
 
 from email.header import decode_header
 from file_to_mail import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR, file_to_mail
+from send_report import VALID_EXTERNAL_PROJECTS
 
 DEFAULT_FOLDER = "inbox"
 VALID_SENDER_SUFFIX = 'owitho.com'
@@ -119,6 +120,14 @@ def main():
         os.chdir('reports')
         subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
         subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+        os.chdir(BASE_DIR)
+        os.chdir('..')
+        os.chdir('xbl_bi')
+        for external_project in VALID_EXTERNAL_PROJECTS:
+            os.chdir(external_project)
+            subprocess.call(['git', 'pull', 'origin', 'master'], stdout=FNULL, stderr=subprocess.STDOUT)
+            os.chdir('..')
+
         os.chdir(BASE_DIR)
 
         try:
