@@ -76,6 +76,7 @@ def send_report(report_id, params=''):
     owner = cfg.get('owner')
     merge = cfg.get('merge', False)
     df_names = cfg.get('df_names')
+    freeze_panes_list = cfg.get('freeze_panes_list')
     style_func = STYLE_FUNC_MAP.get(cfg.get('style_func'), None)
 
     param_json = dict(re.findall(r'([^;]+)=([^;]+)', params))
@@ -158,7 +159,7 @@ def send_report(report_id, params=''):
         if file_type == 'csv':
             file_metas = fetching_data.sql_to_csv(sql_text, filename=filename, dependency=dependency, row_permission=row_permission)
         elif file_type == 'xlsx':
-            data_metas, file_metas = fetching_data.sql_to_excel(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission)
+            data_metas, file_metas = fetching_data.sql_to_excel(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, freeze_panes_list=freeze_panes_list)
         elif file_type == 'html':
             data_metas, file_metas = fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, customized_styles=customized_styles, style_func=style_func)
 

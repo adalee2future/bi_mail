@@ -94,6 +94,10 @@ class FetchingData:
             return MIN_COL_WIDTH
         tkinter.Frame().destroy()
         font = tkinter.font.Font(family='SimSun', size=2, weight='bold')
+        try:
+            text = round(text, 10)
+        except:
+            pass
         width = font.measure(text)
         if width < MIN_COL_WIDTH:
             return MIN_COL_WIDTH
@@ -103,7 +107,9 @@ class FetchingData:
             return width
 
     def get_df_col_width(df, rows=100):
-        max_width = df.head(rows).applymap(FetchingData.get_text_col_width).max()
+        max_width_body = df.head(rows).applymap(FetchingData.get_text_col_width).max()
+        max_width_header = map(FetchingData.get_text_col_width, list(df))
+        max_width = [max(x, y) for x, y in zip(max_width_body, max_width_header)]
         df_width_map = {col: width for col, width in enumerate(max_width)}
         return df_width_map
 
@@ -136,11 +142,14 @@ class FetchingData:
 
         return data_dict
 
-    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_prefix='Sheet', coerce_numeric=False):
+    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_prefix='Sheet', coerce_numeric=False, freeze_panes_list=None):
         if filename is None:
             filename = self.__class__.random_filename('excel')
 
         data_dict = self.sql_to_data(sql_text, dependency=dependency, df_names=df_names, part_prefix=part_prefix, coerce_numeric=coerce_numeric)
+
+        if freeze_panes_list is None:
+            freeze_panes_list = [[1, 0] for _ in data_dict]
 
         if coerce_numeric:
             sql_res_dataframe = sql_res_dataframe.apply(convert_to_integer)
@@ -163,15 +172,23 @@ class FetchingData:
 
             with pd.ExcelWriter(current_filename, engine='xlsxwriter', options={'strings_to_urls': False}) as writer:
 
-                for df_name, df in data_dict.items():
+                for (df_name, df), freeze_panes in zip(data_dict.items(), freeze_panes_list):
 
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)]
                     data_rows_dict[df_name] = {"shape": df.shape}
                     if merge:
-                        df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name)
+                        df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name, freeze_panes=freeze_panes)
                     else:
-                        df.to_excel(writer, sheet_name=df_name, index=False)
+                        df.to_excel(writer, sheet_name=df_name, index=False, freeze_panes=freeze_panes)
+
+                    # excel format
+                    workbook = writer.book
+                    worksheet = writer.sheets[df_name]
+                    col_width = self.__class__.get_df_col_width(df)
+                    print('col_width:', col_width)
+                    for col, width in col_width.items():
+                        worksheet.set_column(col, col, width)
 
             data_rows_dict_list.append(data_rows_dict)
             print("Export to excel %s succeed!" % current_filename)
