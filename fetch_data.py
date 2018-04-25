@@ -92,13 +92,15 @@ class FetchingData:
     def get_text_col_width(text):
         if text is None:
             return MIN_COL_WIDTH
-        tkinter.Frame().destroy()
-        font = tkinter.font.Font(family='SimSun', size=2, weight='bold')
+        #tkinter.Frame().destroy()
+        #font = tkinter.font.Font(family='SimSun', size=2, weight='bold')
         try:
             text = round(text, 10)
         except:
             pass
-        width = font.measure(text)
+        #width = font.measure(text)
+        text = str(text)
+        width = sum(1 if len(c.encode()) <= 1 else 2 for c in text)
         if width < MIN_COL_WIDTH:
             return MIN_COL_WIDTH
         elif width > MAX_COL_WIDTH:
