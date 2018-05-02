@@ -336,7 +336,7 @@ class FetchingDataMysql(FetchingData):
             self._dt = get_dt(today)
         self._dates = {
             'today': self._dt,
-            'yesterday': add_days(dt2date(self._dt), 1)
+            'yesterday': add_days(dt2date(self._dt), -1)
         }
         self._conn = pymysql.connect(**DEFAULT_MYSQL_LOGIN_INFO)
 
