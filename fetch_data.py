@@ -54,21 +54,37 @@ HTML_TO_STR = True
 
 TABLE_STYLES = [{'selector': '.row_heading, .blank', 'props': [('display', 'none;')]}]
 
+DT_FORMAT = '%Y-%m-%d'
+PT_FORMAT = '%Y%m%d'
+
 today = datetime.date.today()
 yesterday = today - datetime.timedelta(1)
 week_start = yesterday - datetime.timedelta(6)
-
-DATES = {
-    'today': today.strftime('%Y-%m-%d'),
-    'yesterday': yesterday.strftime('%Y-%m-%d'),
-    'week_range': '{week_start}-{week_end}'.format(week_start=week_start.strftime('%m%d'), week_end=yesterday.strftime('%m%d')),
-    'month': yesterday.strftime('%Y-%m')
-}
 
 MIN_COL_WIDTH = 8
 MAX_COL_WIDTH = 36
 
 MAX_WAIT_COUNT = 360
+
+def get_dt(date_t):
+    return date_t.strftime(DT_FORMAT)
+
+def get_pt(date_t):
+    return date_t.strftime(PT_FORMAT)
+
+def add_days(date_t, days):
+    if type(date_t) == datetime.datetime:
+        date_t = date_t.date()
+    return date_t + days * datetime.timedelta(1)
+
+def dt2date(dt):
+    return datetime.datetime.strptime(dt, DT_FORMAT).date()
+
+def pt2date(pt):
+    return datetime.datetime.strptime(pt, PT_FORMAT).date()
+
+def pt2dt(pt):
+    return get_dt(pt2date(pt))
 
 def convert_to_integer(s):
     if sum(pd.notna(s)) == 0:
@@ -136,7 +152,7 @@ class FetchingData:
                     print("part_suffix:", part_suffix, "end")
                     df_names = ['%s%s' % (part_prefix, part_suffix * i) for i in range(1, len(sql_text_list) + 1)]
         else:
-            df_names = [df_name.format(**DATES) for df_name in df_names]
+            df_names = [df_name.format(**self._dates) for df_name in df_names]
 
         for sql_text, df_name in zip(sql_text_list, df_names):
             df = self.run_sql(sql_text, dependency=dependency, coerce_numeric=coerce_numeric)
@@ -267,8 +283,14 @@ class FetchingDataOdps(FetchingData):
         self._login_info = login_info
         if pt is not None:
             self._pt = pt
+            self._dt = pt2dt(pt)
         else:
-            self._pt = yesterday.strftime('%Y%m%d')
+            self._pt = get_pt(yesterday)
+            self._dt = get_dt(yesterday)
+        self._dates = {
+                'today': get_dt(add_days(dt2date(self._dt), 1)),
+                'yesterday': self._dt
+        }
         self._conn = odps.ODPS(**login_info)
 
     def run_sql(self, sql_text, dependency={}, coerce_numeric=False, print_log=True):
@@ -288,7 +310,7 @@ class FetchingDataOdps(FetchingData):
                     if count > MAX_WAIT_COUNT:
                         raise Exception('wait for {project}.{table_name} too long ({count} minutes)'.format(project=project, table_name=table_name, count=count))
 
-        sql_text = sql_text.format(pt=self._pt)
+        sql_text = sql_text.format(pt=self._pt, dt=self._dt, **self._dates)
         start = time.time()
         print(sql_text) if print_log else None
         sql_res = self._conn.execute_sql(sql_text)
@@ -308,12 +330,19 @@ class FetchingDataMysql(FetchingData):
         self._login_info = login_info
         if pt is not None:
             self._pt = pt
+            self._dt = pt2dt(pt)
         else:
-            self._pt = today.strftime('%Y%m%d')
+            self._pt = get_pt(today)
+            self._dt = get_dt(today)
+        self._dates = {
+            'today': self._dt,
+            'yesterday': add_days(dt2date(self._dt), 1)
+        }
         self._conn = pymysql.connect(**DEFAULT_MYSQL_LOGIN_INFO)
 
     def run_sql(self, sql_text, dependency={}, coerce_numeric=False, print_log=True):
         start = time.time()
+        sql_text = sql_text.format(pt=self._pt, dt=self._dt, **self._dates)
         print(sql_text) if print_log else None
         sql_res_dataframe = pd.read_sql(sql_text, self._conn)
         if print_log:
