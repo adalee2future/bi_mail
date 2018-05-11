@@ -122,7 +122,6 @@ def main():
         subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
         os.chdir(BASE_DIR)
         os.chdir('..')
-        os.chdir('xbl_bi')
         for external_project in VALID_EXTERNAL_PROJECTS:
             os.chdir(external_project)
             subprocess.call(['git', 'pull', 'origin', 'master'], stdout=FNULL, stderr=subprocess.STDOUT)

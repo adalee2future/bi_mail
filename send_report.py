@@ -62,7 +62,7 @@ def send_report(report_id, params=''):
     external_sql_location = cfg.get('external_sql_location')
     if external_sql_location in VALID_EXTERNAL_PROJECTS:
         os.chdir('..')
-        os.chdir(os.path.join('xbl_bi', external_sql_location, '周期取数'))
+        os.chdir(os.path.join(external_sql_location, '周期取数'))
     else:
         os.chdir(project_dir)
     sql_path = '%s.sql' % report_id
