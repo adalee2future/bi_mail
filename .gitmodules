@@ -1,6 +1,6 @@
 [submodule "reports"]
 	path = reports
-	url = git@git.intra.im:xbl_bi/reports.git
+	url = git@git.intra.im:bi/reports.git
 [submodule "vreports"]
 	path = vreports
-	url = git@git.intra.im:xbl_bi/vreports.git
+	url = git@git.intra.im:bi/vreports.git
