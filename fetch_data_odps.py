@@ -8,6 +8,7 @@ import time
 import datetime
 import random
 import sys
+from IPython.display import display
 
 today = datetime.date.today()
 yesterday = today - datetime.timedelta(1)
