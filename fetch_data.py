@@ -160,20 +160,23 @@ class FetchingData:
 
         return data_dict
 
-    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_prefix='Sheet', coerce_numeric=False, freeze_panes_list=None):
+    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_prefix='Sheet', coerce_numeric=False, freeze_panes_list=None, formats_list=None):
         if filename is None:
             filename = self.__class__.random_filename('excel')
 
         data_dict = self.sql_to_data(sql_text, dependency=dependency, df_names=df_names, part_prefix=part_prefix, coerce_numeric=coerce_numeric)
-
-        if freeze_panes_list is None:
-            freeze_panes_list = [[1, 0] for _ in data_dict]
 
         if coerce_numeric:
             sql_res_dataframe = sql_res_dataframe.apply(convert_to_integer)
         row_permission = copy.deepcopy(row_permission)
         permit_field = row_permission.get('field')
         permit_detail_list = row_permission.get('detail')
+
+        if freeze_panes_list is None:
+            freeze_panes_list = [[1, 0] for _ in data_dict]
+
+        if formats_list is None:
+            formats_list = [ {} for _ in data_dict ]
 
         data_rows_dict_list = []
 
@@ -187,10 +190,9 @@ class FetchingData:
             data_rows_dict = OrderedDict()
             permit_detail['filename'] = current_filename
 
-
             with pd.ExcelWriter(current_filename, engine='xlsxwriter', options={'strings_to_urls': False}) as writer:
 
-                for (df_name, df), freeze_panes in zip(data_dict.items(), freeze_panes_list):
+                for (df_name, df), formats, freeze_panes in zip(data_dict.items(), formats_list, freeze_panes_list):
 
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)]
@@ -203,10 +205,36 @@ class FetchingData:
                     # excel format
                     workbook = writer.book
                     worksheet = writer.sheets[df_name]
+
+                    col_formats = formats.get('col_formats', [])
+                    print("col_formats:", col_formats)
+                    conditional_formats = formats.get('conditional_formats', [])
+                    print("conditional_formats:", conditional_formats)
+                    col_vs_format = {}
+                    col_vs_conditional_format = {}
+
+                    for col_format in col_formats:
+                        fmt = workbook.add_format(col_format.get('format'))
+                        col_vs_format.update({ list(df).index(col_name): fmt for col_name in col_format.get('col_names') })
+
+                    print("col_vs_format:", col_vs_format)
+                    for conditional_format in conditional_formats:
+                        options = conditional_format.get('options')
+                        fmt = workbook.add_format(conditional_format.get('format'))
+                        options["format"] = fmt
+                        col_vs_conditional_format.update(
+                                { list(df).index(col_name): options for col_name in conditional_format.get('col_names') }
+                        )
+
+                    print("col_vs_conditional_format:", col_vs_conditional_format)
                     col_width = self.__class__.get_df_col_width(df)
                     print('col_width:', col_width)
                     for col, width in col_width.items():
-                        worksheet.set_column(col, col, width)
+                        worksheet.set_column(col, col, width, col_vs_format.get(col))
+
+                    nrows = df.shape[0]
+                    for col, options in col_vs_conditional_format.items():
+                        worksheet.conditional_format(1, col, nrows, col, options)
 
             data_rows_dict_list.append(data_rows_dict)
             print("Export to excel %s succeed!" % current_filename)
