@@ -320,6 +320,8 @@ class FetchingDataOdps(FetchingData):
                 'yesterday': self._dt
         }
         self._conn = odps.ODPS(**login_info)
+        self._conn.to_global()
+
 
     def run_sql(self, sql_text, dependency={}, coerce_numeric=False, print_log=True):
 
