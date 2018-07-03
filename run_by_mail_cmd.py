@@ -67,7 +67,7 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
         #print('sender:', sender)
         #print('sender decode:', decode_header(sender))
         #print(sender)
-        res['sender'] = re.findall(r'<{0,1}([^<]*@[^>]*)>{0,1}', sender)[0]
+        res['sender'] = re.findall('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-zA-Z]{2,}', sender)[0]
 
         return res
 
