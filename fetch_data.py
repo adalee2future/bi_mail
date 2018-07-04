@@ -135,8 +135,7 @@ class FetchingData:
     def run_sql(self, sql_text, dependency={}):
         raise NotImplementedError
 
-    def sql_to_data(self, sql_text, dependency={}, df_names=None, part_prefix='', part_suffix=None, coerce_numeric=False):
-        data_dict = OrderedDict()
+    def get_sql_text_list(sql_text):
         sql_text_raw_list = [sql_text.strip() for sql_text in sql_text.split(';')]
         sql_text_list = []
 
@@ -145,12 +144,17 @@ class FetchingData:
                 continue
             sql_text_list.append(sql_text)
 
+        return sql_text_list
+
+    def sql_to_data(self, sql_text, dependency={}, df_names=None, part_prefix='', part_suffix=None, coerce_numeric=False):
+        sql_text_list = self.__class__.get_sql_text_list(sql_text)
+        data_dict = OrderedDict()
         if df_names is None:
-                if part_suffix is None:
-                    df_names = ['%s%s' % (part_prefix, i) for i in range(1, len(sql_text_list) + 1)]
-                else:
-                    print("part_suffix:", part_suffix, "end")
-                    df_names = ['%s%s' % (part_prefix, part_suffix * i) for i in range(1, len(sql_text_list) + 1)]
+            if part_suffix is None:
+                df_names = ['%s%s' % (part_prefix, i) for i in range(1, len(sql_text_list) + 1)]
+            else:
+                print("part_suffix:", part_suffix, "end")
+                df_names = ['%s%s' % (part_prefix, part_suffix * i) for i in range(1, len(sql_text_list) + 1)]
         else:
             df_names = [df_name.format(**self._dates) for df_name in df_names]
 
@@ -304,6 +308,9 @@ class FetchingData:
         res.to_csv(filename, index=False)
         print("Export to csv %s succeed!" % filename)
 
+        data_metas = [OrderedDict(csv={'shape': res.shape})]
+        file_metas = [{'filename': filename}]
+        return data_metas, file_metas
         # todo csv行权限
 
 class FetchingDataOdps(FetchingData):
