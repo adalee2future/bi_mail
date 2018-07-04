@@ -184,7 +184,7 @@ def send_report(report_id, params=''):
                 filename = os.path.join(project_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, current_file_type))
                 current_sql_text = '\n;\n'.join(name_vs_sql[name] for name in current_df_names)
                 data_metas, file_metas = export_file(fetching_data, current_sql_text, current_file_type,
-                    filename, dependency, df_names, row_permission, merge, freeze_panes_list,
+                    filename, dependency, current_df_names, row_permission, merge, freeze_panes_list,
                     xlsx_formats_list, customized_styles, style_func)
 
                 file_metas_container.append(file_metas)
