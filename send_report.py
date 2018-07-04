@@ -8,6 +8,7 @@ import copy
 import re
 import datetime
 import matplotlib
+from collections import OrderedDict
 matplotlib.use('agg')
 
 import fetch_data
@@ -42,6 +43,21 @@ def get_mail_action(data_meta, no_data_handler):
 
         if condition == 'all' and satisfied_size == size:
             return action
+
+def export_file(fetching_data, sql_text, file_type, filename=None, dependency={}, df_names=None, row_permission=fetch_data.DEFAULT_ROW_PERMISSION, merge=False, freeze_panes_list=None, formats_list=None, customized_styles='', style_func=None):
+
+    if file_type == 'csv':
+        data_metas, file_metas = fetching_data.sql_to_csv(sql_text, filename=filename, dependency=dependency, row_permission=row_permission)
+    elif file_type == 'xlsx':
+        data_metas, file_metas = fetching_data.sql_to_excel(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, freeze_panes_list=freeze_panes_list, formats_list=formats_list)
+    elif file_type == 'html':
+        data_metas, file_metas = fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, customized_styles=customized_styles, style_func=style_func)
+
+        for file_meta in file_metas:
+            file_meta['body_prepend'] = open(file_meta.get('filename')).read()
+            del file_meta['filename']
+
+    return data_metas, file_metas
 
 def send_report(report_id, params=''):
     if params is None:
@@ -154,15 +170,41 @@ def send_report(report_id, params=''):
                 raise e
 
     else:
-        filename = os.path.join(project_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, file_type))
-        print('filename:', filename)
+        if isinstance(file_type, str):
+            filename = os.path.join(project_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, file_type))
+            data_metas, file_metas = export_file(fetching_data, sql_text, file_type,
+                    filename, dependency, df_names, row_permission, merge, freeze_panes_list,
+                    xlsx_formats_list, customized_styles, style_func)
+        elif isinstance(file_type, dict):
+            file_metas_container = []
+            data_metas_container = []
+            sql_text_list = fetching_data.__class__.get_sql_text_list(sql_text)
+            name_vs_sql = {df_name: sql for df_name, sql in zip(df_names, sql_text_list)}
+            for current_file_type, current_df_names in file_type.items():
+                filename = os.path.join(project_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, current_file_type))
+                current_sql_text = '\n;\n'.join(name_vs_sql[name] for name in current_df_names)
+                data_metas, file_metas = export_file(fetching_data, current_sql_text, current_file_type,
+                    filename, dependency, df_names, row_permission, merge, freeze_panes_list,
+                    xlsx_formats_list, customized_styles, style_func)
 
-        if file_type == 'csv':
-            file_metas = fetching_data.sql_to_csv(sql_text, filename=filename, dependency=dependency, row_permission=row_permission)
-        elif file_type == 'xlsx':
-            data_metas, file_metas = fetching_data.sql_to_excel(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, freeze_panes_list=freeze_panes_list, formats_list=xlsx_formats_list)
-        elif file_type == 'html':
-            data_metas, file_metas = fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, customized_styles=customized_styles, style_func=style_func)
+                file_metas_container.append(file_metas)
+                data_metas_container.append(data_metas)
+
+            data_metas = []
+            file_metas = []
+            for data_meta_list in zip(*data_metas_container):
+                data_meta_combined = OrderedDict()
+                for data_meta in data_meta_list:
+                    data_meta_combined.update(data_meta)
+                data_metas.append(data_meta_combined)
+
+            for file_meta_list in zip(*file_metas_container):
+                file_meta_combined =file_meta_list[0]
+                file_meta_combined['body_prepend'] = '\n<br/>\n'.join(file_meta.get('body_prepend') for file_meta in file_meta_list if file_meta.get('body_prepend') is not None)
+                file_meta_combined['filename'] = [file_meta.get('filename') for file_meta in file_meta_list if file_meta.get('filename') is not None]
+
+                file_metas.append(file_meta_combined)
+
 
         for data_meta, file_meta in zip(data_metas, file_metas):
 
@@ -179,15 +221,21 @@ def send_report(report_id, params=''):
             mail_meta = {}
             filename = file_meta.get('filename')
             mail_meta['filenames'] = filename
-            oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_DATA_FOLDER)
-            if file_type == 'html':
-                mail_meta['body_prepend'] = open(file_meta['filename']).read()
-                mail_meta['filenames'] = None
+            mail_meta['body_prepend'] = file_meta.get('body_prepend', '')
+            filenames = []
+            if isinstance(filename, str):
+                filenames = [filename]
+            elif isinstance(filename, list):
+                filenames = filename
 
-            mail_meta['subject'] = '{prefix}{subject}_{pt}{suffix}'.format(prefix=file_meta.get('prefix', ''),
-                                                                           subject=cfg.get('subject'),
-                                                                           pt=fetching_data._pt,
-                                                                           suffix=file_meta.get('suffix', ''))
+            for filename in filenames:
+                oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_DATA_FOLDER)
+
+            mail_meta['subject'] = '{prefix}{subject}_{pt}{suffix}'.\
+                    format(prefix=file_meta.get('prefix', ''),
+                           subject=cfg.get('subject'),
+                           pt=fetching_data._pt,
+                           suffix=file_meta.get('suffix', ''))
             mail_meta['customized_styles'] = customized_styles
             mail_meta['owner'] = owner
 
