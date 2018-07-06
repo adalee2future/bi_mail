@@ -198,6 +198,7 @@ class FetchingData:
 
                 for (df_name, df), formats, freeze_panes in zip(data_dict.items(), formats_list, freeze_panes_list):
 
+                    nrows = df.shape[0]
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)]
                     data_rows_dict[df_name] = {"shape": df.shape}
@@ -215,7 +216,6 @@ class FetchingData:
                     conditional_formats = formats.get('conditional_formats', [])
                     print("conditional_formats:", conditional_formats)
                     col_vs_format = {}
-                    col_vs_conditional_format = {}
 
                     for col_format in col_formats:
                         fmt = workbook.add_format(col_format.get('format'))
@@ -226,19 +226,17 @@ class FetchingData:
                         options = conditional_format.get('options')
                         fmt = workbook.add_format(conditional_format.get('format'))
                         options["format"] = fmt
-                        col_vs_conditional_format.update(
-                                { list(df).index(col_name): options for col_name in conditional_format.get('col_names') }
-                        )
+                        col_vs_conditional_format = { list(df).index(col_name): options for col_name in conditional_format.get('col_names') }
 
-                    print("col_vs_conditional_format:", col_vs_conditional_format)
+                        print("col_vs_conditional_format:", col_vs_conditional_format)
+                        for col, options in col_vs_conditional_format.items():
+                            worksheet.conditional_format(1, col, nrows, col, options)
+
                     col_width = self.__class__.get_df_col_width(df)
                     print('col_width:', col_width)
                     for col, width in col_width.items():
                         worksheet.set_column(col, col, width, col_vs_format.get(col))
 
-                    nrows = df.shape[0]
-                    for col, options in col_vs_conditional_format.items():
-                        worksheet.conditional_format(1, col, nrows, col, options)
 
             data_rows_dict_list.append(data_rows_dict)
             print("Export to excel %s succeed!" % current_filename)
