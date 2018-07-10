@@ -15,7 +15,7 @@ import tkinter
 import tkinter.font
 import decimal
 from file_to_mail import STYLES
-from style import default_style
+import style
 from IPython.display import display
 
 DEFAULT_ODPS_LOGIN_INFO = {
@@ -244,7 +244,7 @@ class FetchingData:
         return data_rows_dict_list, permit_detail_list
 
 
-    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' ', styles=STYLES, customized_styles='', coerce_numeric=True, style_func=None):
+    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' ', styles=STYLES, customized_styles='', coerce_numeric=True, formats_list=None):
 
         if filename is None:
             filename = self.__class__.random_filename('html')
@@ -270,7 +270,9 @@ class FetchingData:
             permit_detail['filename'] = current_filename
 
             with open(current_filename, 'w') as f:
-                for df_name, df in data_dict.items():
+                if formats_list is None:
+                    formats_list = [{}] * len(data_dict)
+                for (df_name, df), formats in zip(data_dict.items(), formats_list):
 
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)].copy()
@@ -279,15 +281,37 @@ class FetchingData:
                     f.write('<style>\n{styles}\n{customized_styles}\n</style>'.format(styles=styles, customized_styles=customized_styles))
                     f.write('<br/><h2>%s</h2>\n' % df_name)
                     df.fillna('', inplace=True)
-                    if HTML_TO_STR:
-                        df = df.applymap(str)
+
 
                     if merge:
+                        if HTML_TO_STR:
+                            df = df.applymap(str)
                         f.write(df.set_index(list(df)).to_html())
-                    elif style_func is None:
+                    elif formats == {}:
+                        if HTML_TO_STR:
+                            df = df.applymap(str)
                         f.write(df.to_html(index=False))
                     else:
-                        f.write(df.style.apply(style_func).set_table_styles(TABLE_STYLES).render())
+                        df_style = df.style.applymap(lambda x: '')
+                        col_formats = formats.get('col_formats')
+                        conditional_formats = formats.get('conditional_formats')
+                        if col_formats is not None:
+                            for col_format in col_formats:
+                                df_style = df_style.format({col: col_format.get('format') for col in col_format.get('col_names')})
+                        if conditional_formats is not None:
+                            for conditional_format in conditional_formats:
+                                col_names = conditional_format.get('col_names')
+                                options = conditional_format.get('options')
+                                print(options)
+                                func_type, func_name = options.pop('func_type', 'apply'), options.pop('func_name')
+                                if func_type == 'apply':
+                                    df_style = df_style.apply(eval('style.%s' % func_name), subset=col_names, **options)
+                                elif func_type == 'applymap':
+                                    df_style = df_style.applymap(eval('style.%s' % func_name), subset=col_names, **options)
+                        display(df_style)
+                        display(df_style.set_table_styles(TABLE_STYLES))
+
+                        f.write(df_style.set_table_styles(TABLE_STYLES).render())
 
 
             data_rows_dict_list.append(data_rows_dict)
