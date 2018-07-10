@@ -15,7 +15,6 @@ import fetch_data
 from file_to_mail import file_to_mail, BASE_DIR
 import upload_file
 from smtplib import SMTPDataError
-from style import default_style, STYLE_FUNC_MAP
 
 VALID_CONDITIONS = [ 'all', 'any' ]
 VALID_ACTIONS = [ 'error', 'exit' ]
@@ -44,17 +43,20 @@ def get_mail_action(data_meta, no_data_handler):
         if condition == 'all' and satisfied_size == size:
             return action
 
-def export_file(fetching_data, sql_text, file_type, filename=None, dependency={}, df_names=None, row_permission=fetch_data.DEFAULT_ROW_PERMISSION, merge=False, freeze_panes_list=None, formats_list=None, customized_styles='', style_func=None):
+def export_file(fetching_data, sql_text, file_type, filename=None, dependency={}, df_names=None, row_permission=fetch_data.DEFAULT_ROW_PERMISSION, merge=False, freeze_panes_list=None, xlsx_formats_list=None, customized_styles='', html_formats_list=None):
 
     if file_type == 'csv':
         data_metas, file_metas = fetching_data.sql_to_csv(sql_text, filename=filename, dependency=dependency, row_permission=row_permission)
     elif file_type == 'xlsx':
-        data_metas, file_metas = fetching_data.sql_to_excel(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, freeze_panes_list=freeze_panes_list, formats_list=formats_list)
+        data_metas, file_metas = fetching_data.sql_to_excel(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, freeze_panes_list=freeze_panes_list, formats_list=xlsx_formats_list)
     elif file_type == 'html':
-        data_metas, file_metas = fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, customized_styles=customized_styles, style_func=style_func)
+        data_metas, file_metas = fetching_data.sql_to_html(sql_text, filename=filename, dependency=dependency, df_names=df_names, merge=merge, row_permission=row_permission, customized_styles=customized_styles, formats_list=html_formats_list)
 
-        for file_meta in file_metas:
-            file_meta['body_prepend'] = open(file_meta.get('filename')).read()
+    for file_meta in file_metas:
+        filename = file_meta.get('filename')
+        oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_DATA_FOLDER)
+        if file_type == 'html':
+            file_meta['body_prepend'] = open(filename).read()
             del file_meta['filename']
 
     return data_metas, file_metas
@@ -93,7 +95,7 @@ def send_report(report_id, params=''):
     merge = cfg.get('merge', False)
     df_names = cfg.get('df_names')
     freeze_panes_list = cfg.get('freeze_panes_list')
-    style_func = STYLE_FUNC_MAP.get(cfg.get('style_func'), None)
+    html_formats_list = cfg.get('html_formats_list')
     xlsx_formats_list = cfg.get('xlsx_formats_list')
 
     param_json = dict(re.findall(r'([^;]+)=([^;]+)', params))
@@ -174,7 +176,7 @@ def send_report(report_id, params=''):
             filename = os.path.join(project_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, file_type))
             data_metas, file_metas = export_file(fetching_data, sql_text, file_type,
                     filename, dependency, df_names, row_permission, merge, freeze_panes_list,
-                    xlsx_formats_list, customized_styles, style_func)
+                    xlsx_formats_list, customized_styles, html_formats_list)
         elif isinstance(file_type, dict):
             file_metas_container = []
             data_metas_container = []
@@ -185,7 +187,7 @@ def send_report(report_id, params=''):
                 current_sql_text = '\n;\n'.join(name_vs_sql[name] for name in current_df_names)
                 data_metas, file_metas = export_file(fetching_data, current_sql_text, current_file_type,
                     filename, dependency, current_df_names, row_permission, merge, freeze_panes_list,
-                    xlsx_formats_list, customized_styles, style_func)
+                    xlsx_formats_list, customized_styles, html_formats_list)
 
                 file_metas_container.append(file_metas)
                 data_metas_container.append(data_metas)
@@ -222,15 +224,6 @@ def send_report(report_id, params=''):
             filename = file_meta.get('filename')
             mail_meta['filenames'] = filename
             mail_meta['body_prepend'] = file_meta.get('body_prepend', '')
-            filenames = []
-            if isinstance(filename, str):
-                filenames = [filename]
-            elif isinstance(filename, list):
-                filenames = filename
-
-            for filename in filenames:
-                oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_DATA_FOLDER)
-
             mail_meta['subject'] = '{prefix}{subject}_{pt}{suffix}'.\
                     format(prefix=file_meta.get('prefix', ''),
                            subject=cfg.get('subject'),
