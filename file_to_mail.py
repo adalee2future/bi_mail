@@ -65,8 +65,8 @@ def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend=
     mail_body = '''
      <style>\n{styles}\n{customized_styles}\n</style>
      <br/><br/>
-     {caption}
      {body_prepend}
+     {caption}
      <br/><br/>
      --------------------------------
      <br/><br/>
