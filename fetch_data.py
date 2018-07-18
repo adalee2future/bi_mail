@@ -286,11 +286,11 @@ class FetchingData:
                     if merge:
                         if HTML_TO_STR:
                             df = df.applymap(str)
-                        f.write(df.set_index(list(df)).to_html())
+                        f.write(df.set_index(list(df)).to_html(escape=False))
                     elif formats == {}:
                         if HTML_TO_STR:
                             df = df.applymap(str)
-                        f.write(df.to_html(index=False))
+                        f.write(df.to_html(index=False, escape=False))
                     else:
                         df_style = df.style.applymap(lambda x: '')
                         col_formats = formats.get('col_formats')
