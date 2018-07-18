@@ -9,7 +9,6 @@ th, td {
 
 td {
   line-height: 100%;
-  width: 10%;
 }
 
 table tbody tr:nth-child(even) {
