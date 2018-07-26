@@ -18,6 +18,8 @@ from file_to_mail import STYLES
 import style
 from IPython.display import display
 
+pd.set_option('max_colwidth', 1000)
+
 DEFAULT_ODPS_LOGIN_INFO = {
     'access_id': os.environ.get('access_id'),
     'secret_access_key': os.environ.get('access_key'),
