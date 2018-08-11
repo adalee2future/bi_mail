@@ -68,6 +68,9 @@ MAX_COL_WIDTH = 36
 
 MAX_WAIT_COUNT = 360
 
+LINK_TEMPLATE_HTML = '<a href="{}">{}</a>'
+LINK_TEMPLATE_EXCEL = '=HYPERLINK("{}", "{}")'
+
 def get_dt(date_t):
     return date_t.strftime(DT_FORMAT)
 
@@ -97,6 +100,24 @@ def convert_to_integer(s):
         return pd.to_numeric(s, downcast='integer', errors='ignore')
     else:
         return s
+
+def merge_fields_hyperlink(df, hyperlinks, template):
+    df = df.copy()
+
+    if hyperlinks is None:
+        return df
+
+    for hyperlink in hyperlinks:
+        columns = list(df)
+        text_field = hyperlink.get('text_field')
+        url_field = hyperlink.get('url_field')
+        merged_field = hyperlink.get('merged_field')
+        if text_field in columns and url_field in columns:
+            merged_value = df.apply(lambda x: template.format(x[url_field], x[text_field]), axis=1)
+            loc = columns.index(text_field)
+            df.drop([text_field, url_field], axis=1, inplace=True)
+            df.insert(loc, column=merged_field, value=merged_value)
+    return df
 
 class FetchingData:
     def __init__(self, login_info):
@@ -166,7 +187,7 @@ class FetchingData:
 
         return data_dict
 
-    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_prefix='Sheet', coerce_numeric=False, freeze_panes_list=None, formats_list=None):
+    def sql_to_excel(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_prefix='Sheet', coerce_numeric=False, freeze_panes_list=None, formats_list=None, hyperlinks=None):
         if filename is None:
             filename = self.__class__.random_filename('excel')
 
@@ -203,6 +224,8 @@ class FetchingData:
                     nrows = df.shape[0]
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)]
+
+                    df = merge_fields_hyperlink(df, hyperlinks, LINK_TEMPLATE_EXCEL)
                     data_rows_dict[df_name] = {"shape": df.shape}
                     if merge:
                         df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name, freeze_panes=freeze_panes)
@@ -246,7 +269,7 @@ class FetchingData:
         return data_rows_dict_list, permit_detail_list
 
 
-    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' ', styles=STYLES, customized_styles='', coerce_numeric=True, formats_list=None):
+    def sql_to_html(self, sql_text, filename=None, dependency={}, df_names=None, merge=False, row_permission=DEFAULT_ROW_PERMISSION, part_suffix=' ', styles=STYLES, customized_styles='', coerce_numeric=True, formats_list=None, hyperlinks=None):
 
         if filename is None:
             filename = self.__class__.random_filename('html')
@@ -278,6 +301,8 @@ class FetchingData:
 
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)].copy()
+
+                    df = merge_fields_hyperlink(df, hyperlinks, LINK_TEMPLATE_HTML)
                     data_rows_dict[df_name] = {"shape": df.shape}
                     f.write('<head><meta charset="UTF-8"></head>\n')
                     f.write('<style>\n{styles}\n{customized_styles}\n</style>'.format(styles=styles, customized_styles=customized_styles))
