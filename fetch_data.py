@@ -111,7 +111,7 @@ def merge_fields_hyperlink(df, hyperlinks, template):
         columns = list(df)
         text_field = hyperlink.get('text_field')
         url_field = hyperlink.get('url_field')
-        merged_field = hyperlink.get('merged_field')
+        merged_field = hyperlink.get('merged_field', text_field)
         if text_field in columns and url_field in columns:
             merged_value = df.apply(lambda x: template.format(x[url_field], x[text_field]), axis=1)
             loc = columns.index(text_field)
