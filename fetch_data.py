@@ -71,6 +71,9 @@ MAX_WAIT_COUNT = 360
 LINK_TEMPLATE_HTML = '<a href="{}">{}</a>'
 LINK_TEMPLATE_EXCEL = '=HYPERLINK("{}", "{}")'
 
+DEFAULT_COL_FORMAT_JSON = {'font_name': '微软雅黑'}
+DEFAULT_HEADER_FORMAT_JSON = {'font_name': '微软雅黑', 'font_color': 'white', 'bg_color': '#4286f4'}
+
 def get_dt(date_t):
     return date_t.strftime(DT_FORMAT)
 
@@ -221,7 +224,7 @@ class FetchingData:
 
                 for (df_name, df), formats, freeze_panes in zip(data_dict.items(), formats_list, freeze_panes_list):
 
-                    nrows = df.shape[0]
+                    nrows, ncols = df.shape
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)]
 
@@ -236,14 +239,23 @@ class FetchingData:
                     workbook = writer.book
                     worksheet = writer.sheets[df_name]
 
+                    # first row format
+                    header_format = workbook.add_format(DEFAULT_HEADER_FORMAT_JSON)
+                    for col_num, value in enumerate(df.columns.values):
+                        worksheet.write(0, col_num, value, header_format)
+
+                    # col format
                     col_formats = formats.get('col_formats', [])
                     print("col_formats:", col_formats)
                     conditional_formats = formats.get('conditional_formats', [])
                     print("conditional_formats:", conditional_formats)
-                    col_vs_format = {}
+
+                    col_vs_format = {idx: workbook.add_format(DEFAULT_COL_FORMAT_JSON) for idx in np.arange(ncols)}
 
                     for col_format in col_formats:
-                        fmt = workbook.add_format(col_format.get('format'))
+                        fmt_json = copy.deepcopy(DEFAULT_COL_FORMAT_JSON)
+                        fmt_json.update(col_format.get('format'))
+                        fmt = workbook.add_format(fmt_json)
                         col_vs_format.update({ list(df).index(col_name): fmt for col_name in col_format.get('col_names') })
 
                     print("col_vs_format:", col_vs_format)
