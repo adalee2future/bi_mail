@@ -437,6 +437,20 @@ class FetchingDataOdps(FetchingData):
         self._conn.to_global()
 
 
+    def partition_name(self, t):
+        try:
+            return t.schema.partitions[0].name
+        except:
+            return None
+
+    def is_table_ready(self, t, pt):
+        p_name = self.partition_name(t)
+        print("table and partition:", t.name, p_name)
+        if p_name is not None:
+            return t.exist_partition('{}={}'.format(p_name, pt))
+        else:
+            return t.last_modified_time.strftime('%Y%m%d') > pt
+
     def run_sql(self, sql_text, dependency={}, coerce_numeric=False, print_log=True):
 
         print("dependency:", dependency) if print_log else None
@@ -445,7 +459,7 @@ class FetchingDataOdps(FetchingData):
                 t = self._conn.get_table(table_name, project)
                 count = 0
                 while True:
-                    if t.exist_partition('pt={}'.format(self._pt)):
+                    if self.is_table_ready(t, self._pt):
                         break
 
                     time.sleep(60)
