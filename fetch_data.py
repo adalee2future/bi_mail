@@ -94,6 +94,32 @@ def pt2date(pt):
 def pt2dt(pt):
     return get_dt(pt2date(pt))
 
+def get_max_digits_count(s, e=1e-10):
+    def get_digits_count(x):
+        for i in range(11):
+            if pd.isna(x):
+                return np.nan
+            if abs(x - round(x, i)) < e:
+                return i
+
+    res = s.apply(get_digits_count).max()
+    if pd.isna(res):
+        return res
+    else:
+        return int(res)
+
+def numeric_fields(df):
+    numeric_cols = []
+    for col in df.columns.values:
+        s = df[col]
+        if s.notna().sum() == 0:
+            break
+        s_type = type(s[pd.notna(s)].iloc[0])
+        if np.issubdtype(s_type, np.number) or s_type == decimal.Decimal:
+            numeric_cols.append(col)
+    return numeric_cols
+    
+
 def convert_to_integer(s):
     if sum(pd.notna(s)) == 0:
         return s
@@ -224,11 +250,11 @@ class FetchingData:
 
                 for (df_name, df), formats, freeze_panes in zip(data_dict.items(), formats_list, freeze_panes_list):
 
-                    nrows, ncols = df.shape
                     if detail_permit is not None:
                         df = df[df[permit_field].isin(detail_permit)]
 
                     df = merge_fields_hyperlink(df, hyperlinks, LINK_TEMPLATE_EXCEL)
+                    nrows, ncols = df.shape
                     data_rows_dict[df_name] = {"shape": df.shape}
                     if merge:
                         df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name, freeze_panes=freeze_panes)
@@ -245,12 +271,26 @@ class FetchingData:
                         worksheet.write(0, col_num, value, header_format)
 
                     # col format
+                    num_fields = numeric_fields(df)
                     col_formats = formats.get('col_formats', [])
                     print("col_formats:", col_formats)
                     conditional_formats = formats.get('conditional_formats', [])
                     print("conditional_formats:", conditional_formats)
 
-                    col_vs_format = {idx: workbook.add_format(DEFAULT_COL_FORMAT_JSON) for idx in np.arange(ncols)}
+                    col_vs_format = {}
+                    for idx, col in enumerate(df.columns.values):
+                        fmt_json = copy.deepcopy(DEFAULT_COL_FORMAT_JSON)
+                        if col in num_fields:
+                            digits_count = get_max_digits_count(df[col])
+                            if(digits_count > 0):
+                                num_format = '#,##0.%s' % ('0' * digits_count)
+                            else:
+                                num_format = '#,##0'
+                                
+                            fmt_json.update({'num_format': num_format})
+
+                        col_vs_format[idx] = workbook.add_format(fmt_json)
+                        
 
                     for col_format in col_formats:
                         fmt_json = copy.deepcopy(DEFAULT_COL_FORMAT_JSON)
@@ -326,12 +366,20 @@ class FetchingData:
                         if HTML_TO_STR:
                             df = df.applymap(str)
                         f.write(df.set_index(list(df)).to_html(escape=False))
-                    elif formats == {}:
-                        if HTML_TO_STR:
-                            df = df.applymap(str)
-                        f.write(df.to_html(index=False, escape=False))
+                    #elif formats == {}:
+
+                        #if HTML_TO_STR:
+                        #    df = df.applymap(str)
+                        #f.write(df.to_html(index=False, escape=False))
                     else:
-                        df_style = df.style.applymap(lambda x: '')
+                        print(df.columns.values)
+                        num_fields = numeric_fields(df)
+                        num_fields_format = {}
+                        for col in num_fields:
+                            digits_count = get_max_digits_count(df[col])
+                            num_fields_format[col] = '{:,.%sf}' % digits_count
+                        df_style = df.style.format(num_fields_format)
+                        df_style.set_properties(**{'text-align': 'right'}, subset=num_fields)
                         col_formats = formats.get('col_formats')
                         conditional_formats = formats.get('conditional_formats')
                         if col_formats is not None:
@@ -347,8 +395,6 @@ class FetchingData:
                                     df_style = df_style.apply(eval('style.%s' % func_name), subset=col_names, **options)
                                 elif func_type == 'applymap':
                                     df_style = df_style.applymap(eval('style.%s' % func_name), subset=col_names, **options)
-                        display(df_style)
-                        display(df_style.set_table_styles(TABLE_STYLES))
 
                         f.write(df_style.set_table_styles(TABLE_STYLES).render())
 
