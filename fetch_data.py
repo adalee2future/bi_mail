@@ -363,7 +363,7 @@ class FetchingData:
                     f.write('<head><meta charset="UTF-8"></head>\n')
                     f.write('<style>\n{styles}\n{customized_styles}\n</style>'.format(styles=styles, customized_styles=customized_styles))
                     f.write('<br/><h2>%s</h2>\n' % df_name)
-                    df.fillna('', inplace=True)
+                    #df.fillna('', inplace=True)
 
 
                     if merge:
