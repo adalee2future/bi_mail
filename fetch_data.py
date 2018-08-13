@@ -110,6 +110,8 @@ def get_max_digits_count(s, e=1e-10):
 
 def numeric_fields(df):
     numeric_cols = []
+    if df.shape[0] == 0:
+        return numeric_cols
     for col in df.columns.values:
         s = df[col]
         if s.notna().sum() == 0:
@@ -118,7 +120,7 @@ def numeric_fields(df):
         if np.issubdtype(s_type, np.number) or s_type == decimal.Decimal:
             numeric_cols.append(col)
     return numeric_cols
-    
+
 
 def convert_to_integer(s):
     if sum(pd.notna(s)) == 0:
@@ -137,12 +139,16 @@ def merge_fields_hyperlink(df, hyperlinks, template):
         return df
 
     for hyperlink in hyperlinks:
+        nrows = df.shape[0]
         columns = list(df)
         text_field = hyperlink.get('text_field')
         url_field = hyperlink.get('url_field')
         merged_field = hyperlink.get('merged_field', text_field)
         if text_field in columns and url_field in columns:
-            merged_value = df.apply(lambda x: template.format(x[url_field], x[text_field]), axis=1)
+            if nrows == 0:
+                merged_value = None
+            else:
+                merged_value = df.apply(lambda x: template.format(x[url_field], x[text_field]), axis=1)
             loc = columns.index(text_field)
             df.drop([text_field, url_field], axis=1, inplace=True)
             df.insert(loc, column=merged_field, value=merged_value)
@@ -286,11 +292,10 @@ class FetchingData:
                                 num_format = '#,##0.%s' % ('0' * digits_count)
                             else:
                                 num_format = '#,##0'
-                                
+
                             fmt_json.update({'num_format': num_format})
 
                         col_vs_format[idx] = workbook.add_format(fmt_json)
-                        
 
                     for col_format in col_formats:
                         fmt_json = copy.deepcopy(DEFAULT_COL_FORMAT_JSON)
@@ -313,7 +318,6 @@ class FetchingData:
                     print('col_width:', col_width)
                     for col, width in col_width.items():
                         worksheet.set_column(col, col, width, col_vs_format.get(col))
-
 
             data_rows_dict_list.append(data_rows_dict)
             print("Export to excel %s succeed!" % current_filename)
