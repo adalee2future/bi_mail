@@ -400,7 +400,8 @@ class FetchingData:
                                 elif func_type == 'applymap':
                                     df_style = df_style.applymap(eval('style.%s' % func_name), subset=col_names, **options)
 
-                        f.write(df_style.set_table_styles(TABLE_STYLES).render())
+                        #f.write(df_style.set_table_styles(TABLE_STYLES).render())
+                        f.write(df_style.hide_index().render())
 
 
             data_rows_dict_list.append(data_rows_dict)
