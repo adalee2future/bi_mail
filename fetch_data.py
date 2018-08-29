@@ -367,6 +367,7 @@ class FetchingData:
 
 
                     if merge:
+                        df = df.copy().fillna('')
                         if HTML_TO_STR:
                             df = df.applymap(str)
                         f.write(df.set_index(list(df)).to_html(escape=False))
