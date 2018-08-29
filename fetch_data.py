@@ -377,11 +377,15 @@ class FetchingData:
                         #f.write(df.to_html(index=False, escape=False))
                     else:
                         print(df.columns.values)
+                        fields_vs_format = {}
                         num_fields = numeric_fields(df)
                         num_fields_format = {}
                         for col in num_fields:
                             digits_count = get_max_digits_count(df[col])
-                            num_fields_format[col] = lambda x: '' if pd.isnull(x) else ('{:,.%sf}' % digits_count).format(x)
+                            num_fields_format[col] = lambda x: '' if pd.isna(x) else ('{:,.%sf}' % digits_count).format(x)
+                        fields_vs_format.update(num_fields_format)
+                        other_fields = set(df.columns.values) - set(num_fields)
+                        fields_vs_format.update({f: lambda x: '' if pd.isna(x) else str(x) for f in other_fields})
                         df_style = df.style.format(num_fields_format)
                         df_style.set_properties(**{'text-align': 'right'}, subset=num_fields)
                         col_formats = formats.get('col_formats')
