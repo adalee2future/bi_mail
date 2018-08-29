@@ -381,7 +381,7 @@ class FetchingData:
                         num_fields_format = {}
                         for col in num_fields:
                             digits_count = get_max_digits_count(df[col])
-                            num_fields_format[col] = '{:,.%sf}' % digits_count
+                            num_fields_format[col] = lambda x: '' if pd.isnull(x) else ('{:,.%sf}' % digits_count).format(x)
                         df_style = df.style.format(num_fields_format)
                         df_style.set_properties(**{'text-align': 'right'}, subset=num_fields)
                         col_formats = formats.get('col_formats')
