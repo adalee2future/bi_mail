@@ -386,7 +386,7 @@ class FetchingData:
                         fields_vs_format.update(num_fields_format)
                         other_fields = set(df.columns.values) - set(num_fields)
                         fields_vs_format.update({f: lambda x: '' if pd.isna(x) else str(x) for f in other_fields})
-                        df_style = df.style.format(num_fields_format)
+                        df_style = df.style.format(fields_vs_format)
                         df_style.set_properties(**{'text-align': 'right'}, subset=num_fields)
                         col_formats = formats.get('col_formats')
                         conditional_formats = formats.get('conditional_formats')
