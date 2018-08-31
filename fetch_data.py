@@ -132,6 +132,20 @@ def convert_to_integer(s):
     else:
         return s
 
+def decimal_columns(df):
+    decimal_columns = []
+    for col in df.columns.values:
+        s = df[col]
+        if sum(pd.notna(s)) > 0 and type(s[pd.notna(s)].iloc[0]) == decimal.Decimal:
+            decimal_columns.append(col)
+    return decimal_columns
+
+def decimal2float(x):
+    if pd.isna(x):
+        return np.nan
+    else:
+        return float(x)
+
 def merge_fields_hyperlink(df, hyperlinks, template):
     df = df.copy()
 
@@ -218,6 +232,7 @@ class FetchingData:
 
         for sql_text, df_name in zip(sql_text_list, df_names):
             df = self.run_sql(sql_text, dependency=dependency, coerce_numeric=coerce_numeric)
+            df[decimal_columns(df)] = df[decimal_columns(df)].applymap(decimal2float)
             data_dict[df_name] = df
 
         return data_dict
