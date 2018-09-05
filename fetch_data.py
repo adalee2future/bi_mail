@@ -94,7 +94,7 @@ def pt2date(pt):
 def pt2dt(pt):
     return get_dt(pt2date(pt))
 
-def get_max_digits_count(s, e=1e-10):
+def get_max_digits_count(s, e=1e-8):
     def get_digits_count(x):
         for i in range(11):
             if pd.isna(x):
