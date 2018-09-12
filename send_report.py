@@ -54,8 +54,8 @@ def export_file(fetching_data, sql_text, file_type, filename=None, dependency={}
 
     for file_meta in file_metas:
         filename = file_meta.get('filename')
-        global oss_filename
         oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_DATA_FOLDER)
+        file_meta['oss_filename'] = oss_filename
         if file_type == 'html':
             file_meta['body_prepend'] = open(filename).read()
             del file_meta['filename']
@@ -225,6 +225,8 @@ def send_report(report_id, params=''):
                 return
 
             mail_meta = {}
+            oss_filename = file_meta.get('oss_filename')
+            print('oss_filename:', oss_filename)
             filename = file_meta.get('filename')
             mail_meta['filenames'] = filename
             mail_meta['body_prepend'] = file_meta.get('body_prepend', '')
@@ -247,6 +249,7 @@ def send_report(report_id, params=''):
             except SMTPDataError as e:
                 if report_id in oss_link_reports:
                     share_url = upload_file.get_file_url(oss_filename)
+                    print('share_url:', share_url)
                     valid_hours = round(upload_file.EXPIRE_SECONDS / 3600)
                     body_prepend = '附件太大，请<a href=%s>点击链接</a>下载(有效期%s小时)<br/>' % (share_url, valid_hours)
                     mail_meta['body_prepend'] = body_prepend
