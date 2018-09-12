@@ -54,6 +54,7 @@ def export_file(fetching_data, sql_text, file_type, filename=None, dependency={}
 
     for file_meta in file_metas:
         filename = file_meta.get('filename')
+        global oss_filename
         oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_DATA_FOLDER)
         if file_type == 'html':
             file_meta['body_prepend'] = open(filename).read()
@@ -101,6 +102,7 @@ def send_report(report_id, params=''):
     hyperlinks = cfg.get('hyperlinks')
 
     param_json = dict(re.findall(r'([^;]+)=([^;]+)', params))
+    print('params: %s, param_json: %s' % (params, param_json))
     to = param_json.get('to')
     pt = param_json.get('pt')
 
