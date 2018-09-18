@@ -168,6 +168,29 @@ def merge_fields_hyperlink(df, hyperlinks, template):
             df.insert(loc, column=merged_field, value=merged_value)
     return df
 
+def trunc_datetime(s):
+    '''
+    对于日期时间格式，如果时间都为0，则转化成日期
+    '''
+    if pd.notna(s).any() and type(s[pd.notna(s)].iloc[0]) == pd._libs.tslibs.timestamps.Timestamp:
+        s1 = s[s.notna()]
+        if (s1.dt.time == datetime.time(0, 0, 0)).all():
+            s = s.dt.date
+
+    return s
+
+def datetime2str(s):
+    '''
+    将日期和日期时间格式转化为字符串，以解决xlsxwriter包日期字段无法设置列的bug
+    '''
+    if pd.isna(s).all():
+        return s
+    s_type = type(s[pd.notna(s)].iloc[0])
+    if s_type in (pd._libs.tslibs.timestamps.Timestamp, datetime.date):
+        return s.apply(lambda x: str(x) if pd.notna(x) else '')
+
+    return s
+
 class FetchingData:
     def __init__(self, login_info):
         raise NotImplementedError
@@ -233,6 +256,7 @@ class FetchingData:
         for sql_text, df_name in zip(sql_text_list, df_names):
             df = self.run_sql(sql_text, dependency=dependency, coerce_numeric=coerce_numeric)
             df[decimal_columns(df)] = df[decimal_columns(df)].applymap(decimal2float)
+            df = df.apply(trunc_datetime)
             data_dict[df_name] = df
 
         return data_dict
