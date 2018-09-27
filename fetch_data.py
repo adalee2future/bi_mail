@@ -200,6 +200,7 @@ class FetchingData:
         random_hash = "%032x" % random.getrandbits(128)
         return '{random_hash}{extension}'.format(random_hash=random_hash, extension=DEFAULT_FILE_EXTENSION.get(file_type))
 
+    @staticmethod
     def get_text_col_width(text):
         if text is None:
             return MIN_COL_WIDTH
@@ -219,6 +220,7 @@ class FetchingData:
         else:
             return width
 
+    @staticmethod
     def get_df_col_width(df, rows=100):
         max_width_body = df.head(rows).applymap(FetchingData.get_text_col_width).max()
         max_width_header = map(FetchingData.get_text_col_width, list(df))
@@ -226,7 +228,6 @@ class FetchingData:
         df_width_map = {col: width for col, width in enumerate(max_width)}
         return df_width_map
 
-    @classmethod
     def run_sql(self, sql_text, dependency={}):
         raise NotImplementedError
 
