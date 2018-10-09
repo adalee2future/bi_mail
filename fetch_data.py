@@ -201,7 +201,7 @@ class FetchingData:
         return '{random_hash}{extension}'.format(random_hash=random_hash, extension=DEFAULT_FILE_EXTENSION.get(file_type))
 
     @staticmethod
-    def get_text_col_width(text):
+    def get_text_col_width(text, adjust=0):
         if text is None:
             return MIN_COL_WIDTH
         #tkinter.Frame().destroy()
@@ -213,6 +213,7 @@ class FetchingData:
         #width = font.measure(text)
         text = str(text)
         width = sum(1 if len(c.encode()) <= 1 else 2 for c in text)
+        width += adjust
         if width < MIN_COL_WIDTH:
             return MIN_COL_WIDTH
         elif width > MAX_COL_WIDTH:
@@ -223,9 +224,10 @@ class FetchingData:
     @staticmethod
     def get_df_col_width(df, rows=100):
         max_width_body = df.head(rows).applymap(FetchingData.get_text_col_width).max()
-        max_width_header = map(FetchingData.get_text_col_width, list(df))
+        max_width_header = map(FetchingData.get_text_col_width, list(df), [3 for _ in df])
         max_width = [max(x, y) for x, y in zip(max_width_body, max_width_header)]
         df_width_map = {col: width for col, width in enumerate(max_width)}
+
         return df_width_map
 
     def run_sql(self, sql_text, dependency={}):
@@ -310,6 +312,8 @@ class FetchingData:
                     # excel format
                     workbook = writer.book
                     worksheet = writer.sheets[df_name]
+
+                    worksheet.autofilter(0, 0, 0, ncols - 1)
 
                     # first row format
                     header_format = workbook.add_format(DEFAULT_HEADER_FORMAT_JSON)
