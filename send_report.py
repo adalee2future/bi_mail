@@ -131,7 +131,7 @@ def send_report(report_id, params=''):
         fetching_data = fetch_data.FetchingDataOdps(pt=pt)
         no_data_handler = cfg.get('no_data_handler', ODPS_DEFAULT_NO_DATA_HANDLER)
     elif db_type == 'mysql':
-        fetching_data = fetch_data.FetchingDataMysql()
+        fetching_data = fetch_data.FetchingDataMysql(pt=pt)
         no_data_handler = cfg.get('no_data_handler', MYSQL_DEFAULT_NO_DATA_HANDLER)
 
     if cfg.get('customized_file'):
