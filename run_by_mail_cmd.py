@@ -11,6 +11,7 @@ import email
 import re
 import json
 import subprocess
+from threading import Thread
 
 from email.header import decode_header
 from file_to_mail import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR, file_to_mail
@@ -73,6 +74,13 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
 
 
 def bi_mail_run(cmd_info):
+    def _run():
+        print("./run.sh '%s' %s" % (report_id, params))
+        try:
+            print("exit code:", subprocess.call(["./run.sh", report_id, params]))
+        except Exception as e:
+            print('run.sh failed\n', e, '\n', '-' * 40)
+
     report_id = cmd_info.get('report_id')
     params = cmd_info.get('params', '')
     sender = cmd_info.get('sender')
@@ -82,18 +90,32 @@ def bi_mail_run(cmd_info):
         raise Exception("report_id is None")
 
     if sender.find(VALID_SENDER_SUFFIX) == -1:
-        raise Exception("sender has no right to run report, should be @%s" % VALID_SENDER_SUFFIX)
 
-    sender_prefix = re.search('(\\S+)@%s' % VALID_SENDER_SUFFIX, sender).groups()[0]
+        cmd_info['ERROR'] = '发件人必须是@%s' % VALID_SENDER_SUFFIX
+        file_to_mail(None, '发件人无效', '', sender, cc=MAIL_MONITOR, body_prepend=cmd_info)
+        print("sender has no right to run report, should be @%s" % VALID_SENDER_SUFFIX)
+        sender_prefix = None
+
+    else:
+        sender_prefix = re.search('(\\S+)@%s' % VALID_SENDER_SUFFIX, sender).groups()[0]
 
     cfg_filename = os.path.join('reports', report_id, '%s.cfg' % report_id)
-    report_owner = json.loads(open(cfg_filename).read()).get('owner').split(',')
+    try:
+        report_owner = json.loads(open(cfg_filename).read()).get('owner').split(',')
+    except Exception as e:
+        cmd_info['ERROR'] = e
+        file_to_mail(None, '%s里的json不合法' % cfg_filename, '', sender, cc=MAIL_MONITOR, body_prepend=cmd_info)
+        report_owner = []
+        
     report_owner.append(MAIL_MONITOR.split('@')[0])
     if sender_prefix in report_owner:
-        print("./run.sh '%s' %s" % (report_id, params))
-        print("exit code:", subprocess.call(["./run.sh", report_id, params]))
-
-
+        background_thread = Thread(target=_run)
+        background_thread.start()
+    else:
+        cmd_info['ERROR'] = '你不是报表<%s>负责人' % report_id
+        file_to_mail(None, '没有权限', '', sender, cc=MAIL_MONITOR, body_prepend=cmd_info)
+        
+ 
 def current_time():
     return datetime.datetime.now()
 
@@ -151,14 +173,10 @@ def main():
                 file_to_mail(None, '手动运行报表<%s>监控' % cmd_info.get('report_id'),
 		            '', MAIL_MONITOR, cc=cmd_info.get('sender'), body_prepend=cmd_info)
 
-                try:
-                    bi_mail_run(cmd_info)
-                except Exception as e:
-                    print("invalid cmd_info")
-                    print(e.args)
-
                 with open('mail.id', 'w') as f:
                     f.write('{mail_id}\n'.format(mail_id=mail_id))
+
+                bi_mail_run(cmd_info)
 
                 if exit_condition_by_time():
                     break
