@@ -91,7 +91,7 @@ def bi_mail_run(cmd_info):
 
     if sender.find(VALID_SENDER_SUFFIX) == -1:
 
-        cmd_info['ERROR'] = '发件人必须是@%s' % VALID_SENDER_SUFFIX
+        cmd_info['<span style="color:red">ERROR</span>'] = '发件人必须是@%s' % VALID_SENDER_SUFFIX
         file_to_mail(None, '发件人无效', '', sender, cc=MAIL_MONITOR, body_prepend=cmd_info)
         print("sender has no right to run report, should be @%s" % VALID_SENDER_SUFFIX)
         sender_prefix = None
