@@ -22,6 +22,7 @@ VALID_SENDER_SUFFIX = 'owitho.com'
 MAIL_SEARCH = 'SUBJECT "bi_mail"'
 WAIT_SECONDS = 6
 FNULL = open(os.devnull, 'w')
+ERROR = '<span style="color:red">ERROR</span>' 
 
 os.chdir(BASE_DIR)
 
@@ -91,7 +92,7 @@ def bi_mail_run(cmd_info):
 
     if sender.find(VALID_SENDER_SUFFIX) == -1:
 
-        cmd_info['<span style="color:red">ERROR</span>'] = '发件人必须是@%s' % VALID_SENDER_SUFFIX
+        cmd_info[ERROR] = '发件人必须是@%s' % VALID_SENDER_SUFFIX
         file_to_mail(None, '发件人无效', '', sender, cc=MAIL_MONITOR, body_prepend=cmd_info)
         print("sender has no right to run report, should be @%s" % VALID_SENDER_SUFFIX)
         sender_prefix = None
@@ -103,7 +104,7 @@ def bi_mail_run(cmd_info):
     try:
         report_owner = json.loads(open(cfg_filename).read()).get('owner').split(',')
     except Exception as e:
-        cmd_info['ERROR'] = e
+        cmd_info[ERROR] = e
         file_to_mail(None, '%s里的json不合法' % cfg_filename, '', sender, cc=MAIL_MONITOR, body_prepend=cmd_info)
         report_owner = []
         
@@ -112,7 +113,7 @@ def bi_mail_run(cmd_info):
         background_thread = Thread(target=_run)
         background_thread.start()
     else:
-        cmd_info['ERROR'] = '你不是报表<%s>负责人' % report_id
+        cmd_info[ERROR] = '你不是报表<%s>负责人' % report_id
         file_to_mail(None, '没有权限', '', sender, cc=MAIL_MONITOR, body_prepend=cmd_info)
         
  
