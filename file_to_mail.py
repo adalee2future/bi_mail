@@ -22,12 +22,12 @@ REPORT_TYPE_MAP = {
 
 def triple_run(func):
     def _triple_run(*args, **kwargs):
-        for i in range(3):
+        for i in range(1, 4):
             ret = func(*args, **kwargs)
+            print("try %d times"  % i)
             if ret == 0:
                 break
-            time.sleep(i+60)
-            print  ("try %d times" %(i+1))
+            time.sleep(i * 60)
         return ret
     return _triple_run
 
