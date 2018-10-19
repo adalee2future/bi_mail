@@ -182,7 +182,6 @@ def main():
             for mail_id in mail_ids:
 
                 cmd_info = parse_mail_sender_and_subject(mail_id, M=M)
-                logging_mail_id(mail_id, "手动运行报表监控:%s" % cmd_info)
 
                 file_to_mail(None, '手动运行报表<%s>监控' % cmd_info.get('report_id'),
 		            '', MAIL_MONITOR, cc=cmd_info.get('sender'), body_prepend=cmd_info)
@@ -190,6 +189,7 @@ def main():
                 with open('mail.id', 'w') as f:
                     f.write('{mail_id}\n'.format(mail_id=mail_id))
 
+                logging_mail_id(mail_id, "bi_mail_run: %s" % cmd_info)
                 bi_mail_run(cmd_info)
 
                 if exit_condition_by_time():
