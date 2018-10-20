@@ -42,9 +42,9 @@ def get_mail_count(folder=DEFAULT_FOLDER):
 def logging_mail_id(mail_id, message, type=logging.INFO):
     logging_prepend = 'mail_id: %s, ' % mail_id
     if type == logging.INFO:
-        logger.info(logging_prepend + message)
+        logger.info(logging_prepend + str(message))
     elif type == logging.ERROR:
-        logger.error(logging_prepend + message)
+        logger.error(logging_prepend + str(message))
 
 def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()):
 
@@ -52,17 +52,17 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
 
     M.select(folder)
     resp_code, resp_data = M.fetch(str(mail_id), '(RFC822)')
-    logging_mail_id(mail_id, "got mail: %s" % resp_code)
+
     if(resp_code == 'OK'):
         message_byte = resp_data[0][1]
         message = email.message_from_bytes(message_byte)
         raw_subject = message.get('subject')
-        #logging_mail_id(mail_id, raw_subject)
+        #print(mail_id, raw_subject)
         subject, encoding = decode_header(message.get('subject'))[0]
         if encoding is not None:
             subject = subject.decode(encoding)
 
-        #logging_mail_id(mail_id, "mail header encoding: %s" % encoding)
+        #print(mail_id, "mail header encoding: %s" % encoding)
         res['subject'] = subject
 
         report_id_search = re.search(r'bi_mail\s+run\s+(\S+)', subject)
@@ -74,13 +74,12 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
             res['params'] = params_search.groups()[0]
 
         sender = message.get('from')
-        #logging_mail_id(mail_id, 'sender: %s' % sender)
-        #logging_mail_id(mail_id, 'sender decode: %s' % decode_header(sender))
-        #logging_mail_id(mail_id, sender)
+        #print(mail_id, 'sender: %s' % sender)
+        #print(mail_id, 'sender decode: %s' % decode_header(sender))
+        #print(mail_id, sender)
         res['sender'] = re.findall('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-zA-Z]{2,}', sender)[0]
 
-        logging_mail_id(mail_id, 'mail parsed: %s' % res)
-        return res
+    return resp_code, res
 
 
 def bi_mail_run(cmd_info):
@@ -97,8 +96,17 @@ def bi_mail_run(cmd_info):
         if sender.find(VALID_SENDER_SUFFIX) == -1:
 
             cmd_info[ERROR] = '发件人必须是@%s' % VALID_SENDER_SUFFIX
-            logging_mail_id(mail_id, str(cmd_info), type=logging.ERROR)
-            file_to_mail(None, '发件人无效', '', sender, cc=MAIL_MONITOR, body_prepend=cmd_info)
+            logging_mail_id(mail_id, cmd_info, type=logging.ERROR)
+            mail_params = {
+              'filenames': None,
+              'subject': '发件人无效',
+              'owner': '',
+              'to': sender,
+              'cc': MAIL_MONITOR,
+              'body_prepend': cmd_info
+            }
+            logging_mail_id(mail_id, 'send mail: %s' % mail_params)
+            file_to_mail(**mail_params)
             sender_prefix = None
 
         else:
@@ -109,8 +117,19 @@ def bi_mail_run(cmd_info):
             report_owner = json.loads(open(cfg_filename).read()).get('owner').split(',')
         except Exception as e:
             cmd_info[ERROR] = e
-            logging_mail_id(mail_id, str(cmd_info), type=logging.ERROR)
-            file_to_mail(None, '%s里的json不合法' % cfg_filename, '', sender, cc=MAIL_MONITOR, body_prepend=cmd_info)
+            logging_mail_id(mail_id, cmd_info, type=logging.ERROR)
+
+            mail_params = {
+              'filenames': None,
+              'subject': '配置文件(%s)问题' % cfg_filename,
+              'owner': '',
+              'to': sender,
+              'cc': MAIL_MONITOR,
+              'body_prepend': cmd_info
+            }
+            logging_mail_id(mail_id, 'send mail: %s' % mail_params)
+
+            file_to_mail(**mail_params)
             report_owner = []
 
         report_owner.append(MAIL_MONITOR.split('@')[0])
@@ -120,8 +139,18 @@ def bi_mail_run(cmd_info):
             logging_mail_id(mail_id, "./run.sh '%s' '%s', result: %s" % (report_id, params, exit_code))
         else:
             cmd_info[ERROR] = '你不是报表<%s>负责人' % report_id
-            logging_mail_id(mail_id, str(cmd_info), type=logging.ERROR)
-            file_to_mail(None, '没有权限', '', sender, cc=MAIL_MONITOR, body_prepend=cmd_info)
+            logging_mail_id(mail_id, cmd_info, type=logging.ERROR)
+            mail_params = {
+              'filenames': None,
+              'subject': '没有权限',
+              'owner': '',
+              'to': sender,
+              'cc': MAIL_MONITOR,
+              'body_prepend': cmd_info
+            }
+            logging_mail_id(mail_id, 'send mail: %s' % mail_params)
+
+            file_to_mail(**mail_params)
         
     try:
         background_thread = Thread(target=_run)
@@ -181,10 +210,20 @@ def main():
             mail_ids = list(filter(lambda x: x > min_mail_id, all_mail_ids))
             for mail_id in mail_ids:
 
-                cmd_info = parse_mail_sender_and_subject(mail_id, M=M)
+                mail_respb_code, cmd_info = parse_mail_sender_and_subject(mail_id, M=M)
+                logging_mail_id(mail_id, "got mail: %s" % mail_respb_code)
+                logging_mail_id(mail_id, 'mail parsed: %s' % cmd_info)
+                mail_params = {
+                  'filenames': None,
+                  'subject': '手动运行报表<%s>监控' % cmd_info.get('report_id'),
+                  'owner': '',
+                  'to': MAIL_MONITOR,
+                  'cc': cmd_info.get('sender'),
+                  'body_prepend': cmd_info
+                }
+                logging_mail_id(mail_id, 'send mail: %s' % mail_params)
 
-                file_to_mail(None, '手动运行报表<%s>监控' % cmd_info.get('report_id'),
-		            '', MAIL_MONITOR, cc=cmd_info.get('sender'), body_prepend=cmd_info)
+                file_to_mail(**mail_params)
 
                 with open('mail.id', 'w') as f:
                     f.write('{mail_id}\n'.format(mail_id=mail_id))
@@ -194,7 +233,6 @@ def main():
 
                 if exit_condition_by_time():
                     break
-
 
 
 if __name__ == "__main__":
