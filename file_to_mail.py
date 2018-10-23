@@ -9,6 +9,7 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
+from helper import multiple_trials
 
 BASE_DIR = os.path.dirname(__file__)
 STYLES = open(os.path.join(BASE_DIR, 'styles.css')).read()
@@ -20,18 +21,8 @@ REPORT_TYPE_MAP = {
     'vreport': '报告'
 }
 
-def triple_run(func):
-    def _triple_run(*args, **kwargs):
-        for i in range(1, 4):
-            ret = func(*args, **kwargs)
-            print("try %d times"  % i)
-            if ret == 0:
-                break
-            time.sleep(i * 60)
-        return ret
-    return _triple_run
 
-@triple_run
+@multiple_trials()
 def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None, caption='', report_type='report'):
 
     s = smtplib.SMTP('smtp.office365.com', port=587)
@@ -101,6 +92,5 @@ def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend=
     s.sendmail(me, receiver_list, msg.as_string())
     print("mail sent!\n")
     s.quit()
-    return 0
 if __name__ == "__main__":
     file_to_mail(*sys.argv[1:])

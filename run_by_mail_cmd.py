@@ -16,6 +16,7 @@ import logging
 from email.header import decode_header
 from file_to_mail import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR, file_to_mail
 from send_report import VALID_EXTERNAL_PROJECTS
+from helper import multiple_trials
 
 DEFAULT_FOLDER = "inbox"
 VALID_SENDER_SUFFIX = 'owitho.com'
@@ -27,7 +28,7 @@ ERROR = '<span style="color:red">ERROR</span>'
 os.chdir(BASE_DIR)
 
 
-
+@multiple_trials([0] + [60] * 50)
 def login_imap():
     M = imaplib.IMAP4_SSL("mail.office365.com", port=993)
     M.login(MAIL_USER, MAIL_PASSWD)
@@ -168,6 +169,17 @@ def exit_condition_by_time():
         logger.info("server ends")
         return True
 
+@multiple_trials([0] + [30] * 4)
+def fetch_code(directory=BASE_DIR):
+    origin_cwd = os.getcwd()
+    os.chdir(directory)
+    subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+    subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+    os.chdir('reports')
+    subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+    subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+    os.chdir(origin_cwd)
+
 
 def main():
 
@@ -181,12 +193,6 @@ def main():
         logger.info('sleeping')
         time.sleep(WAIT_SECONDS)
 
-        subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
-        subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
-        os.chdir('reports')
-        subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
-        subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
-        os.chdir(BASE_DIR)
         os.chdir('..')
         for external_project in VALID_EXTERNAL_PROJECTS:
             os.chdir(external_project)
