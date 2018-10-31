@@ -193,6 +193,9 @@ def main():
         logger.info('sleeping')
         time.sleep(WAIT_SECONDS)
 
+        logger.info("fetch code")
+        fetch_code()
+
         os.chdir('..')
         for external_project in VALID_EXTERNAL_PROJECTS:
             os.chdir(external_project)
