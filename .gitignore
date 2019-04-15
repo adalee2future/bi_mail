@@ -10,3 +10,4 @@ mail.id
 nohup.out
 .Rhistory
 crontab_backup/
+main.cfg
