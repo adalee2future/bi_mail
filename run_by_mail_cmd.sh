@@ -2,7 +2,6 @@
 
 export LANG=zh_CN.UTF-8
 export supervised=true
-source ~/.profile
 
 cd `dirname $0`
 

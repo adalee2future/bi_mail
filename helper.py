@@ -1,5 +1,8 @@
 from functools import wraps
 import time
+import commentjson
+
+CONFIG_FILE = 'main.cfg'
 
 def multiple_trials(wait_seconds=[0, 60, 120]):
     def _multiple_trials(func):
@@ -21,4 +24,13 @@ def multiple_trials(wait_seconds=[0, 60, 120]):
                     print('ERROR: %s\n' % e)
         return wrapper
     return _multiple_trials
+
+with open(CONFIG_FILE) as f:
+    cfg = commentjson.loads(f.read())
+    MAIL_MONITOR = cfg['mail_monitor']
+    MAIL_USER = cfg['mail_sender']['user']
+    MAIL_PASSWD = cfg['mail_sender']['password']
+    ODPS_LOGIN = cfg['db']['odps']
+    MYSQL_LOGIN = cfg['db']['mysql']
+    OSS_LINK_REPORTS = cfg.get('oss_link_reports', [])
 

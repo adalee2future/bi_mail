@@ -9,12 +9,14 @@ import re
 import datetime
 import matplotlib
 from collections import OrderedDict
+from smtplib import SMTPDataError
 matplotlib.use('agg')
 
 import fetch_data
 from file_to_mail import file_to_mail, BASE_DIR
 import upload_file
-from smtplib import SMTPDataError
+from helper import OSS_LINK_REPORTS
+
 
 VALID_CONDITIONS = [ 'all', 'any' ]
 VALID_ACTIONS = [ 'error', 'exit' ]
@@ -23,8 +25,6 @@ MYSQL_DEFAULT_NO_DATA_HANDLER = None
 DEFAULT_BODY_PREPEND = ''
 OSS_DATA_FOLDER = 'data'
 VALID_EXTERNAL_PROJECTS = ['store-bi', 'rack-bi']
-
-oss_link_reports = os.environ.get('oss_link_reports', '').split(',')
 
 def get_mail_action(data_meta, no_data_handler):
     if data_meta is None or no_data_handler is None:
@@ -90,6 +90,7 @@ def send_report(report_id, params=''):
 
     report_name = cfg['report_name']
     db_type = cfg.get('db_type', 'odps')
+    db_account = cfg.get('db_account', 'default')
     dependency = cfg.get('dependency', {})
     file_type = cfg.get('file_type', 'xlsx')
     owner = cfg.get('owner')
@@ -128,10 +129,10 @@ def send_report(report_id, params=''):
     row_permission = cfg.get('row_permission', default_row_permission)
 
     if db_type == 'odps':
-        fetching_data = fetch_data.FetchingDataOdps(pt=pt)
+        fetching_data = fetch_data.FetchingDataOdps(db_account, pt=pt)
         no_data_handler = cfg.get('no_data_handler', ODPS_DEFAULT_NO_DATA_HANDLER)
     elif db_type == 'mysql':
-        fetching_data = fetch_data.FetchingDataMysql(pt=pt)
+        fetching_data = fetch_data.FetchingDataMysql(db_account, pt=pt)
         no_data_handler = cfg.get('no_data_handler', MYSQL_DEFAULT_NO_DATA_HANDLER)
 
     if cfg.get('customized_file'):
@@ -166,7 +167,7 @@ def send_report(report_id, params=''):
         try:
             file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc, caption=caption)
         except SMTPDataError as e:
-            if report_id in oss_link_reports:
+            if report_id in OSS_LINK_REPORTS:
                 share_url = upload_file.get_file_url(oss_filename)
                 valid_hours = round(upload_file.EXPIRE_SECONDS / 3600)
                 body_prepend = '附件太大，请<a href=%s>点击链接</a>下载(有效期%s小时)<br/>' % (share_url, valid_hours)
@@ -247,7 +248,7 @@ def send_report(report_id, params=''):
             try:
                 file_to_mail(**mail_meta)
             except SMTPDataError as e:
-                if report_id in oss_link_reports:
+                if report_id in OSS_LINK_REPORTS:
                     share_url = upload_file.get_file_url(oss_filename)
                     print('share_url:', share_url)
                     valid_hours = round(upload_file.EXPIRE_SECONDS / 3600)

@@ -1,7 +1,6 @@
 #!/bin/sh
 
 export LANG=zh_CN.UTF-8
-source ~/.profile
 
 cd `dirname $0`
 report_id=$1

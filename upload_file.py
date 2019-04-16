@@ -3,14 +3,16 @@
 import oss2
 import os
 import datetime
+from helper import ODPS_LOGIN
 
 ENDPOINT = 'oss-cn-shanghai.aliyuncs.com'
 DEFAULT_BUCKET = 'owitho-bi-mail-attachments'
 DEFAULT_FOLDER = None
 EXPIRE_SECONDS = 60 * 60 * 24
 
-def login_bucket(bucket_name=DEFAULT_BUCKET):
-    auth = oss2.Auth(os.environ.get('access_id'), os.environ.get('access_key'))
+def login_bucket(bucket_name=DEFAULT_BUCKET, account="default"):
+    login_info = ODPS_LOGIN[account]
+    auth = oss2.Auth(login_info['access_id'], login_info['secret_access_key'])
     service = oss2.Service(auth, ENDPOINT)
     bucket = oss2.Bucket(auth, ENDPOINT, DEFAULT_BUCKET)
 

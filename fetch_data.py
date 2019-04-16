@@ -11,28 +11,13 @@ import random
 import sys
 import copy
 from collections import OrderedDict
-import tkinter
-import tkinter.font
 import decimal
 from file_to_mail import STYLES
 import style
 from IPython.display import display
+from helper import ODPS_LOGIN, MYSQL_LOGIN
 
 pd.set_option('max_colwidth', 1000)
-
-DEFAULT_ODPS_LOGIN_INFO = {
-    'access_id': os.environ.get('access_id'),
-    'secret_access_key': os.environ.get('access_key'),
-    'project': 'phoenix'
-}
-
-DEFAULT_MYSQL_LOGIN_INFO = {
-    'host': os.environ.get('mysql_host'),
-    'user': os.environ.get('mysql_user'),
-    'password': os.environ.get('mysql_password'),
-    'charset': 'utf8',
-    'read_timeout': 60 * 40
-}
 
 DEFAULT_ROW_PERMISSION = {
     'field': None,
@@ -192,7 +177,7 @@ def datetime2str(s):
     return s
 
 class FetchingData:
-    def __init__(self, login_info):
+    def __init__(self, account):
         raise NotImplementedError
 
     @staticmethod
@@ -204,8 +189,6 @@ class FetchingData:
     def get_text_col_width(text, adjust=0):
         if text is None:
             return MIN_COL_WIDTH
-        #tkinter.Frame().destroy()
-        #font = tkinter.font.Font(family='SimSun', size=2, weight='bold')
         try:
             text = round(text, 10)
         except:
@@ -475,7 +458,8 @@ class FetchingData:
         # todo csv行权限
 
 class FetchingDataOdps(FetchingData):
-    def __init__(self, login_info=DEFAULT_ODPS_LOGIN_INFO, pt=None):
+    def __init__(self, account="default", pt=None):
+        login_info = ODPS_LOGIN[account]
         self._login_info = login_info
         if pt is not None:
             self._pt = pt
@@ -538,7 +522,8 @@ class FetchingDataOdps(FetchingData):
 
 
 class FetchingDataMysql(FetchingData):
-    def __init__(self, login_info=DEFAULT_MYSQL_LOGIN_INFO, pt=None):
+    def __init__(self, account="default", pt=None):
+        login_info = MYSQL_LOGIN[account]
         self._login_info = login_info
         if pt is not None:
             self._pt = pt
@@ -550,7 +535,7 @@ class FetchingDataMysql(FetchingData):
             'today': self._dt,
             'yesterday': add_days(dt2date(self._dt), -1)
         }
-        self._conn = pymysql.connect(**DEFAULT_MYSQL_LOGIN_INFO)
+        self._conn = pymysql.connect(**login_info)
 
     def run_sql(self, sql_text, dependency={}, coerce_numeric=False, print_log=True):
         start = time.time()
