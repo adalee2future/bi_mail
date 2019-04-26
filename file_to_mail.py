@@ -10,14 +10,8 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from helper import multiple_trials
-from helper import MAIL_USER, MAIL_PASSWD, MAIL_MONITOR, SUPERVISED
-
-BASE_DIR = os.path.dirname(__file__)
-STYLES = open(os.path.join(BASE_DIR, 'styles.css')).read()
-REPORT_TYPE_MAP = {
-    'report': '报表',
-    'vreport': '报告'
-}
+from helper import BASE_DIR, REPORT_TYPE_MAP
+from helper import MAIL_MONITOR, MAIL_USER, MAIL_PASSWD, STYLES
 
 
 @multiple_trials()

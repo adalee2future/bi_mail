@@ -6,7 +6,8 @@ import sys
 import json
 import copy
 
-from file_to_mail import file_to_mail, MAIL_USER, MAIL_MONITOR, REPORT_TYPE_MAP
+from helper import MAIL_USER, MAIL_MONITOR, REPORT_TYPE_MAP
+from file_to_mail import file_to_mail
 
 
 def main(report_type, report_id, log_filename):

@@ -14,16 +14,17 @@ from threading import Thread
 import logging
 
 from email.header import decode_header
-from file_to_mail import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR, file_to_mail
+from file_to_mail import file_to_mail
 from send_report import VALID_EXTERNAL_PROJECTS
 from helper import multiple_trials
+from helper import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR
 
 DEFAULT_FOLDER = "inbox"
 VALID_SENDER_SUFFIX = 'owitho.com'
 MAIL_SEARCH = 'SUBJECT "bi_mail"'
 WAIT_SECONDS = 6
 FNULL = open(os.devnull, 'w')
-ERROR = '<span style="color:red">ERROR</span>' 
+ERROR = '<span style="color:red">ERROR</span>'
 
 os.chdir(BASE_DIR)
 
@@ -152,13 +153,13 @@ def bi_mail_run(cmd_info):
             logging_mail_id(mail_id, 'send mail: %s' % mail_params)
 
             file_to_mail(**mail_params)
-        
+
     try:
         background_thread = Thread(target=_run)
         background_thread.start()
     except Exception as e:
         logging_mail_id(mail_id, 'bi_mail_run failed\n%s\n%s' % (e, '-' * 40), type=logging.ERROR)
- 
+
 def current_time():
     return datetime.datetime.now()
 

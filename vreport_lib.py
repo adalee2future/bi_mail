@@ -1,4 +1,6 @@
+import os
 import warnings
+import json
 import pandas as pd
 import numpy as np
 import scipy.stats as stats
@@ -19,7 +21,11 @@ from datetime import timedelta
 from wordcloud import WordCloud
 from collections import OrderedDict
 
-from fetch_data_odps import run_sql, pt
+import fetch_data
+
+pt = fetch_data.get_pt(yesterday)
+odps_obj = fetch_data.FetchingDataOdps(pt)
+run_sql = odps_obj.run_sql
 
 %config InlineBackend.figure_format = 'svg'
 %matplotlib inline
@@ -76,3 +82,4 @@ def dict2excel(data_dict, filename):
 def write_pt(pt):
     with open('current.pt', 'w') as f:
         f.write(pt)
+

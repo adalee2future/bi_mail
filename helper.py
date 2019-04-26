@@ -1,8 +1,15 @@
+import os
 from functools import wraps
 import time
 import commentjson
 
-CONFIG_FILE = 'main.cfg'
+BASE_DIR = os.path.dirname(__file__)
+CONFIG_FILE = os.path.join(BASE_DIR, 'main.cfg')
+STYLES = open(os.path.join(BASE_DIR, 'styles.css')).read()
+REPORT_TYPE_MAP = {
+    'report': '报表',
+    'vreport': '报告'
+}
 
 def multiple_trials(wait_seconds=[0, 60, 120]):
     def _multiple_trials(func):

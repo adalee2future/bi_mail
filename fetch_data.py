@@ -12,11 +12,9 @@ import sys
 import copy
 from collections import OrderedDict
 import decimal
-from file_to_mail import STYLES
 import style
 from IPython.display import display
-from helper import ODPS_LOGIN, MYSQL_LOGIN
-
+from helper import ODPS_LOGIN, MYSQL_LOGIN, STYLES
 pd.set_option('max_colwidth', 1000)
 
 DEFAULT_ROW_PERMISSION = {

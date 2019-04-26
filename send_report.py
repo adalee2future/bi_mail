@@ -13,9 +13,9 @@ from smtplib import SMTPDataError
 matplotlib.use('agg')
 
 import fetch_data
-from file_to_mail import file_to_mail, BASE_DIR
+from file_to_mail import file_to_mail
 import upload_file
-from helper import OSS_LINK_REPORTS
+from helper import BASE_DIR, OSS_LINK_REPORTS
 
 
 VALID_CONDITIONS = [ 'all', 'any' ]
