@@ -303,11 +303,16 @@ class FetchingData:
                     nrows, ncols = df.shape
                     data_rows_dict[df_name] = {"shape": df.shape}
 
+
+                    if merge:
+                        df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name, freeze_panes=freeze_panes)
+                    else:
+                        df.to_excel(writer, sheet_name=df_name, index=False, freeze_panes=freeze_panes)
+
                     columns = list(df)
                     # excel format
                     workbook = writer.book
-                    worksheet = workbook.add_worksheet(df_name)
-                    worksheet.freeze_panes(*freeze_panes)
+                    worksheet = writer.sheets[df_name]
 
                     worksheet.autofilter(0, 0, 0, ncols - 1)
 
@@ -351,11 +356,6 @@ class FetchingData:
                         fmt_json.update(col_format.get('format'))
                         fmt = workbook.add_format(fmt_json)
 
-
-
-
-
-
                         col_vs_format.update({ list(df).index(col_name): fmt for col_name in col_format.get('col_names') })
 
                     print("col_vs_format:", col_vs_format)
@@ -374,8 +374,10 @@ class FetchingData:
                     for col, width in col_width.items():
                         worksheet.set_column(col, col, width, col_vs_format.get(col))
 
-                        for row, val in enumerate(df.values[:, col]):
-                            worksheet.write(row+1, col, coalesce(df.values[row][col]), col_vs_format.get(col))
+
+                        if columns[col] in datetime_fields + date_fields:
+                            for row, val in enumerate(df.values[:, col]):
+                                worksheet.write(row+1, col, coalesce(df.values[row][col]), col_vs_format.get(col))
 
             data_rows_dict_list.append(data_rows_dict)
             print("Export to excel %s succeed!" % current_filename)
