@@ -1,3 +1,4 @@
+import pandas as pd
 import os
 from functools import wraps
 import time
@@ -31,6 +32,12 @@ def multiple_trials(wait_seconds=[0, 60, 120]):
                     print('ERROR: %s\n' % e)
         return wrapper
     return _multiple_trials
+
+def coalesce(a, b=''):
+    if pd.isna(a):
+        return b
+    else:
+        return a
 
 with open(CONFIG_FILE) as f:
     cfg = commentjson.loads(f.read())

@@ -15,6 +15,7 @@ import decimal
 import style
 from IPython.display import display
 from helper import ODPS_LOGIN, MYSQL_LOGIN, STYLES
+from helper import coalesce
 pd.set_option('max_colwidth', 1000)
 
 DEFAULT_ROW_PERMISSION = {
@@ -34,6 +35,9 @@ DEFAULT_FILE_EXTENSION = {
     'csv': '.csv',
     'html': '.html'
 }
+
+EXCEL_DATE_FORMAT = 'yyyy-mm-dd'
+EXCEL_DATETIME_FORMAT = 'yyyy-mm-dd hh:mm:ss'
 
 HTML_TO_STR = True
 
@@ -104,6 +108,31 @@ def numeric_fields(df):
             numeric_cols.append(col)
     return numeric_cols
 
+def get_datetime_fields(df):
+    time_cols = []
+    if df.shape[0] == 0:
+        return time_cols
+    for col in df.columns.values:
+        s = df[col]
+        if s.notna().sum() == 0:
+            break
+        s_type = type(s[pd.notna(s)].iloc[0])
+        if s_type in [pd.Timestamp, datetime.datetime]:
+            time_cols.append(col)
+    return time_cols
+
+def get_date_fields(df):
+    date_cols = []
+    if df.shape[0] == 0:
+        return date_cols
+    for col in df.columns.values:
+        s = df[col]
+        if s.notna().sum() == 0:
+            break
+        s_type = type(s[pd.notna(s)].iloc[0])
+        if s_type in [datetime.date]:
+            date_cols.append(col)
+    return date_cols
 
 def convert_to_integer(s):
     if sum(pd.notna(s)) == 0:
@@ -159,18 +188,6 @@ def trunc_datetime(s):
         s1 = s[s.notna()]
         if (s1.dt.time == datetime.time(0, 0, 0)).all():
             s = s.dt.date
-
-    return s
-
-def datetime2str(s):
-    '''
-    将日期和日期时间格式转化为字符串，以解决xlsxwriter包日期字段无法设置列的bug
-    '''
-    if pd.isna(s).all():
-        return s
-    s_type = type(s[pd.notna(s)].iloc[0])
-    if s_type in (pd._libs.tslibs.timestamps.Timestamp, datetime.date):
-        return s.apply(lambda x: str(x) if pd.notna(x) else '')
 
     return s
 
@@ -285,31 +302,31 @@ class FetchingData:
                     df = merge_fields_hyperlink(df, hyperlinks, LINK_TEMPLATE_EXCEL)
                     nrows, ncols = df.shape
                     data_rows_dict[df_name] = {"shape": df.shape}
-                    if merge:
-                        df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name, freeze_panes=freeze_panes)
-                    else:
-                        df.to_excel(writer, sheet_name=df_name, index=False, freeze_panes=freeze_panes)
 
+                    columns = list(df)
                     # excel format
                     workbook = writer.book
-                    worksheet = writer.sheets[df_name]
+                    worksheet = workbook.add_worksheet(df_name)
+                    worksheet.freeze_panes(*freeze_panes)
 
                     worksheet.autofilter(0, 0, 0, ncols - 1)
 
                     # first row format
                     header_format = workbook.add_format(DEFAULT_HEADER_FORMAT_JSON)
-                    for col_num, value in enumerate(df.columns.values):
+                    for col_num, value in enumerate(columns):
                         worksheet.write(0, col_num, value, header_format)
 
                     # col format
                     num_fields = numeric_fields(df)
+                    datetime_fields = get_datetime_fields(df)
+                    date_fields = get_date_fields(df)
                     col_formats = formats.get('col_formats', [])
                     print("col_formats:", col_formats)
                     conditional_formats = formats.get('conditional_formats', [])
                     print("conditional_formats:", conditional_formats)
 
                     col_vs_format = {}
-                    for idx, col in enumerate(df.columns.values):
+                    for idx, col in enumerate(columns):
                         fmt_json = copy.deepcopy(DEFAULT_COL_FORMAT_JSON)
                         if col in num_fields:
                             digits_count = get_max_digits_count(df[col])
@@ -320,12 +337,25 @@ class FetchingData:
 
                             fmt_json.update({'num_format': num_format})
 
+                        if col in date_fields:
+                            fmt_json.update({'num_format': EXCEL_DATE_FORMAT})
+                            
+                        if col in datetime_fields:
+                            fmt_json.update({'num_format': EXCEL_DATETIME_FORMAT})
+
+
                         col_vs_format[idx] = workbook.add_format(fmt_json)
 
                     for col_format in col_formats:
                         fmt_json = copy.deepcopy(DEFAULT_COL_FORMAT_JSON)
                         fmt_json.update(col_format.get('format'))
                         fmt = workbook.add_format(fmt_json)
+
+
+
+
+
+
                         col_vs_format.update({ list(df).index(col_name): fmt for col_name in col_format.get('col_names') })
 
                     print("col_vs_format:", col_vs_format)
@@ -343,6 +373,9 @@ class FetchingData:
                     print('col_width:', col_width)
                     for col, width in col_width.items():
                         worksheet.set_column(col, col, width, col_vs_format.get(col))
+
+                        for row, val in enumerate(df.values[:, col]):
+                            worksheet.write(row+1, col, coalesce(df.values[row][col]), col_vs_format.get(col))
 
             data_rows_dict_list.append(data_rows_dict)
             print("Export to excel %s succeed!" % current_filename)
