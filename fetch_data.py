@@ -15,7 +15,7 @@ import decimal
 import style
 from IPython.display import display
 from helper import ODPS_LOGIN, MYSQL_LOGIN, STYLES
-from helper import coalesce
+from helper import coalesce, excel_datetime_to_num
 pd.set_option('max_colwidth', 1000)
 
 DEFAULT_ROW_PERMISSION = {
@@ -116,9 +116,12 @@ def get_datetime_fields(df):
         s = df[col]
         if s.notna().sum() == 0:
             break
-        s_type = type(s[pd.notna(s)].iloc[0])
-        if s_type in [pd.Timestamp, datetime.datetime]:
+        sample = s[pd.notna(s)].iloc[0]
+        try:
+            sample.date(), sample.time()
             time_cols.append(col)
+        except:
+            pass
     return time_cols
 
 def get_date_fields(df):
@@ -303,6 +306,12 @@ class FetchingData:
                     nrows, ncols = df.shape
                     data_rows_dict[df_name] = {"shape": df.shape}
 
+                    num_fields = numeric_fields(df)
+                    datetime_fields = get_datetime_fields(df)
+                    date_fields = get_date_fields(df)
+                    print('XXXXX', date_fields, datetime_fields)
+
+                    df[date_fields + datetime_fields] = df[date_fields + datetime_fields].applymap(excel_datetime_to_num)
 
                     if merge:
                         df.set_index(list(df)[:-1]).to_excel(writer, sheet_name=df_name, freeze_panes=freeze_panes)
@@ -322,9 +331,6 @@ class FetchingData:
                         worksheet.write(0, col_num, value, header_format)
 
                     # col format
-                    num_fields = numeric_fields(df)
-                    datetime_fields = get_datetime_fields(df)
-                    date_fields = get_date_fields(df)
                     col_formats = formats.get('col_formats', [])
                     print("col_formats:", col_formats)
                     conditional_formats = formats.get('conditional_formats', [])
@@ -344,7 +350,7 @@ class FetchingData:
 
                         if col in date_fields:
                             fmt_json.update({'num_format': EXCEL_DATE_FORMAT})
-                            
+
                         if col in datetime_fields:
                             fmt_json.update({'num_format': EXCEL_DATETIME_FORMAT})
 
@@ -373,11 +379,6 @@ class FetchingData:
                     print('col_width:', col_width)
                     for col, width in col_width.items():
                         worksheet.set_column(col, col, width, col_vs_format.get(col))
-
-
-                        if columns[col] in datetime_fields + date_fields:
-                            for row, val in enumerate(df.values[:, col]):
-                                worksheet.write(row+1, col, coalesce(df.values[row][col]), col_vs_format.get(col))
 
             data_rows_dict_list.append(data_rows_dict)
             print("Export to excel %s succeed!" % current_filename)
@@ -593,3 +594,4 @@ try:
     mysql_obj = FetchingDataMysql()
 except:
     pass
+
