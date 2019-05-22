@@ -46,6 +46,10 @@ TABLE_STYLES = [{'selector': '.row_heading, .blank', 'props': [('display', 'none
 DT_FORMAT = '%Y-%m-%d'
 PT_FORMAT = '%Y%m%d'
 
+ODPS_VALUE_MAP = {
+  '${bdp.system.bizdate}': '{pt}'
+}
+
 today = datetime.date.today()
 yesterday = today - datetime.timedelta(1)
 week_start = yesterday - datetime.timedelta(6)
@@ -540,6 +544,8 @@ class FetchingDataOdps(FetchingData):
                     if count > MAX_WAIT_COUNT:
                         raise Exception('wait for {project}.{table_name} too long ({count} minutes)'.format(project=project, table_name=table_name, count=count))
 
+        for odps_val, py_val in ODPS_VALUE_MAP.items():
+            sql_text = sql_text.replace(odps_val, py_val)
         sql_text = sql_text.format(pt=self._pt, dt=self._dt, **self._dates)
         start = time.time()
         print(sql_text) if print_log else None
