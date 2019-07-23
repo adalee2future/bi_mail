@@ -68,7 +68,7 @@ def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend=
      <br/><br/>
      如对{report_type_name}有任何疑问，请联系{owner}
      <br/><br/>
-     [自动发送]
+     [BI自建报表系统]
      <br/><br/>
     '''.format(styles=STYLES, customized_styles=customized_styles, body_prepend=body_prepend, owner=owner, caption=caption, report_type_name=REPORT_TYPE_MAP[report_type])
 
