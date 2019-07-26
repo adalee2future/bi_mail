@@ -1,4 +1,5 @@
 import os
+import re
 import warnings
 import json
 import pandas as pd
@@ -21,11 +22,13 @@ from datetime import timedelta
 from wordcloud import WordCloud
 from collections import OrderedDict
 
+import odps
 import fetch_data
 
-pt = fetch_data.get_pt(yesterday)
-odps_obj = fetch_data.FetchingDataOdps(pt)
+pt = fetch_data.get_pt(fetch_data.yesterday)
+odps_obj = fetch_data.FetchingDataOdps(pt=pt)
 run_sql = odps_obj.run_sql
+conn = odps_obj._conn
 
 %config InlineBackend.figure_format = 'svg'
 %matplotlib inline
