@@ -15,7 +15,7 @@ from helper import MAIL_MONITOR, MAIL_USER, MAIL_PASSWD, STYLES
 
 
 @multiple_trials()
-def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None, caption='', report_type='report'):
+def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None, caption='', report_type='report', sender_display=None, fake_to=None):
 
     s = smtplib.SMTP('smtp.office365.com', port=587)
     s.ehlo()
@@ -25,27 +25,43 @@ def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend=
     me = mail_user
     msg = MIMEMultipart()
     msg['Subject'] = subject
-    msg['From'] = me
-    msg['to'] = to
+    if sender_display is None:
+        msg['From'] = me
+    else:
+        msg['From'] = "%s<%s>" % (sender_display, me)
+    print(msg['From'])
     receiver_list = to.split(',')
 
+    msg_to_list = to.split(',')
     msg_cc_list = []
+
     if cc is not None:
         msg_cc_list += cc.split(',')
         receiver_list += cc.split(',')
 
     if supervised is None:
-        supervised = bool(os.environ.get('supervised', False))
+        os_supervised = os.environ.get('supervised', 'false')
+        if os_supervised.lower().startswith('t'):
+            supervised = True
+        else:
+            supervised = False
 
+    print("supervised:", supervised)
     if supervised and MAIL_MONITOR not in receiver_list:
         msg_cc_list.append(MAIL_MONITOR)
         receiver_list.append(MAIL_MONITOR)
 
     if fake_cc is not None:
-        msg_cc_list.append(MAIL_MONITOR)
+        msg_cc_list += fake_cc.split(',')
 
+    if fake_to is not None:
+        msg_to_list += fake_to.split(',')
+
+    msg['to'] = ','.join(msg_to_list)
     msg['cc'] = ','.join(msg_cc_list)
+
     msg['bcc'] = bcc
+
     if bcc is not None:
         receiver_list += bcc.split(',')
 
