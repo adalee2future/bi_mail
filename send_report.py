@@ -15,7 +15,7 @@ matplotlib.use('agg')
 import fetch_data
 from file_to_mail import file_to_mail
 import upload_file
-from helper import BASE_DIR, OSS_LINK_REPORTS
+from helper import BASE_DIR, OSS_LINK_REPORTS, file_size
 
 
 VALID_CONDITIONS = [ 'all', 'any' ]
@@ -109,6 +109,7 @@ def send_report(report_id, params=''):
 
     if to is None:
         to = cfg.get('to')
+        fake_to = cfg.get('fake_to')
         cc = cfg.get('cc')
         bcc = cfg.get('bcc')
         fake_cc = cfg.get('fake_cc')
@@ -116,12 +117,14 @@ def send_report(report_id, params=''):
         cc = None
         bcc = None
         fake_cc = None
+        fake_to = None
 
     customized_styles = cfg.get('customized_styles', '')
 
 
     default_row_permission = copy.deepcopy(fetch_data.DEFAULT_ROW_PERMISSION)
     default_row_permission['detail'][0]['to'] = to
+    default_row_permission['detail'][0]['fake_to'] = fake_to
     default_row_permission['detail'][0]['cc'] = cc
     default_row_permission['detail'][0]['fake_cc'] = fake_cc
     default_row_permission['detail'][0]['bcc'] = bcc
@@ -164,18 +167,16 @@ def send_report(report_id, params=''):
         elif mail_action == 'exit':
             return
 
-        try:
-            file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc, caption=caption)
-        except SMTPDataError as e:
-            if report_id in OSS_LINK_REPORTS:
-                share_url = upload_file.get_file_url(oss_filename)
-                valid_hours = round(upload_file.EXPIRE_SECONDS / 3600)
-                body_prepend = '附件太大，请<a href=%s>点击链接</a>下载(有效期%s小时)<br/>' % (share_url, valid_hours)
-                print("body_prepend:", body_prepend)
-                file_to_mail(None, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc, caption=caption)
-            else:
-                raise e
+        file_mb = file_size(filename)
+        if file_mb > 30 and report_id in OSS_LINK_REPORTS:
+            share_url = upload_file.get_file_url(oss_filename)
+            valid_hours = round(upload_file.EXPIRE_SECONDS / 3600)
+            body_prepend = '附件太大，请<a href=%s>点击链接</a>下载(有效期%s小时)<br/>' % (share_url, valid_hours)
+            print("body_prepend:", body_prepend)
+            file_to_mail(None, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc, caption=caption, fake_to=fake_to)
 
+        else:
+            file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc, caption=caption, fake_to=fake_to)
     else:
         if isinstance(file_type, str):
             filename = os.path.join(project_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, file_type))
@@ -241,6 +242,7 @@ def send_report(report_id, params=''):
 
             mail_meta['to'] = file_meta.get('to')
             mail_meta['cc'] = file_meta.get('cc')
+            mail_meta['fake_to'] = file_meta.get('fake_to')
             mail_meta['fake_cc'] = file_meta.get('fake_cc')
             mail_meta['bcc'] = file_meta.get('bcc')
             mail_meta['caption'] = caption
