@@ -233,10 +233,12 @@ def send_report(report_id, params=''):
             mail_meta['filenames'] = filename
             mail_meta['body_prepend'] = file_meta.get('body_prepend', '')
             mail_meta['subject'] = '{prefix}{subject}_{pt}{suffix}'.\
-                    format(prefix=file_meta.get('prefix', ''),
+                    format(prefix='',
+                    #format(prefix=file_meta.get('prefix', ''),
                            subject=cfg.get('subject'),
                            pt=fetching_data._pt,
-                           suffix=file_meta.get('suffix', ''))
+                           suffix='')
+                           #suffix=file_meta.get('suffix', ''))
             mail_meta['customized_styles'] = customized_styles
             mail_meta['owner'] = owner
 
