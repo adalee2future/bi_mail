@@ -13,15 +13,13 @@ REPORT_TYPE_MAP = {
     'vreport': '报告'
 }
 
-with open(CONFIG_FILE) as f:
-    cfg = commentjson.loads(f.read())
-    MAIL_MONITOR = cfg['mail_monitor']
-    MAIL_USER = cfg['mail_sender']['user']
-    MAIL_PASSWD = cfg['mail_sender']['password']
-    ODPS_LOGIN = cfg['db']['odps']
-    MYSQL_LOGIN = cfg['db']['mysql']
-    OSS_LINK_REPORTS = cfg.get('oss_link_reports', [])
-
+def file_size(filename):
+    '''
+    文件大小（MB）
+    '''
+    b = os.path.getsize(filename)
+    mb = b / 1000 / 1000
+    return mb
 
 def multiple_trials(wait_seconds=[0, 60, 120]):
     def _multiple_trials(func):
@@ -68,4 +66,14 @@ def excel_datetime_to_num(t):
     if t_time > bug_time:
         num += 1
     return num
+
+with open(CONFIG_FILE) as f:
+    cfg = commentjson.loads(f.read())
+    MAIL_MONITOR = cfg['mail_monitor']
+    MAIL_USER = cfg['mail_sender']['user']
+    MAIL_PASSWD = cfg['mail_sender']['password']
+    ODPS_LOGIN = cfg['db']['odps']
+    MYSQL_LOGIN = cfg['db']['mysql']
+    OSS_LINK_REPORTS = cfg.get('oss_link_reports', [])
+
 
