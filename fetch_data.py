@@ -18,6 +18,7 @@ from helper import ODPS_LOGIN, MYSQL_LOGIN, STYLES
 from helper import coalesce, excel_datetime_to_num
 pd.set_option('max_colwidth', 1000)
 
+odps.options.sql.settings =  { "odps.sql.submit.mode" : "script" }
 DEFAULT_ROW_PERMISSION = {
     'field': None,
     'detail':
