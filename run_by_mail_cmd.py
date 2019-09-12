@@ -174,11 +174,11 @@ def exit_condition_by_time():
 def fetch_code(directory=BASE_DIR):
     origin_cwd = os.getcwd()
     os.chdir(directory)
-    subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
-    subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+    subprocess.call(['git', 'checkout', 'master'], stdout=FNULL, stderr=subprocess.STDOUT)
+    subprocess.call(['git', 'pull', 'origin', 'master'], stdout=FNULL, stderr=subprocess.STDOUT)
     os.chdir('reports')
-    subprocess.call(['git', 'checkout', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
-    subprocess.call(['git', 'pull', 'origin', 'dev'], stdout=FNULL, stderr=subprocess.STDOUT)
+    subprocess.call(['git', 'checkout', 'master'], stdout=FNULL, stderr=subprocess.STDOUT)
+    subprocess.call(['git', 'pull', 'origin', 'master'], stdout=FNULL, stderr=subprocess.STDOUT)
     os.chdir(origin_cwd)
 
 
