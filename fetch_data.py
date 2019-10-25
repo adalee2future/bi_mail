@@ -291,12 +291,14 @@ class FetchingData:
         data_rows_dict_list = []
 
         for permit_detail in permit_detail_list:
+
             detail_prefix = permit_detail.get('prefix', '')
             detail_suffix = permit_detail.get('suffix', '')
             detail_permit = permit_detail.get('permit')
 
-            name, extension = os.path.splitext(filename)
-            current_filename = ''.join([detail_prefix, name, detail_suffix, extension])
+            dirname = os.path.dirname(filename)
+            name, extension = os.path.splitext(os.path.basename(filename))
+            current_filename = os.path.join(dirname, ''.join([detail_prefix, name, detail_suffix, extension]))
             data_rows_dict = OrderedDict()
             permit_detail['filename'] = current_filename
 
@@ -314,7 +316,6 @@ class FetchingData:
                     num_fields = numeric_fields(df)
                     datetime_fields = get_datetime_fields(df)
                     date_fields = get_date_fields(df)
-                    print('XXXXX', date_fields, datetime_fields)
 
                     df[date_fields + datetime_fields] = df[date_fields + datetime_fields].applymap(excel_datetime_to_num)
 
