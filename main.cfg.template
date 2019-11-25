@@ -1,0 +1,36 @@
+{
+  "mail_host": "abc.com", #公司邮箱地址
+  "mail_monitor": "ada.li@abc.com", #报表管理员
+  "mail_sender": {
+    "user": "data-report@abc.com", #邮件系统发件人
+    "password": "xxx"
+
+  }, #报表系统发件人
+  "oss_endpoint": "oss-cn-shanghai.aliyuncs.com", #阿里云oss endpoint
+  "oss_bucket": "xxx", #阿里云oss bucket
+  "oss_folder": "data", #阿里云oss默认文件夹
+  "oss_link_reports": [
+    "cm城市数据",
+    "测试",
+    "1w+rows",
+    "门店sku维度每日数据"
+  ], #文件太大改用链接发送的报表 
+  "db": {
+    "odps": {
+      "default": {
+        "access_id": "xxx",
+        "secret_access_key": "xxx",
+        "project": "xxx" # 默认库
+      }
+    },
+    "mysql": {
+      "default": {
+        "host": "xxx",
+        "user": "xxx",
+        "password": "xxx",
+        "charset": "utf8",
+        "read_timeout": 2400 # 限制取数时间最长为40分钟
+      }
+    }
+  }
+}
