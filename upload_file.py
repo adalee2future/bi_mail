@@ -3,23 +3,21 @@
 import oss2
 import os
 import datetime
-from helper import ODPS_LOGIN
+from helper import ODPS_LOGIN, OSS_ENDPOINT, OSS_BUCKET
 
-ENDPOINT = 'oss-cn-shanghai.aliyuncs.com'
-DEFAULT_BUCKET = 'owitho-bi-mail-attachments'
 DEFAULT_FOLDER = None
 EXPIRE_SECONDS = 60 * 60 * 24
 
-def login_bucket(bucket_name=DEFAULT_BUCKET, account="default"):
+def login_bucket(bucket_name=OSS_BUCKET, account="default"):
     login_info = ODPS_LOGIN[account]
     auth = oss2.Auth(login_info['access_id'], login_info['secret_access_key'])
-    service = oss2.Service(auth, ENDPOINT)
-    bucket = oss2.Bucket(auth, ENDPOINT, DEFAULT_BUCKET)
+    service = oss2.Service(auth, OSS_ENDPOINT)
+    bucket = oss2.Bucket(auth, OSS_ENDPOINT, OSS_BUCKET)
 
     return bucket
 
-def upload_file_to_oss(filename, oss_filename=None, folder=DEFAULT_FOLDER, bucket_name=DEFAULT_BUCKET):
-    bucket = login_bucket(DEFAULT_BUCKET)
+def upload_file_to_oss(filename, oss_filename=None, folder=DEFAULT_FOLDER, bucket_name=OSS_BUCKET):
+    bucket = login_bucket(OSS_BUCKET)
 
     file_creation_time = datetime.datetime.fromtimestamp(os.path.getmtime(filename))
     if oss_filename is None:
@@ -31,8 +29,8 @@ def upload_file_to_oss(filename, oss_filename=None, folder=DEFAULT_FOLDER, bucke
     bucket.update_object_meta(oss_filename, {'Content-Disposition': 'attachment'})
     return oss_filename
 
-def upload_text_to_oss(oss_filename, text, folder=DEFAULT_FOLDER, bucket_name=DEFAULT_BUCKET):
-    bucket = login_bucket(DEFAULT_BUCKET)
+def upload_text_to_oss(oss_filename, text, folder=DEFAULT_FOLDER, bucket_name=OSS_BUCKET):
+    bucket = login_bucket(OSS_BUCKET)
     if folder is not None:
         oss_filename = '{}/{}'.format(folder, oss_filename)
     bucket.put_object(oss_filename, text)
@@ -40,5 +38,5 @@ def upload_text_to_oss(oss_filename, text, folder=DEFAULT_FOLDER, bucket_name=DE
     return oss_filename
 
 def get_file_url(oss_filename, expires=EXPIRE_SECONDS):
-    bucket = login_bucket(DEFAULT_BUCKET)
+    bucket = login_bucket(OSS_BUCKET)
     return bucket.sign_url('GET', oss_filename, expires)

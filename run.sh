@@ -1,6 +1,7 @@
 #!/bin/sh
 
 export LANG=zh_CN.UTF-8
+export PATH=`pwd`:$PATH
 
 cd `dirname $0`
 report_id=$1
@@ -33,5 +34,5 @@ echo >> $daily_log_file
 if [[ $res_code -eq 0 ]]
   then echo
 else
-  ./send_log.py report $report_id $report_log_file
+  python send_log.py report $report_id $report_log_file
 fi

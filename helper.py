@@ -72,8 +72,10 @@ with open(CONFIG_FILE) as f:
     MAIL_MONITOR = cfg['mail_monitor']
     MAIL_USER = cfg['mail_sender']['user']
     MAIL_PASSWD = cfg['mail_sender']['password']
+    MAIL_HOST= cfg.get('mail_host')
     ODPS_LOGIN = cfg['db']['odps']
     MYSQL_LOGIN = cfg['db']['mysql']
+    OSS_ENDPOINT  = cfg.get('oss_endpoint')
+    OSS_BUCKET  = cfg.get('oss_bucket')
+    OSS_FOLDER = cfg.get('oss_folder')
     OSS_LINK_REPORTS = cfg.get('oss_link_reports', [])
-
-

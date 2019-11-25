@@ -1,4 +1,3 @@
-#!/ada_program/python
 # -*- coding: utf-8 -*-
 
 import os
@@ -6,7 +5,7 @@ import sys
 import json
 import copy
 
-from helper import MAIL_USER, MAIL_MONITOR, REPORT_TYPE_MAP
+from helper import MAIL_USER, MAIL_MONITOR, REPORT_TYPE_MAP, MAIL_HOST
 from file_to_mail import file_to_mail
 
 
@@ -25,7 +24,7 @@ def main(report_type, report_id, log_filename):
 
     owner = cfg.get('owner')
 
-    to = ','.join(['%s@owitho.com' % owner for owner in cfg.get('owner').split(',')])
+    to = ','.join(['%s@%s' % (owner, MAIL_HOST) for owner in cfg.get('owner').split(',')])
     cc = MAIL_MONITOR
     bcc = None
     body_prepend = '''

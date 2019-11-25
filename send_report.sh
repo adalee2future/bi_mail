@@ -8,7 +8,7 @@ date
 echo "******start*******" 
 
 pwd
-./send_report.py $report_id $params
+python send_report.py $report_id $params
 
 date
 echo "******end*******"

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 export LANG=zh_CN.UTF-8
+export PATH=`pwd`:$PATH
 export supervised=true
 
 cd `dirname $0`
@@ -8,7 +9,7 @@ cd `dirname $0`
 log_file=log/`date +%Y-%m-%d`.log
 echo $log_file
 touch $log_file
-./run_by_mail_cmd.py >> $log_file 2>&1
+python run_by_mail_cmd.py >> $log_file 2>&1
 
 res_code=$?
 

@@ -1,4 +1,3 @@
-#!/ada_program/python
 # -*- coding: utf-8 -*-
 
 import imaplib
@@ -17,10 +16,9 @@ from email.header import decode_header
 from file_to_mail import file_to_mail
 from send_report import VALID_EXTERNAL_PROJECTS
 from helper import multiple_trials
-from helper import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR
+from helper import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR, MAIL_HOST
 
 DEFAULT_FOLDER = "inbox"
-VALID_SENDER_SUFFIX = 'owitho.com'
 MAIL_SEARCH = 'SUBJECT "bi_mail"'
 WAIT_SECONDS = 6
 FNULL = open(os.devnull, 'w')
@@ -95,9 +93,9 @@ def bi_mail_run(cmd_info):
         if report_id is None:
             raise Exception("report_id is None")
 
-        if sender.find(VALID_SENDER_SUFFIX) == -1:
+        if sender.find(MAIL_HOST) == -1:
 
-            cmd_info[ERROR] = '发件人必须是@%s' % VALID_SENDER_SUFFIX
+            cmd_info[ERROR] = '发件人必须是@%s' % MAIL_HOST
             logging_mail_id(mail_id, cmd_info, type=logging.ERROR)
             mail_params = {
               'filenames': None,
@@ -112,7 +110,7 @@ def bi_mail_run(cmd_info):
             sender_prefix = None
 
         else:
-            sender_prefix = re.search('(\\S+)@%s' % VALID_SENDER_SUFFIX, sender).groups()[0]
+            sender_prefix = re.search('(\\S+)@%s' % MAIL_HOST, sender).groups()[0]
 
         cfg_filename = os.path.join('reports', report_id, '%s.cfg' % report_id)
         try:

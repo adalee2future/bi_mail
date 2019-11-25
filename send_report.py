@@ -1,4 +1,3 @@
-#!/ada_program/python
 # -*- coding: utf-8 -*-
 
 import os
@@ -15,7 +14,7 @@ matplotlib.use('agg')
 import fetch_data
 from file_to_mail import file_to_mail
 import upload_file
-from helper import BASE_DIR, OSS_LINK_REPORTS, file_size
+from helper import BASE_DIR, OSS_FOLDER, OSS_LINK_REPORTS, file_size
 
 
 VALID_CONDITIONS = [ 'all', 'any' ]
@@ -23,7 +22,6 @@ VALID_ACTIONS = [ 'error', 'exit' ]
 ODPS_DEFAULT_NO_DATA_HANDLER = {"condition": "any", "action": "error"}
 MYSQL_DEFAULT_NO_DATA_HANDLER = None
 DEFAULT_BODY_PREPEND = ''
-OSS_DATA_FOLDER = 'data'
 VALID_EXTERNAL_PROJECTS = ['store-bi', 'rack-bi']
 
 def get_mail_action(data_meta, no_data_handler):
@@ -54,7 +52,7 @@ def export_file(fetching_data, sql_text, file_type, filename=None, dependency={}
 
     for file_meta in file_metas:
         filename = file_meta.get('filename')
-        oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_DATA_FOLDER)
+        oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_FOLDER)
         file_meta['oss_filename'] = oss_filename
         if file_type == 'html':
             file_meta['body_prepend'] = open(filename).read()
@@ -153,10 +151,10 @@ def send_report(report_id, params=''):
 
             current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
             oss_filename = '{}_{}_{}.html'.format(report_id, fetching_data._pt, current_datetime)
-            upload_file.upload_text_to_oss(oss_filename, body_prepend, folder=OSS_DATA_FOLDER)
+            upload_file.upload_text_to_oss(oss_filename, body_prepend, folder=OSS_FOLDER)
 
         if filename is not None:
-            oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_DATA_FOLDER)
+            oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_FOLDER)
 
         mail_action = get_mail_action(data_meta, no_data_handler)
         print('\ndata_meta:', data_meta)
