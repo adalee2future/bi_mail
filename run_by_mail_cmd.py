@@ -16,6 +16,7 @@ from email.header import decode_header
 from file_to_mail import file_to_mail
 from send_report import VALID_EXTERNAL_PROJECTS
 from helper import multiple_trials
+from helper import IMAP_HOST, IMAP_PORT
 from helper import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR, MAIL_HOST
 
 DEFAULT_FOLDER = "inbox"
@@ -29,7 +30,7 @@ os.chdir(BASE_DIR)
 
 @multiple_trials([0] + [60] * 50)
 def login_imap():
-    M = imaplib.IMAP4_SSL("mail.office365.com", port=993)
+    M = imaplib.IMAP4_SSL(IMAP_HOST, port=IMAP_PORT)
     M.login(MAIL_USER, MAIL_PASSWD)
     return M
 

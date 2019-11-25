@@ -69,6 +69,10 @@ def excel_datetime_to_num(t):
 
 with open(CONFIG_FILE) as f:
     cfg = commentjson.loads(f.read())
+    SMTP_HOST = cfg['smtp_host']
+    SMTP_PORT = cfg['smtp_port']
+    IMAP_HOST = cfg['imap_host']
+    IMAP_PORT = cfg['imap_port']
     MAIL_MONITOR = cfg['mail_monitor']
     MAIL_USER = cfg['mail_sender']['user']
     MAIL_PASSWD = cfg['mail_sender']['password']

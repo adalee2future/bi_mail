@@ -1,4 +1,8 @@
 {
+  "smtp_host": "smtp.office365.com",
+  "smtp_port": 587,
+  "imap_host": "mail.office365.com",
+  "imap_port": 993,
   "mail_host": "abc.com", #公司邮箱地址
   "mail_monitor": "ada.li@abc.com", #报表管理员
   "mail_sender": {

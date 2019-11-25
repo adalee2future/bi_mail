@@ -10,13 +10,14 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from helper import multiple_trials
 from helper import BASE_DIR, REPORT_TYPE_MAP
+from helper import SMTP_HOST, SMTP_PORT
 from helper import MAIL_MONITOR, MAIL_USER, MAIL_PASSWD, STYLES
 
 
 @multiple_trials()
 def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None, caption='', report_type='report', sender_display=None, fake_to=None):
 
-    s = smtplib.SMTP('smtp.office365.com', port=587)
+    s = smtplib.SMTP(SMTP_HOST, port=SMTP_PORT)
     s.ehlo()
     s.starttls()
     s.login(mail_user, mail_passwd)
