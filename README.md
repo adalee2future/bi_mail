@@ -69,12 +69,13 @@ Python编写的邮件报表系统，现开源
 	* IPython
 	* commentjson
 	* pymysql
-	* odps （阿里云大数据计算Maxcompute）
-	* oss2（阿里云对象存储oss）
+	* pyodps （阿里云大数据计算Maxcompute）
+	* oss2（阿里云对象存储oss）（非必须，用来支持附件太大链接发送）
 
 1. 下载该项目
 2. 复制main.cfg.template于main.cfg，并填写好里面的配置
 3. 将python3设置为项目下的python链接，如`ln -s /path/to/python3 python`
+4. mkdir log
 
 部署有问题，请邮件联系开发者：adalee2future@163.com
 

@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import oss2
 import os
 import datetime
-from helper import ODPS_LOGIN, OSS_ENDPOINT, OSS_BUCKET
+from helper import OSS_ENABLE
 
-DEFAULT_FOLDER = None
+if OSS_ENABLE:
+    import oss2
+    from helper import ODPS_LOGIN, OSS_ENDPOINT, OSS_BUCKET, OSS_FOLDER
+else:
+    raise Exception("oss not enable, plese set it in main.cfg")
+
+DEFAULT_FOLDER = OSS_FOLDER
 EXPIRE_SECONDS = 60 * 60 * 24
 
 def login_bucket(bucket_name=OSS_BUCKET, account="default"):

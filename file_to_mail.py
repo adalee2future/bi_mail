@@ -10,18 +10,23 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from helper import multiple_trials
 from helper import BASE_DIR, REPORT_TYPE_MAP
-from helper import SMTP_HOST, SMTP_PORT
+from helper import SMTP_HOST, SMTP_PORT, SMTP_PROTOCOL
 from helper import MAIL_MONITOR, MAIL_USER, MAIL_PASSWD, STYLES
 
 
 @multiple_trials()
-def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None, caption='', report_type='report', sender_display=None, fake_to=None):
+def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None, caption='', report_type='report', sender_display=None, fake_to=None, smtp_protocol=SMTP_PROTOCOL):
 
-    s = smtplib.SMTP(SMTP_HOST, port=SMTP_PORT)
-    s.ehlo()
-    s.starttls()
+    if lower(smtp_protocol) == 'ssl': 
+        s = smtplib.SMTP_SSL(SMTP_HOST, port=SMTP_PORT)
+        s.ehlo()
+    else:
+        s = smtplib.SMTP(SMTP_HOST, port=SMTP_PORT)
+        s.ehlo()
+        if(smtp_protocol == 'tls'):
+            s.starttls()
+
     s.login(mail_user, mail_passwd)
-
     me = mail_user
     msg = MIMEMultipart()
     msg['Subject'] = subject

@@ -10,15 +10,19 @@
     "password": "xxx"
 
   }, #报表系统发件人
-  "oss_endpoint": "oss-cn-shanghai.aliyuncs.com", #阿里云oss endpoint
-  "oss_bucket": "xxx", #阿里云oss bucket
-  "oss_folder": "data", #阿里云oss默认文件夹
-  "oss_link_reports": [
-    "cm城市数据",
-    "测试",
-    "1w+rows",
-    "门店sku维度每日数据"
-  ], #文件太大改用链接发送的报表 
+  "oss_setting":
+    {
+      "oss_enable": true,
+      "oss_endpoint": "oss-cn-shanghai.aliyuncs.com", #阿里云oss endpoint
+      "oss_bucket": "xxx", #阿里云oss bucket
+      "oss_folder": "data", #阿里云oss默认文件夹
+      "oss_link_reports": [
+            "cm城市数据",
+	    "测试",
+	    "1w+rows",
+	    "门店sku维度每日数据"
+	  ]#文件太大改用链接发送的报表 
+    }, 
   "db": {
     "odps": {
       "default": {

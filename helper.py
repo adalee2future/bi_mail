@@ -71,6 +71,7 @@ with open(CONFIG_FILE) as f:
     cfg = commentjson.loads(f.read())
     SMTP_HOST = cfg['smtp_host']
     SMTP_PORT = cfg['smtp_port']
+    SMTP_PROTOCOL = cfg.get('smtp_protocol', 'tls')
     IMAP_HOST = cfg['imap_host']
     IMAP_PORT = cfg['imap_port']
     MAIL_MONITOR = cfg['mail_monitor']
@@ -79,7 +80,12 @@ with open(CONFIG_FILE) as f:
     MAIL_HOST= cfg.get('mail_host')
     ODPS_LOGIN = cfg['db']['odps']
     MYSQL_LOGIN = cfg['db']['mysql']
-    OSS_ENDPOINT  = cfg.get('oss_endpoint')
-    OSS_BUCKET  = cfg.get('oss_bucket')
-    OSS_FOLDER = cfg.get('oss_folder')
-    OSS_LINK_REPORTS = cfg.get('oss_link_reports', [])
+
+    
+    oss_setting = cfg.get('oss_setting', {}) 
+    OSS_ENABLE = oss_setting.get('oss_enable', False)
+    if OSS_ENABLE:
+        OSS_ENDPOINT = oss_setting.get('oss_endpoint')
+        OSS_BUCKET = oss_setting.get('oss_bucket')
+        OSS_FOLDER = oss_setting.get('oss_folder')
+        OSS_LINK_REPORTS = oss_setting.get('oss_link_reports', [])

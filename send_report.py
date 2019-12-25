@@ -13,9 +13,12 @@ matplotlib.use('agg')
 
 import fetch_data
 from file_to_mail import file_to_mail
-import upload_file
-from helper import BASE_DIR, OSS_FOLDER, OSS_LINK_REPORTS, file_size
+from helper import BASE_DIR, file_size
 
+from helper import OSS_ENABLE
+if OSS_ENABLE:
+    from helper import OSS_LINK_REPORTS
+    import upload_file
 
 VALID_CONDITIONS = [ 'all', 'any' ]
 VALID_ACTIONS = [ 'error', 'exit' ]
@@ -52,8 +55,9 @@ def export_file(fetching_data, sql_text, file_type, filename=None, dependency={}
 
     for file_meta in file_metas:
         filename = file_meta.get('filename')
-        oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_FOLDER)
-        file_meta['oss_filename'] = oss_filename
+        if OSS_ENABLE:
+            oss_filename = upload_file.upload_file_to_oss(filename)
+            file_meta['oss_filename'] = oss_filename
         if file_type == 'html':
             file_meta['body_prepend'] = open(filename).read()
             del file_meta['filename']
@@ -151,10 +155,15 @@ def send_report(report_id, params=''):
 
             current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
             oss_filename = '{}_{}_{}.html'.format(report_id, fetching_data._pt, current_datetime)
-            upload_file.upload_text_to_oss(oss_filename, body_prepend, folder=OSS_FOLDER)
+            
 
-        if filename is not None:
-            oss_filename = upload_file.upload_file_to_oss(filename, folder=OSS_FOLDER)
+            if OSS_ENABLE:
+                upload_file.upload_text_to_oss(oss_filename, body_prepend)
+                oss_filename = upload_file.upload_file_to_oss(filename)
+                file_meta['oss_filename'] = oss_filename
+
+                if filename is not None:
+                    oss_filename = upload_file.upload_file_to_oss(filename)
 
         mail_action = get_mail_action(data_meta, no_data_handler)
         print('\ndata_meta:', data_meta)
