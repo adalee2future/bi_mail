@@ -17,7 +17,7 @@ from helper import MAIL_MONITOR, MAIL_USER, MAIL_PASSWD, STYLES
 @multiple_trials()
 def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend='', customized_styles='', fake_cc=None, mail_user=MAIL_USER, mail_passwd=MAIL_PASSWD, supervised=None, caption='', report_type='report', sender_display=None, fake_to=None, smtp_protocol=SMTP_PROTOCOL):
 
-    if lower(smtp_protocol) == 'ssl': 
+    if smtp_protocol.lower() == 'ssl': 
         s = smtplib.SMTP_SSL(SMTP_HOST, port=SMTP_PORT)
         s.ehlo()
     else:
