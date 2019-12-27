@@ -83,6 +83,13 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
     return resp_code, res
 
 
+# 解决部分邮箱搜索(M.search)无用，需要显式判断邮箱主题，如企业QQ邮箱
+def is_mail_cmd(cmd_info):
+    if cmd_info.get('subject').find('bi_mail') >= 0 and cmd_info.get('sender').split('@')[1] == MAIL_HOST:
+        return True
+    else:
+        return False
+
 def bi_mail_run(cmd_info):
     def _run():
         mail_id = cmd_info.get('mail_id', -1)
@@ -216,32 +223,30 @@ def main():
         #logger.info("min_mail_id: %s" % min_mail_id)
         if resp_code == 'OK':
             all_mail_ids = [int(mail_id) for mail_id in resp_data[0].decode('ascii').split()]
-            print('all_mail_ids:', all_mail_ids)
             mail_ids = list(filter(lambda x: x > min_mail_id, all_mail_ids))
             for mail_id in mail_ids:
 
                 mail_respb_code, cmd_info = parse_mail_sender_and_subject(mail_id, M=M)
                 logging_mail_id(mail_id, "got mail: %s" % mail_respb_code)
                 logging_mail_id(mail_id, 'mail parsed: %s' % cmd_info)
-                mail_params = {
-                  'filenames': None,
-                  'subject': '手动运行报表<%s>监控' % cmd_info.get('report_id'),
-                  'owner': '',
-                  'to': MAIL_MONITOR,
-                  'cc': cmd_info.get('sender'),
-                  'body_prepend': cmd_info
-                }
-                logging_mail_id(mail_id, 'send mail: %s' % mail_params)
+                if is_mail_cmd(cmd_info):
+                    mail_params = {
+                      'filenames': None,
+                      'subject': '手动运行报表<%s>监控' % cmd_info.get('report_id'),
+                      'owner': '',
+                      'to': MAIL_MONITOR,
+                      'cc': cmd_info.get('sender'),
+                      'body_prepend': cmd_info
+                    }
+                    logging_mail_id(mail_id, 'send mail: %s' % mail_params)
 
-                file_to_mail(**mail_params)
+                    file_to_mail(**mail_params)
+                    logging_mail_id(mail_id, "bi_mail_run: %s" % cmd_info)
+                    bi_mail_run(cmd_info)
 
                 with open('mail.id', 'w') as f:
                     f.write('{mail_id}\n'.format(mail_id=mail_id))
 
-                logging_mail_id(mail_id, "bi_mail_run: %s" % cmd_info)
-
-                if cmd_info.get('subject').find('bi_mail') >= 0: 
-                    bi_mail_run(cmd_info)
 
                 if exit_condition_by_time():
                     break
