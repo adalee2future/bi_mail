@@ -89,3 +89,6 @@ with open(CONFIG_FILE) as f:
         OSS_BUCKET = oss_setting.get('oss_bucket')
         OSS_FOLDER = oss_setting.get('oss_folder')
         OSS_LINK_REPORTS = oss_setting.get('oss_link_reports', [])
+
+    EXTERNAL_PROJECTS = cfg.get('external_projects', [])
+

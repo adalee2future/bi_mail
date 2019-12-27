@@ -14,7 +14,7 @@ import logging
 
 from email.header import decode_header
 from file_to_mail import file_to_mail
-from send_report import VALID_EXTERNAL_PROJECTS
+from helper import EXTERNAL_PROJECTS
 from helper import multiple_trials
 from helper import IMAP_HOST, IMAP_PORT
 from helper import MAIL_USER, MAIL_PASSWD, BASE_DIR, MAIL_MONITOR, MAIL_HOST
@@ -74,7 +74,7 @@ def parse_mail_sender_and_subject(mail_id, folder=DEFAULT_FOLDER, M=login_imap()
         if params_search:
             res['params'] = params_search.groups()[0]
 
-        sender = message.get('from')
+        sender = str(message.get('from'))
         #print(mail_id, 'sender: %s' % sender)
         #print(mail_id, 'sender decode: %s' % decode_header(sender))
         #print(mail_id, sender)
@@ -197,7 +197,7 @@ def main():
         fetch_code()
 
         os.chdir('..')
-        for external_project in VALID_EXTERNAL_PROJECTS:
+        for external_project in EXTERNAL_PROJECTS:
             os.chdir(external_project)
             subprocess.call(['git', 'pull', 'origin', 'master'], stdout=FNULL, stderr=subprocess.STDOUT)
             os.chdir('..')
@@ -216,6 +216,7 @@ def main():
         #logger.info("min_mail_id: %s" % min_mail_id)
         if resp_code == 'OK':
             all_mail_ids = [int(mail_id) for mail_id in resp_data[0].decode('ascii').split()]
+            print('all_mail_ids:', all_mail_ids)
             mail_ids = list(filter(lambda x: x > min_mail_id, all_mail_ids))
             for mail_id in mail_ids:
 
@@ -238,7 +239,9 @@ def main():
                     f.write('{mail_id}\n'.format(mail_id=mail_id))
 
                 logging_mail_id(mail_id, "bi_mail_run: %s" % cmd_info)
-                bi_mail_run(cmd_info)
+
+                if cmd_info.get('subject').find('bi_mail') >= 0: 
+                    bi_mail_run(cmd_info)
 
                 if exit_condition_by_time():
                     break

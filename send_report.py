@@ -14,6 +14,7 @@ matplotlib.use('agg')
 import fetch_data
 from file_to_mail import file_to_mail
 from helper import BASE_DIR, file_size
+from helper import EXTERNAL_PROJECTS
 
 from helper import OSS_ENABLE
 if OSS_ENABLE:
@@ -25,7 +26,7 @@ VALID_ACTIONS = [ 'error', 'exit' ]
 ODPS_DEFAULT_NO_DATA_HANDLER = {"condition": "any", "action": "error"}
 MYSQL_DEFAULT_NO_DATA_HANDLER = None
 DEFAULT_BODY_PREPEND = ''
-VALID_EXTERNAL_PROJECTS = ['store-bi', 'rack-bi']
+
 
 def get_mail_action(data_meta, no_data_handler):
     if data_meta is None or no_data_handler is None:
@@ -81,7 +82,7 @@ def send_report(report_id, params=''):
         cfg = json.loads(f.read())
 
     external_sql_location = cfg.get('external_sql_location')
-    if external_sql_location in VALID_EXTERNAL_PROJECTS:
+    if external_sql_location in EXTERNAL_PROJECTS:
         os.chdir('..')
         os.chdir(os.path.join(external_sql_location, '周期取数'))
     else:
