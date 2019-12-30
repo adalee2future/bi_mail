@@ -1,9 +1,10 @@
 #!/bin/sh
 
 export LANG=zh_CN.UTF-8
+cd `dirname $0`
+
 export PATH=`pwd`:$PATH
 
-cd `dirname $0`
 report_id=$1
 params=$2
 

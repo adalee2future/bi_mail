@@ -1,10 +1,10 @@
 #!/bin/sh
 
 export LANG=zh_CN.UTF-8
+cd `dirname $0`
+
 export PATH=`pwd`:$PATH
 export supervised=true
-
-cd `dirname $0`
 
 log_file=log/`date +%Y-%m-%d`.log
 echo $log_file
