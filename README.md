@@ -74,6 +74,24 @@ Python编写的邮件报表系统，现开源
 
 1. 下载该项目
 2. 复制main.cfg.template于main.cfg，并填写好里面的配置
+    * 邮箱配置
+        * office365参考如下
+        ```
+          "smtp_host": "smtp.office365.com",
+          "smtp_port": 587,
+          "smtp_protocol": "tls",
+          "imap_host": "mail.office365.com",
+          "imap_port": 993
+        
+        ```
+        * 企业QQ邮箱参考如下
+        ```
+          "smtp_host": "smtp.exmail.qq.com",
+          "smtp_port": 465,
+          "smtp_protocol": "ssl",
+          "imap_host": "imap.exmail.qq.com",
+          "imap_port": 993
+        ```
 3. 将python3设置为项目下的python链接，如`ln -s /path/to/python3 python`
 4. echo 1 > mail.id
 5. mkdir log
