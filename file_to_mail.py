@@ -3,11 +3,14 @@
 import json
 import sys
 import os
+
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
+import premailer
+
 from helper import multiple_trials
 from helper import BASE_DIR, REPORT_TYPE_MAP
 from helper import SMTP_HOST, SMTP_PORT, SMTP_PROTOCOL
@@ -93,6 +96,7 @@ def file_to_mail(filenames, subject, owner, to, cc=None, bcc=None, body_prepend=
      <br/><br/>
     '''.format(styles=STYLES, customized_styles=customized_styles, body_prepend=body_prepend, owner=owner, caption=caption, report_type_name=REPORT_TYPE_MAP[report_type])
 
+    mail_body = premailer.transform(mail_body)
     mail_body_html = MIMEText(mail_body, 'html', 'utf-8')
     msg.attach(mail_body_html)
 

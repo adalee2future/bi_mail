@@ -66,6 +66,7 @@ Python编写的邮件报表系统，现开源
 * 支持数据源：Maxcompute/MySQL
 * Python版本：python3
 	* pandas>=0.23.4
+        * premailer
 	* IPython
 	* commentjson
 	* pymysql
