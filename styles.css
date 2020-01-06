@@ -1,15 +1,14 @@
 table {
   border-collapse: collapse;
-  width: 100%;
 }
 
 th, td {
   text-align: center;
-  padding: 2px;
-  border-right: 1px solid grey;
-  border-left: 1px solid grey;
-  border-top: 1px solid grey;
-  border-bottom: 1px solid grey;
+  padding: 1px;
+  border-right: solid #d8d8d8;
+  border-left: solid #d8d8d8;
+  border-top: solid #d8d8d8;
+  border-bottom: solid #d8d8d8;
 }
 
 td {
