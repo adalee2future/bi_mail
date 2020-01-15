@@ -12,3 +12,4 @@ nohup.out
 crontab_backup/
 main.cfg
 python
+styles.css
