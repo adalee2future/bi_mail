@@ -93,9 +93,10 @@ Python编写的邮件报表系统，现开源
           "imap_host": "imap.exmail.qq.com",
           "imap_port": 993
         ```
-3. 将python3设置为项目下的python链接，如`ln -s /path/to/python3 python`
-4. echo 1 > mail.id
-5. mkdir log
+3. cp styles.css.template styles.css #邮件html格式
+4. 将python3设置为项目下的python链接，如`ln -s /path/to/python3 python`
+5. echo 1 > mail.id
+6. mkdir log
 
 部署有问题，请邮件联系开发者：adalee2future@163.com
 
