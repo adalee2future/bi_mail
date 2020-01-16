@@ -15,6 +15,7 @@ import decimal
 import style
 from IPython.display import display
 from helper import ODPS_LOGIN, MYSQL_LOGIN, STYLES
+from helper import add_days, diff_days, datetime_truncate
 from helper import coalesce, excel_datetime_to_num
 pd.set_option('max_colwidth', 1000)
 
@@ -51,9 +52,7 @@ ODPS_VALUE_MAP = {
   '${bdp.system.bizdate}': '{pt}'
 }
 
-today = datetime.date.today()
-yesterday = today - datetime.timedelta(1)
-week_start = yesterday - datetime.timedelta(6)
+TODAY = datetime.date.today()
 
 MIN_COL_WIDTH = 8
 MAX_COL_WIDTH = 36
@@ -71,11 +70,6 @@ def get_dt(date_t):
 
 def get_pt(date_t):
     return date_t.strftime(PT_FORMAT)
-
-def add_days(date_t, days):
-    if type(date_t) == datetime.datetime:
-        date_t = date_t.date()
-    return date_t + days * datetime.timedelta(1)
 
 def dt2date(dt):
     return datetime.datetime.strptime(dt, DT_FORMAT).date()
@@ -200,8 +194,28 @@ def trunc_datetime(s):
     return s
 
 class FetchingData:
-    def __init__(self, account):
-        raise NotImplementedError
+    def __init__(self, account="default", day_shift=None, pt=None, date_range='day'):
+        login_info = copy.deepcopy(ODPS_LOGIN[account])
+        self._day_shift = 0
+        if 'day_shift' in login_info.keys():
+            self._day_shift = login_info.pop('day_shift')
+
+        self._login_info = login_info
+        if pt is not None:
+            self._pt = pt
+            self._dt = pt2dt(self._pt)
+            self._day_shift = diff_days(TODAY, pt2date(self._pt))
+        else:
+            if day_shift is not None:
+                self._day_shift = day_shift
+            self._pt = get_pt(add_days(TODAY, self._day_shift))
+            self._dt = pt2dt(self._pt)
+        self._end_date = pt2date(self._pt)
+        self._start_date = datetime_truncate(self._end_date, date_range)
+        self._dates = {
+                'start_date': self._start_date,
+                'end_date': self._end_date
+        }
 
     @staticmethod
     def random_filename(file_type):
@@ -498,20 +512,10 @@ class FetchingData:
         # todo csv行权限
 
 class FetchingDataOdps(FetchingData):
-    def __init__(self, account="default", pt=None):
-        login_info = ODPS_LOGIN[account]
-        self._login_info = login_info
-        if pt is not None:
-            self._pt = pt
-            self._dt = pt2dt(pt)
-        else:
-            self._pt = get_pt(yesterday)
-            self._dt = get_dt(yesterday)
-        self._dates = {
-                'today': get_dt(add_days(dt2date(self._dt), 1)),
-                'yesterday': self._dt
-        }
-        self._conn = odps.ODPS(**login_info)
+    def __init__(self, account="default", day_shift=None, pt=None, date_range='day'):
+        super(FetchingDataOdps, self).__init__(account, day_shift, pt, date_range)
+
+        self._conn = odps.ODPS(**self._login_info)
         self._conn.to_global()
 
 
@@ -564,20 +568,9 @@ class FetchingDataOdps(FetchingData):
 
 
 class FetchingDataMysql(FetchingData):
-    def __init__(self, account="default", pt=None):
-        login_info = MYSQL_LOGIN[account]
-        self._login_info = login_info
-        if pt is not None:
-            self._pt = pt
-            self._dt = pt2dt(pt)
-        else:
-            self._pt = get_pt(today)
-            self._dt = get_dt(today)
-        self._dates = {
-            'today': self._dt,
-            'yesterday': add_days(dt2date(self._dt), -1)
-        }
-        self._conn = pymysql.connect(**login_info)
+    def __init__(account, day_shift, pt, date_range):
+        super(FetchingDataMysql, self).__init__(account, day_shift, pt, date_range)
+        self._conn = pymysql.connect(**self._login_info)
 
     def run_sql(self, sql_text, dependency={}, coerce_numeric=False, print_log=True):
         start = time.time()
@@ -591,7 +584,6 @@ class FetchingDataMysql(FetchingData):
         if coerce_numeric:
             sql_res_dataframe = sql_res_dataframe.apply(convert_to_integer)
         return sql_res_dataframe
-
 
 try:
     odps_obj = FetchingDataOdps()

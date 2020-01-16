@@ -5,6 +5,7 @@ from functools import wraps
 import time
 import datetime
 import commentjson
+from datetime_truncate import truncate
 
 BASE_DIR = os.path.dirname(__file__)
 CONFIG_FILE = os.path.join(BASE_DIR, 'main.cfg')
@@ -13,6 +14,28 @@ REPORT_TYPE_MAP = {
     'report': '报表',
     'vreport': '报告'
 }
+
+def add_days(d, num):
+    if isinstance(d, datetime.date):
+        d = datetime.datetime.combine(d, datetime.datetime.min.time())
+
+    delta = datetime.timedelta(num)
+    return d + delta
+
+def diff_days(d1, d2):
+    return (d1 - d2) / datetime.timedelta(1)
+
+def datetime_truncate(d, truncate_to='day'):
+    if isinstance(d, datetime.date):
+        d = datetime.datetime.combine(d, datetime.datetime.min.time())
+    try:
+        start_d = truncate(d, truncate_to)
+    except:
+        num, day = split(truncate_to, '_')
+        if day == 'day':
+            start_d = add_days(d, num)
+
+    return  start_d
 
 def file_size(filename):
     '''

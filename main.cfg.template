@@ -28,7 +28,8 @@
       "default": {
         "access_id": "xxx",
         "secret_access_key": "xxx",
-        "project": "xxx" # 默认库
+        "project": "xxx", # 默认库
+        "day_shift": -1 #默认报表日期为昨日
       }
     },
     "mysql": {
@@ -37,7 +38,8 @@
         "user": "xxx",
         "password": "xxx",
         "charset": "utf8",
-        "read_timeout": 2400 # 限制取数时间最长为40分钟
+        "read_timeout": 2400, # 限制取数时间最长为40分钟
+        "day_shift": 0 #默认报表日期为今天
       }
     }
   }

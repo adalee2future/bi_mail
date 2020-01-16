@@ -29,15 +29,15 @@ Python编写的邮件报表系统，现开源
 
 #### 邮件配置
 
-配置文档见<https://bitbucket.org/adalee2future/reports/src/master/README.md>
+配置文档见report.md
 
 #### 运维
 
-见<https://bitbucket.org/adalee2future/reports/src/master/maintenance.md>
+见maintenance.md
 
 #### 报表规范
 
-见<https://bitbucket.org/adalee2future/reports/src/master/standard.md>
+见standard.md
  
 ### 代码概览
 

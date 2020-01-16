@@ -134,13 +134,17 @@ def send_report(report_id, params=''):
 
     row_permission = cfg.get('row_permission', default_row_permission)
 
+    day_shift = cfg.get('day_shift') 
+    date_range=cfg.get('date_range', 'day')
     if db_type == 'odps':
-        fetching_data = fetch_data.FetchingDataOdps(db_account, pt=pt)
+        fetching_data = fetch_data.FetchingDataOdps(db_account, day_shift, pt, date_range)
         no_data_handler = cfg.get('no_data_handler', ODPS_DEFAULT_NO_DATA_HANDLER)
     elif db_type == 'mysql':
-        fetching_data = fetch_data.FetchingDataMysql(db_account, pt=pt)
+        fetching_data = fetch_data.FetchingDataMysql(db_account, day_shift, pt, date_range)
         no_data_handler = cfg.get('no_data_handler', MYSQL_DEFAULT_NO_DATA_HANDLER)
 
+    range_str, date_str= cfg.get('date_range_fmt', ['{end_date}', '%Y%m%d'])
+    date_range_str = range_str.format(start_date=fetching_data._start_date.strftime(date_str), end_date=fetching_data._end_date.strftime(date_str))
     if cfg.get('customized_file'):
         sys.path.insert(0, os.getcwd())
         import customized_file
@@ -149,13 +153,13 @@ def send_report(report_id, params=''):
         body_prepend = cust_res.get('body_prepend', DEFAULT_BODY_PREPEND)
         data_meta = cust_res.get('data_meta')
 
-        subject = '%s_%s' % (cfg.get('subject'), fetching_data._pt)
+        subject = '%s_%s' % (cfg.get('subject'), date_range_str)
         print()
 
         if len(body_prepend) > 0:
 
             current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
-            oss_filename = '{}_{}_{}.html'.format(report_id, fetching_data._pt, current_datetime)
+            oss_filename = '{}_{}_{}.html'.format(report_id, date_range_str, current_datetime)
             
 
             if OSS_ENABLE:
@@ -187,7 +191,7 @@ def send_report(report_id, params=''):
             file_to_mail(filename, subject, owner, to, cc=cc, bcc=bcc, body_prepend=body_prepend, customized_styles=customized_styles, fake_cc=fake_cc, caption=caption, fake_to=fake_to)
     else:
         if isinstance(file_type, str):
-            filename = os.path.join(project_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, file_type))
+            filename = os.path.join(project_dir, 'data', '%s_%s.%s' % (report_name, date_range_str, file_type))
             data_metas, file_metas = export_file(fetching_data, sql_text, file_type,
                     filename, dependency, df_names, row_permission, merge, freeze_panes_list,
                     xlsx_formats_list, customized_styles, html_formats_list, hyperlinks)
@@ -197,7 +201,7 @@ def send_report(report_id, params=''):
             sql_text_list = fetching_data.__class__.get_sql_text_list(sql_text)
             name_vs_sql = {df_name: sql for df_name, sql in zip(df_names, sql_text_list)}
             for current_file_type, current_df_names in file_type.items():
-                filename = os.path.join(project_dir, 'data', '%s_%s.%s' % (report_name, fetching_data._pt, current_file_type))
+                filename = os.path.join(project_dir, 'data', '%s_%s.%s' % (report_name, date_range_str, current_file_type))
                 current_sql_text = '\n;\n'.join(name_vs_sql[name] for name in current_df_names)
                 data_metas, file_metas = export_file(fetching_data, current_sql_text, current_file_type,
                     filename, dependency, current_df_names, row_permission, merge, freeze_panes_list,
@@ -240,11 +244,11 @@ def send_report(report_id, params=''):
             filename = file_meta.get('filename')
             mail_meta['filenames'] = filename
             mail_meta['body_prepend'] = file_meta.get('body_prepend', '')
-            mail_meta['subject'] = '{prefix}{subject}_{pt}{suffix}'.\
+            mail_meta['subject'] = '{prefix}{subject}_{date_range_str}{suffix}'.\
                     format(prefix='',
                     #format(prefix=file_meta.get('prefix', ''),
                            subject=cfg.get('subject'),
-                           pt=fetching_data._pt,
+                           date_range_str=date_range_str,
                            suffix='')
                            #suffix=file_meta.get('suffix', ''))
             mail_meta['customized_styles'] = customized_styles
