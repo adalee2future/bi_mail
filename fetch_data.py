@@ -568,7 +568,7 @@ class FetchingDataOdps(FetchingData):
 
 
 class FetchingDataMysql(FetchingData):
-    def __init__(account, day_shift, pt, date_range):
+    def __init__(self, account="default", day_shift=None, pt=None, date_range='day'):
         super(FetchingDataMysql, self).__init__(account, day_shift, pt, date_range)
         self._conn = pymysql.connect(**self._login_info)
 
