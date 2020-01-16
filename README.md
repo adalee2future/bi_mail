@@ -65,13 +65,14 @@ Python编写的邮件报表系统，现开源
 * 系统要求：Linux/MacOS
 * 支持数据源：Maxcompute/MySQL
 * Python版本：python3
-	* pandas>=0.23.4
-        * premailer
-	* IPython
-	* commentjson
-	* pymysql
-	* pyodps （阿里云大数据计算Maxcompute）
-	* oss2（阿里云对象存储oss）（非必须，用来支持附件太大链接发送）
+    * pandas>=0.23.4
+    * datetime_truncate
+    * premailer
+    * IPython
+    * commentjson
+    * pymysql
+    * pyodps （阿里云大数据计算Maxcompute）
+    * oss2（阿里云对象存储oss）（非必须，用来支持附件太大链接发送）
 
 1. 下载该项目
 2. 复制main.cfg.template于main.cfg，并填写好里面的配置
