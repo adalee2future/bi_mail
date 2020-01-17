@@ -11,6 +11,7 @@ import random
 import sys
 import copy
 from collections import OrderedDict
+from pprint import pprint
 import decimal
 import style
 from IPython.display import display
@@ -215,9 +216,12 @@ class FetchingData:
         self._end_date = pt2date(self._pt)
         self._start_date = datetime_truncate(self._end_date, date_range)
         self._dates = {
+                'pt': self._pt,
+                'dt': self._dt,
                 'start_date': self._start_date,
                 'end_date': self._end_date
         }
+        pprint(self._dates)
 
     @staticmethod
     def random_filename(file_type):
@@ -554,7 +558,7 @@ class FetchingDataOdps(FetchingData):
 
         for odps_val, py_val in ODPS_VALUE_MAP.items():
             sql_text = sql_text.replace(odps_val, py_val)
-        sql_text = sql_text.format(pt=self._pt, dt=self._dt, **self._dates)
+        sql_text = sql_text.format(**self._dates)
         start = time.time()
         print(sql_text) if print_log else None
         sql_res = self._conn.execute_sql(sql_text)
@@ -576,7 +580,7 @@ class FetchingDataMysql(FetchingData):
 
     def run_sql(self, sql_text, dependency={}, coerce_numeric=False, print_log=True):
         start = time.time()
-        sql_text = sql_text.format(pt=self._pt, dt=self._dt, **self._dates)
+        sql_text = sql_text.format(**self._dates)
         print(sql_text) if print_log else None
         sql_res_dataframe = pd.read_sql(sql_text, self._conn)
         if print_log:
@@ -586,14 +590,4 @@ class FetchingDataMysql(FetchingData):
         if coerce_numeric:
             sql_res_dataframe = sql_res_dataframe.apply(convert_to_integer)
         return sql_res_dataframe
-
-try:
-    odps_obj = FetchingDataOdps()
-except:
-    pass
-
-try:
-    mysql_obj = FetchingDataMysql()
-except:
-    pass
 
