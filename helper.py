@@ -102,8 +102,8 @@ with open(CONFIG_FILE) as f:
     MAIL_USER = cfg['mail_sender']['user']
     MAIL_PASSWD = cfg['mail_sender']['password']
     MAIL_HOST= cfg.get('mail_host')
-    ODPS_LOGIN = cfg['db']['odps']
-    MYSQL_LOGIN = cfg['db']['mysql']
+    DB_LOGIN = cfg['db'] 
+    ODPS_LOGIN = DB_LOGIN.get('odps')
 
     
     oss_setting = cfg.get('oss_setting', {}) 

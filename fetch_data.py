@@ -14,7 +14,7 @@ from collections import OrderedDict
 import decimal
 import style
 from IPython.display import display
-from helper import ODPS_LOGIN, MYSQL_LOGIN, STYLES
+from helper import DB_LOGIN, STYLES
 from helper import add_days, diff_days, datetime_truncate
 from helper import coalesce, excel_datetime_to_num
 pd.set_option('max_colwidth', 1000)
@@ -194,8 +194,10 @@ def trunc_datetime(s):
     return s
 
 class FetchingData:
-    def __init__(self, account="default", day_shift=None, pt=None, date_range='day'):
-        login_info = copy.deepcopy(ODPS_LOGIN[account])
+    def __init__(self, account="default", day_shift=None, pt=None, date_range='day', db_type=None):
+        
+        self._db_type = db_type
+        login_info = copy.deepcopy(DB_LOGIN.get(db_type).get(account))
         self._day_shift = 0
         if 'day_shift' in login_info.keys():
             self._day_shift = login_info.pop('day_shift')
@@ -512,8 +514,8 @@ class FetchingData:
         # todo csv行权限
 
 class FetchingDataOdps(FetchingData):
-    def __init__(self, account="default", day_shift=None, pt=None, date_range='day'):
-        super(FetchingDataOdps, self).__init__(account, day_shift, pt, date_range)
+    def __init__(self, account="default", day_shift=None, pt=None, date_range='day', db_type='odps'):
+        super(FetchingDataOdps, self).__init__(account, day_shift, pt, date_range, db_type)
 
         self._conn = odps.ODPS(**self._login_info)
         self._conn.to_global()
@@ -568,8 +570,8 @@ class FetchingDataOdps(FetchingData):
 
 
 class FetchingDataMysql(FetchingData):
-    def __init__(self, account="default", day_shift=None, pt=None, date_range='day'):
-        super(FetchingDataMysql, self).__init__(account, day_shift, pt, date_range)
+    def __init__(self, account="default", day_shift=None, pt=None, date_range='day', db_type='mysql'):
+        super(FetchingDataMysql, self).__init__(account, day_shift, pt, date_range, db_type)
         self._conn = pymysql.connect(**self._login_info)
 
     def run_sql(self, sql_text, dependency={}, coerce_numeric=False, print_log=True):
