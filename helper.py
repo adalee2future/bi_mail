@@ -105,6 +105,8 @@ with open(CONFIG_FILE) as f:
     DB_LOGIN = cfg['db'] 
     ODPS_LOGIN = DB_LOGIN.get('odps')
 
+    DATE_RANGE_FMTS = cfg.get('date_range_fmts')
+
     
     oss_setting = cfg.get('oss_setting', {}) 
     OSS_ENABLE = oss_setting.get('oss_enable', False)

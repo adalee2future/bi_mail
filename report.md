@@ -62,7 +62,7 @@ where pt = '{pt}'
 ;
 ```
 
-  * 其中`{pt}`是变量，当main.cfg配置里day_shift为0时，默认为今日，如'20180406'，day_shift配置为-1时，默认为昨日，如'20180405'
+  * 其中`{pt}`是变量，当main.cfg配置里`day_shift`为0时，默认为今日，如'20180406'，`day_shift`配置为-1时，默认为昨日，如'20180405'；也可以在报表级别配置`day_shift`
   * 还有`{dt}`变量，和pt保持一致，格式不同，如'2018-04-06'
   * 对于odps sql语句，如果跨越多个分区，会有一万条限制，如果只有一个分区或者没有分区，则没有条数限制
   * 当cfg文件配置`file_type`为xlsx和html时，则支持多个sql查询语句，每个语句一个sheet, 语句之间用分号隔开
@@ -129,6 +129,39 @@ bi_mail run 营销日报 to=bob.li@abc.com;pt=20180301
 ## 附
 
 ### 其他配置
+
+#### 日期相关
+
+有四个系统变量：`dt`、`pt`, `start_date`, `end_date`  
+pt, dt 为日期字符串，格式为'%Y%m%d'和'%Y-%m-%d'  
+`start_date`, `end_date` 开始日期，结束日期，格式如'%Y-%m-%d 00:00:00'，如'2020-01-17 00:00:00'  
+
+1. `day_shift` （报表级别配置pt，0为今天，-1为昨天，如果不配置，则读取main.cfg里的该参数）
+2. `date_range` （报表的时间范围，默认为'day'，即一天）
+    * 可以支持如"day", "7\_day", "week", "month", "quarter", "half_year", "year"等
+
+根据`day_shift`，和`date_range`，产生四个日期变量，可以在sql脚本里使用，也可以在`df_names`和报表备注(caption)里使用  
+以
+
+3. `date_range_fmt` （配置报表主题和名字中的日期显示，可用`start_date`, `end_date`两个变量
+
+默认格式可在main.cfg配置，如
+
+```
+  "date_range_fmts": {
+     "day": ["{end_date}", "%Y%m%d"],
+     "week": ["{start_date}", "%Y%m%d"],
+     "month": ["{end_date}", "%Y%m"]
+   }
+```
+
+则
+
+* 日报默认设置为：`"date_range_fmt": ["{end_date}", "%Y%m%d"]` 
+* 周报默认可设置为：`"date_range_fmt": ["{start_date}", "%Y%m%d"]`  （用周一日期代表本周）
+* 月报默认设置为：`"date_range_fmt": ["{end_date}", "%Y%m"]`
+
+也可在报表级别配置，如`"date_range_fmt": ["{start_date}-{end_date}", "%m%d"]`
 
 #### 多种文件类型组合
 

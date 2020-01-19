@@ -42,5 +42,10 @@
         "day_shift": 0 #默认报表日期为今天
       }
     }
+  },
+  "date_range_fmts": {
+    "day": ["{end_date}", "%Y%m%d"],
+    "week": ["{start_date}", "%Y%m%d"], #以周一日期代表该周
+    "month": ["{end_date}", "%Y%m"]
   }
 }

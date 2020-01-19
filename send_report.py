@@ -15,6 +15,7 @@ import fetch_data
 from file_to_mail import file_to_mail
 from helper import BASE_DIR, file_size
 from helper import EXTERNAL_PROJECTS
+from helper import DATE_RANGE_FMTS
 
 from helper import OSS_ENABLE
 if OSS_ENABLE:
@@ -143,7 +144,8 @@ def send_report(report_id, params=''):
         fetching_data = fetch_data.FetchingDataMysql(db_account, day_shift, pt, date_range)
         no_data_handler = cfg.get('no_data_handler', MYSQL_DEFAULT_NO_DATA_HANDLER)
 
-    range_str, date_str= cfg.get('date_range_fmt', ['{end_date}', '%Y%m%d'])
+    caption = caption.format(**fetching_data._dates)
+    range_str, date_str= cfg.get('date_range_fmt', DATE_RANGE_FMTS.get(date_range, ['{end_date}', '%Y%m%d']))
     date_range_str = range_str.format(start_date=fetching_data._start_date.strftime(date_str), end_date=fetching_data._end_date.strftime(date_str))
     if cfg.get('customized_file'):
         sys.path.insert(0, os.getcwd())
