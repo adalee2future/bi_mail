@@ -213,7 +213,7 @@ class FetchingData:
                 self._day_shift = day_shift
             self._pt = get_pt(add_days(TODAY, self._day_shift))
             self._dt = pt2dt(self._pt)
-        self._end_date = pt2date(self._pt)
+        self._end_date = datetime.datetime.strptime(self._pt, PT_FORMAT)
         self._start_date = datetime_truncate(self._end_date, date_range)
         self._dates = {
                 'pt': self._pt,
